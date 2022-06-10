@@ -9,7 +9,7 @@ if ( keystorePropertiesFile.exists() ) {
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 30
     buildToolsVersion '28.0.3'
     if ( keystorePropertiesFile.exists() ) {
         signingConfigs {
@@ -47,14 +47,14 @@ android {
     }
     flavorDimensions 'std'
     productFlavors.all {
-        buildConfigField "String", "API_BASE_URL", '"http://educash.y-note.cm/rest/"'
+        buildConfigField "String", "API_BASE_URL", '"http://educash.y-note.cm/reposApi/"'
         buildConfigField "boolean", "SHOW_CONTROL_NUMBER_MENU", 'false'
         buildConfigField "String", "RAR_PASSWORD", '")(#$1HsD"'
         resValue "string", "app_name", "Educash"
     }
     productFlavors {
         demoProd {
-            buildConfigField "String", "API_BASE_URL", '"http://educash.y-note.cm/rest/"'
+            buildConfigField "String", "API_BASE_URL", '"http://educash.y-note.cm/reposApi/"'
             applicationId "cm.ynote.educash.demoProd"
             buildConfigField "String", "RAR_PASSWORD", '")(#$1HsD"'
             resValue "string", "app_name", "Educash"
