@@ -4064,11 +4064,11 @@ public class ClientAndroidInterface {
 
 
                 JSONObject objEnrol = new JSONObject();
-                //try {
-                objEnrol.put("Family", familyArray);
-       /*     } catch (JSONException e) {
-                e.printStackTrace();
-            }*/
+                try {
+                    objEnrol.put("Family", familyArray);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 String Family = objEnrol.toString();
 
                 objEnrol = new JSONObject();
@@ -4155,7 +4155,7 @@ public class ClientAndroidInterface {
                         }
 
                         ToRestApi rest = new ToRestApi();
-                        HttpResponse response = rest.postToRestApiToken(resultObj, "family");
+                        HttpResponse response = rest.postToRestApi(resultObj, "family");
                         System.out.println("Resultat Object Sent");
                         System.out.println(resultObj);
                         HttpEntity entity = response.getEntity();
@@ -5436,6 +5436,7 @@ public class ClientAndroidInterface {
 
         Log.d("Json Requete languages ", String.valueOf(masterData.get("languages")));
         Log.d("Json Requete officers", String.valueOf(masterData.get("officers")));
+
 
         if (masterData.length() == 0)
             throw new UserException(mContext.getResources().getString(R.string.DownloadMasterDataFailed));

@@ -47,14 +47,14 @@ android {
     }
     flavorDimensions 'std'
     productFlavors.all {
-        buildConfigField "String", "API_BASE_URL", '"http://educash.y-note.cm/reposApi/"'
+        buildConfigField "String", "API_BASE_URL", '"http://3.238.179.83:89/reposApi/"'
         buildConfigField "boolean", "SHOW_CONTROL_NUMBER_MENU", 'false'
         buildConfigField "String", "RAR_PASSWORD", '")(#$1HsD"'
         resValue "string", "app_name", "Educash"
     }
     productFlavors {
         demoProd {
-            buildConfigField "String", "API_BASE_URL", '"http://educash.y-note.cm/reposApi/"'
+            buildConfigField "String", "API_BASE_URL", '"http://3.238.179.83:89/reposApi/"'
             applicationId "cm.ynote.educash.demoProd"
             buildConfigField "String", "RAR_PASSWORD", '")(#$1HsD"'
             resValue "string", "app_name", "Educash"
@@ -62,7 +62,7 @@ android {
         }
         demoRelease {
             applicationId "cm.ynote.educash.demoRelease"
-            buildConfigField "String", "API_BASE_URL", '"http://educash.y-note.cm/reposApi/"'
+            buildConfigField "String", "API_BASE_URL", '"http://3.238.179.83:89/reposApi/"'
             buildConfigField "boolean", "SHOW_CONTROL_NUMBER_MENU", 'true'
             resValue "string", "app_name", "Educash"
             dimension = 'std'

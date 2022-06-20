@@ -194,7 +194,7 @@
   <string name="DuplicateHOF">Mwanachama mwenye CHFID hii yumo kwenye mfumo</string>
   <string name="DuplicateInsuranceNumber">Risiti namba imetumika</string>
   <string name="DuplicateReceiptNumber">Risiti namba uliyoingiza imeshatumika</string>
-  <string name="DownloadMasterDataFailed">Imeshindikana kupakua masta data.</string>
+  <string name="Failed">Imeshindikana kupakua masta data.</string>
   <string name="DownloadingMasterData">Pakua masta data</string>
   <string name="DataDownloadedSuccess">Master data imepakuliwa vizuri</string>
   <string name="Delete">Futa</string>
