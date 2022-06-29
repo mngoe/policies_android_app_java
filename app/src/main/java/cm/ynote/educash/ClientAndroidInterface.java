@@ -335,8 +335,47 @@ public class ClientAndroidInterface {
         if (validInsuranceNumber != 0) {
             ShowDialog(mContext.getResources().getString(validInsuranceNumber));
             return false;
+        }else if(getInsuranceNumberStatut(InsuranceNumber).equals("En cours")){
+            ShowDialog(mContext.getResources().getString(R.string.usedInsureeNumber));
+            return false;
+        }else if(getInsuranceNumberStatut(InsuranceNumber).equals("Annulé")){
+            ShowDialog(mContext.getResources().getString(R.string.AbortedInsureeNumber));
+            return false;
         }
         return true;
+    }
+
+
+    //joseph
+    public String getInsuranceNumberStatut(String insuranceNumber){
+
+        String Query = "SELECT Statut FROM tblInsureeNumbers WHERE Number=? ";
+        String arg[] = {insuranceNumber};
+        JSONArray Renews = sqlHandler.getResult(Query, arg);
+        String statut = "";
+        JSONObject O = null;
+        if (Renews.length() > 0) {
+            try {
+                O = Renews.getJSONObject(0);
+                statut = O.getString("Statut");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return statut;
+
+    }
+
+    //joseph
+    public void updateStatutInsuranceNumber(String insureeNumber){
+        try {
+            ContentValues cv = new ContentValues();
+            cv.put("Statut", "En cours");
+            db.update("tblInsureeNumbers", cv,"Number=?", new String[]{insureeNumber});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //get Region Without Officer
@@ -1108,6 +1147,7 @@ public class ClientAndroidInterface {
         int InsureeId = 0;
         int MaxFamilyId = 0;
 
+
         try {
             global = (Global) mContext.getApplicationContext();
             MaxFamilyId = getNextAvailableFamilyId();
@@ -1166,6 +1206,7 @@ public class ClientAndroidInterface {
                 values.put("isOffline", isOffline);
                 values.put("FamilyId", MaxFamilyId);
                 sqlHandler.insertData("tblFamilies", values);
+                updateStatutInsuranceNumber(data.get("txtInsuranceNumber"));
                 FamilyId = MaxFamilyId;
             } else {
                 int Online = 2;
@@ -1199,8 +1240,10 @@ public class ClientAndroidInterface {
                 }*/
             }
             if (InsureeData.length() > 0) {
-                //Insert Insuree
+                //Insert Insuree Number
                 //==========================================================================================
+                HashMap<String, String> dataInsur = jsonToTable(InsureeData);
+
                 InsureeId = SaveInsuree(InsureeData, FamilyId, 1, -1, 0);//herman new
 
                 //Update insureeId in tblFamilies
@@ -1216,6 +1259,7 @@ public class ClientAndroidInterface {
                 String[] whereArgs = {String.valueOf(FamilyId)};
 
                 sqlHandler.updateData("tblFamilies", cvUpdate, "FamilyId= ?", whereArgs);
+
             }
             return FamilyId;
 
@@ -1487,6 +1531,7 @@ public class ClientAndroidInterface {
                             values.put("InsureeId", MaxInsureeId);
 
                             sqlHandler.insertData("tblInsuree", values);
+                            updateStatutInsuranceNumber(data.get("txtInsuranceNumber"));
                             if (PolicyId > 0 && isHead == 0) {
                                 getFamilyPolicies(FamilyId);
                             }
@@ -5444,6 +5489,7 @@ public class ClientAndroidInterface {
         insertConfirmationTypes((JSONArray) masterData.get("confirmationTypes"));
         insertControls((JSONArray) masterData.get("controls"));
         insertEducation((JSONArray) masterData.get("education"));
+        insertInsureeNumbers((JSONArray) masterData.get("insureeNumbers"));
         insertFamilyTypes((JSONArray) masterData.get("familyTypes"));
         insertHF((JSONArray) masterData.get("hf"));
         insertIdentificationTypes((JSONArray) masterData.get("identificationTypes"));
@@ -5513,6 +5559,23 @@ public class ClientAndroidInterface {
         String Columns[] = {"fieldName", "adjustibility"};
         sqlHandler.insertData("tblControls", Columns, jsonArray.toString(), "DELETE FROM tblControls;");
         return true;
+    }
+
+    //joseph: add list of cheque number
+    private boolean insertInsureeNumbers(JSONArray jsonArray) throws JSONException {
+        String Columns[] = {"Number", "Statut"};
+        sqlHandler.insertData("tblInsureeNumbers", Columns, jsonArray.toString(), "DELETE FROM tblInsureeNumbers;");
+        return true;
+    }
+
+    //joseph: add one cheque number
+    public void insertInsuranceNumber(JSONArray jsonArray){
+        try {
+            String Columns[] = {"Number", "Statut"};
+            sqlHandler.insertData("tblInsureeNumbers", Columns, jsonArray.toString(), "DELETE FROM tblInsureeNumbers;");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean insertEducation(JSONArray jsonArray) throws JSONException {

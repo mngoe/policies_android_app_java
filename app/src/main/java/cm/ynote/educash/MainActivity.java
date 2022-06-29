@@ -625,6 +625,24 @@ public class MainActivity extends AppCompatActivity
                                         if (ca.isOfficerCodeValid(userInput.getText().toString())) {
                                             global.setOfficerCode(userInput.getText().toString());
                                             OfficerName.setText(global.getOfficerName());
+
+                                            JSONObject o1 = new JSONObject().put("Number","2020");
+                                            o1.put("Statut","Annulé");
+                                            JSONObject o2 = new JSONObject().put("Number","2021");
+                                            o2.put("Statut","En cours");
+                                            JSONObject o3 = new JSONObject().put("Number","2022");
+                                            o3.put("Statut","Disponible");
+
+                                            JSONArray ar = new JSONArray();
+                                            ar.put(o1);
+                                            ar.put(o2);
+                                            ar.put(o3);
+
+                                            ca.insertInsuranceNumber(ar);
+
+                                            /*ca.insertInsuranceNumber("2022","Disponible");
+                                            ca.insertInsuranceNumber("2021","En cours");
+                                            ca.insertInsuranceNumber("2020","Annulé");*/
 //                                            if(_General.isNetworkAvailable(MainActivity.this)){
 //                                                ca.getOfficerVillages(userInput.getText().toString());
 //                                            }

@@ -67,6 +67,7 @@ public class SQLHandler extends SQLiteOpenHelper {
     private static final String tblConfirmationTypes = "tblConfirmationTypes";
     private static final String tblControlNumber = "tblControlNumber";
     private static final String tblControls = "tblControls";
+    private static final String tblInsureeNumbers = "tblInsureeNumbers";
     private static final String tblEducations = "tblEducations";
     private static final String tblFamilies = "tblFamilies";
     private static final String tblFamilyTypes = "tblFamilyTypes";
@@ -122,6 +123,11 @@ public class SQLHandler extends SQLiteOpenHelper {
                     "CREATE TABLE " + tblControls + "("
                             + "FieldName TEXT,"
                             + "Adjustibility TEXT"+ ")"
+            );
+            sqLiteDatabase.execSQL(
+                    "CREATE TABLE " + tblInsureeNumbers + "("
+                            + "Number TEXT,"
+                            + "Statut TEXT"+ ")"
             );
             sqLiteDatabase.execSQL(
                     "CREATE TABLE " + tblEducations + "("

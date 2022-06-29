@@ -192,7 +192,7 @@
   <string name="FamilyUploaded">Famille téléchargée avec succès</string>
   <string name="MissingHOF">Chef de famille manquant</string>
   <string name="DuplicateHOF">Une famille avec ce numéro d\'assurance existe déjà.</string>
-  <string name="DuplicateInsuranceNumber">Numéro d\'assurance en double trouvé</string>
+  <string name="DuplicateInsuranceNumber">Numéro de cheque en double trouvé</string>
   <string name="DuplicateReceiptNumber">Numéro de reçu en double trouvé</string>
   <string name="DownloadMasterDataFailed">Impossible de télécharger les données de base.</string>
   <string name="DownloadingMasterData">Téléchargement des données de base</string>
@@ -448,4 +448,6 @@
   <string name="BothParentsChildAlive">Both Parents of Child Alive</string>
   <string name="SingleOrphanedChild">Single Orphaned Child</string>
   <string name="DoubleOrphanedChild">Double Orphaned Child</string>
+  <string name="usedInsureeNumber">Ce numéro de chèque a déja été utilisé</string>
+  <string name="AbortedInsureeNumber">Numéro de chèque annulé</string>
 </resources>

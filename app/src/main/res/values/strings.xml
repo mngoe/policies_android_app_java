@@ -192,7 +192,7 @@
   <string name="FamilyUploaded">Family uploaded successfully</string>
   <string name="MissingHOF">Given family has no HOF</string>
   <string name="DuplicateHOF">Family with this Insuree number already exists</string>
-  <string name="DuplicateInsuranceNumber">Duplicate Insuree number found</string>
+  <string name="DuplicateInsuranceNumber">Duplicate Cheque number found</string>
   <string name="DuplicateReceiptNumber">Duplicate receipt number found</string>
   <string name="DownloadMasterDataFailed">Could not download master data.</string>
   <string name="DownloadingMasterData">Downloading master data</string>
@@ -450,4 +450,6 @@
     <string name="BothParentsChildAlive">Both Parents of Child Alive</string>
   <string name="SingleOrphanedChild">Single Orphaned Child</string>
   <string name="DoubleOrphanedChild">Double Orphaned Child</string>
+  <string name="usedInsureeNumber">This cheque number already used</string>
+  <string name="AbortedInsureeNumber">This cheque number was aborted</string>
 </resources>
