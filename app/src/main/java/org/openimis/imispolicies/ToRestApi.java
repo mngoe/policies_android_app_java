@@ -184,6 +184,7 @@ public class ToRestApi {
             }
         }
 
+        Log.e("Response:", content);
         return content;
     }
 

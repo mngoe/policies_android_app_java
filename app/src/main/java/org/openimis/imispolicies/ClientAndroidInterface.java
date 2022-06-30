@@ -553,7 +553,7 @@ public class ClientAndroidInterface {
         return selectJsonArray.toString();
     }
 
-    @JavascriptInterface
+/*    @JavascriptInterface
     public String getGender() {
         String tableName = "tblGender";
         String[] columns = {"Code", "Gender", "AltLanguage"};
@@ -563,9 +563,9 @@ public class ClientAndroidInterface {
         JSONArray Gender = sqlHandler.getResult(tableName, columns, null, OrderBy);
 
         return Gender.toString();
-    }
+    }*/
 
-/*    @JavascriptInterface
+    @JavascriptInterface
     public String getGender() {
         JSONArray Gender = new JSONArray();
 
@@ -595,7 +595,7 @@ public class ClientAndroidInterface {
         }
 
         return Gender.toString();
-    }*/
+    }
 
     @JavascriptInterface
     public String getMaritalStatus() {

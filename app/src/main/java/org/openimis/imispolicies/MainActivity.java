@@ -32,6 +32,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -258,9 +259,13 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.setCheckedItem(R.id.nav_home);
 
-        if (checkRequirements()) {
-            onAllRequirementsMet();
+        if (TextUtils.isEmpty(global.getOfficerCode())){
+            ShowEnrolmentOfficerDialog();
         }
+
+        /*if (checkRequirements()) {
+            onAllRequirementsMet();
+        }*/
 
         setVisibilityOfPaymentMenu();
     }
@@ -426,6 +431,9 @@ public class MainActivity extends AppCompatActivity
             userInput.setVisibility(View.GONE);
         }
 
+        // set dialog message
+        final String result = "";
+
         int positiveButton, negativeButton;
         if (MasterData > 0) {
             positiveButton = R.string.Ok;
@@ -438,66 +446,63 @@ public class MainActivity extends AppCompatActivity
         alertDialogBuilder
                 .setCancelable(false)
                 .setPositiveButton(getResources().getString(positiveButton),
-                        (dialog, id) -> {
-                            try {
-                                if (MasterData > 0) {
-                                    if (ca.isOfficerCodeValid(userInput.getText().toString())) {
-                                        global.setOfficerCode(userInput.getText().toString());
-                                        OfficerName.setText(global.getOfficerName());
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int i) {
+                                try {
+                                    if (MasterData > 0) {
+                                        if (ca.isOfficerCodeValid(userInput.getText().toString())) {
+                                            global.setOfficerCode(userInput.getText().toString());
+                                            OfficerName.setText(global.getOfficerName());
 //                                            if(_General.isNetworkAvailable(MainActivity.this)){
 //                                                ca.getOfficerVillages(userInput.getText().toString());
 //                                            }
 
+                                            JSONObject chNumber1 = new JSONObject().put("number","2020");
+                                            chNumber1.put("statut","Annulé");
+                                            JSONObject chNumber2 = new JSONObject().put("number","2021");
+                                            chNumber2.put("statut","En cours");
+                                            JSONObject chNumber3 = new JSONObject().put("number","2022");
+                                            chNumber3.put("statut","Disponible");
+                                            JSONArray chNumbers = new JSONArray().put(chNumber1);
+                                            chNumbers.put(chNumber2);
+                                            chNumbers.put(chNumber3);
+                                            ca.insertChequeNumbers(chNumbers);
+
+                                        } else {
+                                            ShowEnrolmentOfficerDialog();
+                                            ca.ShowDialog(getResources().getString(R.string.IncorrectOfficerCode));
+                                        }
                                     } else {
-                                        ShowEnrolmentOfficerDialog();
-                                        ca.ShowDialog(getResources().getString(R.string.IncorrectOfficerCode));
+                                        if (!global.isNetworkAvailable()) {
+                                            PickMasterDataFileDialog();
+                                        } else {
+                                            MasterDataAsync masterDataAsync = new MasterDataAsync();
+                                            masterDataAsync.execute();
+
+                                        }
+                                        //ca.downloadMasterData();
+                                        //ShowDialogTex();
                                     }
-                                } else {
-                                    if (!global.isNetworkAvailable()) {
-                                        PickMasterDataFileDialog();
-                                    } else {
-                                        MasterDataAsync masterDataAsync = new MasterDataAsync();
-                                        masterDataAsync.execute();
-
-                                        //add static genders and cheque numbers
-                                        JSONObject gender1 = new JSONObject().put("code","M");
-                                        gender1.put("gender","Male");
-                                        gender1.put("altLanguage","Homme");
-                                        gender1.put("sortOrder",1);
-                                        JSONObject gender2 = new JSONObject().put("code","F");
-                                        gender2.put("gender","Female");
-                                        gender2.put("altLanguage","Femme");
-                                        gender2.put("sortOrder",2);
-                                        JSONArray genders = new JSONArray().put(gender1);
-                                        genders.put(gender2);
-                                        ca.insertGenders(genders);
-
-                                        JSONObject chNumber1 = new JSONObject().put("number","2020");
-                                        chNumber1.put("statut","Annulé");
-                                        JSONObject chNumber2 = new JSONObject().put("number","2021");
-                                        chNumber2.put("statut","En cours");
-                                        JSONObject chNumber3 = new JSONObject().put("number","2022");
-                                        chNumber3.put("statut","Disponible");
-                                        JSONArray chNumbers = new JSONArray().put(chNumber1);
-                                        chNumbers.put(chNumber2);
-                                        chNumbers.put(chNumber3);
-                                        ca.insertChequeNumbers(chNumbers);
-
-                                    }
-                                    //ca.downloadMasterData();
-                                    //ShowDialogTex();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
                         })
                 .setNegativeButton(getResources().getString(negativeButton),
-                        (dialog, id) -> {
-                            dialog.cancel();
-                            finish();
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                //finish();
+                            }
                         });
 
+        // create alert dialog
+        alertDialog = alertDialogBuilder.create();
+
+        //show it
         alertDialog = alertDialogBuilder.show();
+
     }
 
     public void ShowMasterDataDialog() {
@@ -954,7 +959,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (ca.isMasterDataAvailable() < 1) {
-            ShowMasterDataDialog();
+            ShowEnrolmentOfficerDialog();
             return false;
         }
 
