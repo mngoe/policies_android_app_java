@@ -493,7 +493,7 @@ public class MainActivity extends AppCompatActivity
                 .setNegativeButton(R.string.ForceClose,
                         (dialog, id) -> {
                             dialog.cancel();
-                            finish();
+                            //finish();
                         })
                 .show();
     }
