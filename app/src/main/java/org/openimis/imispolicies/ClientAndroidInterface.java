@@ -332,6 +332,15 @@ public class ClientAndroidInterface {
             ShowDialog(mContext.getResources().getString(validInsuranceNumber));
             return false;
         }
+
+        if(getChequeNumberStatut(InsuranceNumber).equals("En cours")){
+            ShowDialog(mContext.getResources().getString(R.string.UsedChequeNumber));
+            return false;
+        }
+        if(getChequeNumberStatut(InsuranceNumber).equals("Annulé")){
+            ShowDialog(mContext.getResources().getString(R.string.AbortedChequeNumber));
+            return false;
+        }
         return true;
     }
 
@@ -1076,6 +1085,11 @@ public class ClientAndroidInterface {
                         values.put("InsureeId", MaxInsureeId);
 
                         sqlHandler.insertData("tblInsuree", values);
+
+                        //joseph
+                        String chequeNumber = data.get("txtInsuranceNumber");
+                        updateChequeNumberStatut(chequeNumber);
+
                         if (PolicyId > 0 && isHead == 0) {
                             getFamilyPolicies(FamilyId);
                         }
@@ -1100,6 +1114,11 @@ public class ClientAndroidInterface {
                         }
                     } else {
                         sqlHandler.insertData("tblInsuree", values);
+
+                        //joseph
+                        String chequeNumber = data.get("txtInsuranceNumber");
+                        updateChequeNumberStatut(chequeNumber);
+
                         if (PolicyId > 0 && isHead == 0) {
                             getFamilyPolicies(FamilyId);
                         }
@@ -5047,9 +5066,16 @@ public class ClientAndroidInterface {
         return true;
     }
 
-    private boolean insertGenders(JSONArray jsonArray) throws JSONException {
+    //Joseph : insert  list of cheque number to database
+    public boolean insertChequeNumbers(JSONArray jsonArray) throws JSONException {
         String[] Columns = getColumnNames(jsonArray);
-        sqlHandler.insertData("tblGender", Columns, jsonArray.toString(), "DELETE FROM tblGender;");
+        sqlHandler.insertData("tblChequeNumbers", Columns, jsonArray.toString(), "CREATE TABLE tblChequeNumbers (Number TEXT, Statut TEXT);");
+        return true;
+    }
+
+    public boolean insertGenders(JSONArray jsonArray) throws JSONException {
+        String[] Columns = getColumnNames(jsonArray);
+        sqlHandler.insertData("tblGender", Columns, jsonArray.toString(), "CREATE TABLE tblGender (Code TEXT, Gender TEXT, AltLanguage TEXT, SortOrder NUMERIC);");
         return true;
     }
 
@@ -6377,6 +6403,37 @@ public class ClientAndroidInterface {
             throw new SQLException(
                     "Couldn't get max id " + idFieldName +
                             " for table " + tableName);
+        }
+    }
+
+
+    //get statut of cheque number
+    public String getChequeNumberStatut(String Code) {
+        String Statut = "";
+        try {
+            String query = "SELECT Statut FROM tblChequeNumbers WHERE upper(Number) like '" + Code.toUpperCase() + "'";
+            Cursor cursor1 = db.rawQuery(query, null);
+            // looping through all rows
+            if (cursor1.moveToFirst()) {
+                do {
+                    Statut = cursor1.getString(0);
+                } while (cursor1.moveToNext());
+            }
+        } catch (Exception e) {
+            return Statut;
+        }
+
+        return Statut;
+    }
+
+    //modifie le statut d'un numéro de cheque
+    public void updateChequeNumberStatut(String Code){
+        try {
+            ContentValues cv = new ContentValues();
+            cv.put("Statut", "En cours");
+            db.update("tblChequeNumbers", cv,"Number=?", new String[]{Code});
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

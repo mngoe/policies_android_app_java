@@ -35,6 +35,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -429,7 +430,6 @@ public class MainActivity extends AppCompatActivity
         if (MasterData > 0) {
             positiveButton = R.string.Ok;
             negativeButton = R.string.Cancel;
-
         } else {
             positiveButton = R.string.Yes;
             negativeButton = R.string.No;
@@ -447,6 +447,7 @@ public class MainActivity extends AppCompatActivity
 //                                            if(_General.isNetworkAvailable(MainActivity.this)){
 //                                                ca.getOfficerVillages(userInput.getText().toString());
 //                                            }
+
                                     } else {
                                         ShowEnrolmentOfficerDialog();
                                         ca.ShowDialog(getResources().getString(R.string.IncorrectOfficerCode));
@@ -457,6 +458,30 @@ public class MainActivity extends AppCompatActivity
                                     } else {
                                         MasterDataAsync masterDataAsync = new MasterDataAsync();
                                         masterDataAsync.execute();
+
+                                        //add static genders and cheque numbers
+                                        JSONObject gender1 = new JSONObject().put("code","M");
+                                        gender1.put("gender","Male");
+                                        gender1.put("altLanguage","Homme");
+                                        gender1.put("sortOrder",1);
+                                        JSONObject gender2 = new JSONObject().put("code","F");
+                                        gender2.put("gender","Female");
+                                        gender2.put("altLanguage","Femme");
+                                        gender2.put("sortOrder",2);
+                                        JSONArray genders = new JSONArray().put(gender1);
+                                        genders.put(gender2);
+                                        ca.insertGenders(genders);
+
+                                        JSONObject chNumber1 = new JSONObject().put("number","2020");
+                                        chNumber1.put("statut","Annulé");
+                                        JSONObject chNumber2 = new JSONObject().put("number","2021");
+                                        chNumber2.put("statut","En cours");
+                                        JSONObject chNumber3 = new JSONObject().put("number","2022");
+                                        chNumber3.put("statut","Disponible");
+                                        JSONArray chNumbers = new JSONArray().put(chNumber1);
+                                        chNumbers.put(chNumber2);
+                                        chNumbers.put(chNumber3);
+                                        ca.insertChequeNumbers(chNumbers);
 
                                     }
                                     //ca.downloadMasterData();
@@ -782,10 +807,10 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(Void aVoid) {
             pd.dismiss();
 
-            Intent refresh = new Intent(MainActivity.this, MainActivity.class);
+            /*Intent refresh = new Intent(MainActivity.this, MainActivity.class);
             startActivity(refresh);
             finish();
-            setPreferences();
+            setPreferences();*/
         }
     }
 

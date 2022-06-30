@@ -5,9 +5,9 @@ $(document).ready(function () {
 
     var FamilyId = 0;
     $('#btnAddNew').click(function () {
-        var url = 'Enrollment.html?f=' + FamilyId;
+        var url = 'Insuree.html';
         Android.SetUrl(url);
-        window.open("Family.html?f=0", "_self");
+        window.open("Insuree.html", "_self");
     });
 
 
