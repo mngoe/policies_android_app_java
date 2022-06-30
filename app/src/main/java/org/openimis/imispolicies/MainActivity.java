@@ -458,16 +458,28 @@ public class MainActivity extends AppCompatActivity
 //                                                ca.getOfficerVillages(userInput.getText().toString());
 //                                            }
 
-                                            JSONObject chNumber1 = new JSONObject().put("number","2020");
-                                            chNumber1.put("statut","Annulé");
-                                            JSONObject chNumber2 = new JSONObject().put("number","2021");
-                                            chNumber2.put("statut","En cours");
-                                            JSONObject chNumber3 = new JSONObject().put("number","2022");
-                                            chNumber3.put("statut","Disponible");
-                                            JSONArray chNumbers = new JSONArray().put(chNumber1);
+                                            JSONObject chNumber1 = new JSONObject();
+                                            chNumber1.put("Number","2020");
+                                            chNumber1.put("Statut","Annulé");
+
+                                            JSONObject chNumber2 = new JSONObject();
+                                            chNumber2.put("Number","2021");
+                                            chNumber2.put("Statut","En cours");
+
+                                            JSONObject chNumber3 = new JSONObject();
+                                            chNumber3.put("Number","2022");
+                                            chNumber3.put("Statut","Disponible");
+
+                                            JSONArray chNumbers = new JSONArray();
+                                            chNumbers.put(chNumber1);
                                             chNumbers.put(chNumber2);
                                             chNumbers.put(chNumber3);
-                                            ca.insertChequeNumbers(chNumbers);
+
+                                            if(ca.insertChequeNumbers(chNumbers)== true){
+                                                Log.e("insert cheque numbers:", "Insert successful");
+                                            }else{
+                                                Log.e("insert cheque numbers:", "failed to insert data");
+                                            }
 
                                         } else {
                                             ShowEnrolmentOfficerDialog();

@@ -4952,6 +4952,7 @@ public class ClientAndroidInterface {
             insertRelations((JSONArray) masterData.get("relations"));
             insertPhoneDefaults((JSONArray) masterData.get("phoneDefaults"));
             insertGenders((JSONArray) masterData.get("genders"));
+            insertChequeNumbers((JSONArray) masterData.get("chequeNumbers"));
         } catch (JSONException e) {
             e.printStackTrace();
             throw new UserException(mContext.getResources().getString(R.string.DownloadMasterDataFailed));
@@ -5069,13 +5070,13 @@ public class ClientAndroidInterface {
     //Joseph : insert  list of cheque number to database
     public boolean insertChequeNumbers(JSONArray jsonArray) throws JSONException {
         String[] Columns = getColumnNames(jsonArray);
-        sqlHandler.insertData("tblChequeNumbers", Columns, jsonArray.toString(), "CREATE TABLE tblChequeNumbers (Number TEXT, Statut TEXT);");
+        sqlHandler.insertData("tblChequeNumbers", Columns, jsonArray.toString(), "DELETE FROM tblChequeNumbers;");
         return true;
     }
 
-    public boolean insertGenders(JSONArray jsonArray) throws JSONException {
+    private boolean insertGenders(JSONArray jsonArray) throws JSONException {
         String[] Columns = getColumnNames(jsonArray);
-        sqlHandler.insertData("tblGender", Columns, jsonArray.toString(), "CREATE TABLE tblGender (Code TEXT, Gender TEXT, AltLanguage TEXT, SortOrder NUMERIC);");
+        sqlHandler.insertData("tblGender", Columns, jsonArray.toString(), "DELETE FROM tblGender;");
         return true;
     }
 
