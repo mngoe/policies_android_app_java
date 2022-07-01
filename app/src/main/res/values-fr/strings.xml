@@ -130,7 +130,7 @@
     <string name="Scan">Scanner</string>
     <string name="InsureeName">Nom de l\'assuré</string>
     <string name="ReadOnly">La carte SD est en mode lecture seule. Veuillez régler le mode de lecture/écriture et redémarrer l\'application.</string>
-    <string name="NoSDCard">openIMIS a besoin d\'une carte mémoire externe pour fonctionner. Veuillez insérer la carte mémoire et redémarrer l\'application.</string>
+    <string name="NoSDCard">Cheque Sante a besoin d\'une carte mémoire externe pour fonctionner. Veuillez insérer la carte mémoire et redémarrer l\'application.</string>
     <string name="ForceClose">Fermeture forcée</string>
     <string name="MissingInsuranceNumber">Veuillez entrer le numéro d\'assurance</string>
     <string name="InvalidInsuranceNumber">Invalid Insurance number</string>
@@ -224,7 +224,7 @@
     <string name="AddEditPolicy">Ajouter/Modifier le contrat</string>
     <string name="Premiums">Contributions</string>
     <string name="AddEditPremium">Ajouter/Modifier la contribution</string>
-    <string name="QuitAppQuestion">Voulez-vous quitter openIMIS ?</string>
+    <string name="QuitAppQuestion">Voulez-vous quitter Cheque Sante ?</string>
     <string name="UploadFailureReport">Téléverser le rapport</string>
     <string name="Go">OK</string>
     <string name="Insuree">Assuré</string>

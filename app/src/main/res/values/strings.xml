@@ -130,7 +130,7 @@
     <string name="Scan">Scan</string>
     <string name="InsureeName">Insuree Name</string>
     <string name="ReadOnly">SD Card is set to readonly mode. Please set the mode to read/write and restart the application.</string>
-    <string name="NoSDCard">openIMIS Policies needs external memory card to run. Please insert memory card and restart the application.</string>
+    <string name="NoSDCard">Cheque Sante needs external memory card to run. Please insert memory card and restart the application.</string>
     <string name="ForceClose">Force Close</string>
     <string name="MissingInsuranceNumber">Please enter the Insuree number</string>
     <string name="InvalidInsuranceNumber">Invalid Insuree number</string>
@@ -224,7 +224,7 @@
     <string name="AddEditPolicy">Add/Edit Policy</string>
     <string name="Premiums">Contributions</string>
     <string name="AddEditPremium">Add/Edit Contribution</string>
-    <string name="QuitAppQuestion">Do you want to quit openIMIS Policies?</string>
+    <string name="QuitAppQuestion">Do you want to quit Cheque Sante?</string>
     <string name="UploadFailureReport">Upload report</string>
     <string name="Go">Go</string>
     <string name="Insuree">Insuree</string>
@@ -273,7 +273,7 @@
     <string name="Confirm">Confirm</string>
     <string name="Logout">Logout</string>
     <string name="FamilyExists">Family already exists in phone</string>
-    <string name="ContentTitle">New release of openIMIS Policies is now available.</string>
+    <string name="ContentTitle">New release of Cheque Sante is now available.</string>
     <string name="ContentText">Click here to download.</string>
     <string name="saving">Saving…</string>
     <string name="Interuption">Process has been interrupted. Please check your internet connection.</string>

@@ -224,7 +224,7 @@
     <string name="AddEditPolicy">Add/Edit Policy</string>
     <string name="Premiums">Contributions</string>
     <string name="AddEditPremium">Add/Edit Contribution</string>
-    <string name="QuitAppQuestion">Do you want to quit BEPHA Policies?</string>
+    <string name="QuitAppQuestion">Do you want to quit Cheque Sante?</string>
     <string name="UploadFailureReport">Upload report</string>
     <string name="Go">Go</string>
     <string name="Insuree">Adherent</string>

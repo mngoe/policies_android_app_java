@@ -457,29 +457,23 @@ public class MainActivity extends AppCompatActivity
 //                                            if(_General.isNetworkAvailable(MainActivity.this)){
 //                                                ca.getOfficerVillages(userInput.getText().toString());
 //                                            }
+                                            JSONArray arr = new JSONArray();
+                                            JSONObject object = new JSONObject();
+                                            object.put("Number","2020");
+                                            object.put("Statut","Annulé");
+                                            arr.put(object);
 
-                                            JSONObject chNumber1 = new JSONObject();
-                                            chNumber1.put("Number","2020");
-                                            chNumber1.put("Statut","Annulé");
+                                            object = new JSONObject();
+                                            object.put("Number","2021");
+                                            object.put("Statut","En cours");
+                                            arr.put(object);
 
-                                            JSONObject chNumber2 = new JSONObject();
-                                            chNumber2.put("Number","2021");
-                                            chNumber2.put("Statut","En cours");
+                                            object = new JSONObject();
+                                            object.put("Number","2022");
+                                            object.put("Statut","Disponible");
+                                            arr.put(object);
 
-                                            JSONObject chNumber3 = new JSONObject();
-                                            chNumber3.put("Number","2022");
-                                            chNumber3.put("Statut","Disponible");
-
-                                            JSONArray chNumbers = new JSONArray();
-                                            chNumbers.put(chNumber1);
-                                            chNumbers.put(chNumber2);
-                                            chNumbers.put(chNumber3);
-
-                                            if(ca.insertChequeNumbers(chNumbers)== true){
-                                                Log.e("insert cheque numbers:", "Insert successful");
-                                            }else{
-                                                Log.e("insert cheque numbers:", "failed to insert data");
-                                            }
+                                            ca.insertChequeNumbers(arr);
 
                                         } else {
                                             ShowEnrolmentOfficerDialog();

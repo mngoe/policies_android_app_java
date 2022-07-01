@@ -469,6 +469,7 @@ public class SQLHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + tblRecordedPolicies);
         db.execSQL("DROP TABLE IF EXISTS " + tblRelations);
         db.execSQL("DROP TABLE IF EXISTS " + tblRenewals);
+        db.execSQL("DROP TABLE IF EXISTS " + tblChequeNumbers);
         if (oldVersion < 2) {
             String sql = "ALTER TABLE tblRenewals ADD COLUMN LocationId INTEGER;";
             db.execSQL(sql);
