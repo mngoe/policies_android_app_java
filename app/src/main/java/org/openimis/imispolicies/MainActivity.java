@@ -465,7 +465,7 @@ public class MainActivity extends AppCompatActivity
 
                                             object = new JSONObject();
                                             object.put("chequeImportLineCode","2021");
-                                            object.put("chequeImportLineStatus","En cours");
+                                            object.put("chequeImportLineStatus","Non disponible");
                                             arr.put(object);
 
                                             object = new JSONObject();
@@ -499,7 +499,7 @@ public class MainActivity extends AppCompatActivity
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
-                                //finish();
+                                finish();
                             }
                         });
 
@@ -742,6 +742,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_sync) {
             wv.loadUrl("file:///android_asset/pages/Sync.html");
+            Log.e("cheque numbers",ca.getChequeNumbers());
         } else if (id == R.id.nav_about) {
             wv.loadUrl("file:///android_asset/pages/About.html");
         } else if (id == R.id.nav_settings) {

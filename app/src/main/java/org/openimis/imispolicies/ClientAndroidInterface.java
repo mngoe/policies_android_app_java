@@ -333,11 +333,11 @@ public class ClientAndroidInterface {
             return false;
         }
 
-        if(getChequeNumberStatut(InsuranceNumber).equals("Used")){
+        if(getChequeNumberStatut(InsuranceNumber).equals("Non disponible")){
             ShowDialog(mContext.getResources().getString(R.string.UsedChequeNumber));
             return false;
         }
-        if(getChequeNumberStatut(InsuranceNumber).equals("Cancel")){
+        if(getChequeNumberStatut(InsuranceNumber).equals("Annulé")){
             ShowDialog(mContext.getResources().getString(R.string.AbortedChequeNumber));
             return false;
         }
@@ -4818,19 +4818,19 @@ public class ClientAndroidInterface {
 
         //joseph
         String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyVVVJRCI6IjRhMWZiYjBlLWFhMzctNGRkYS04OTE0LTk3YzQ3YTViNzY2NSIsImV4cCI6MTY1NzAxNTcxNCwiaXNzIjoiaHR0cDovL29wZW5pbWlzLm9yZyIsImF1ZCI6Imh0dHA6Ly9vcGVuaW1pcy5vcmcifQ.z8H_pflIc73W8-wu1WsaHybHSQXXUkBQ7S9bMAXMdT0";
-        String CD = rest.getListChequeFromRestApi("GetListChequeItems",token);
+        //String CD = rest.getListChequeFromRestApi("GetListChequeItems",token);
 
-        JSONArray chequeData = new JSONArray(CD);
+        //JSONArray chequeData = new JSONArray(CD);
         JSONObject masterData = new JSONObject(MD);
 
         if (masterData.length() == 0)
             throw new UserException(mContext.getResources().getString(R.string.DownloadMasterDataFailed));
 
-        if (chequeData.length() == 0)
-            throw new UserException(mContext.getResources().getString(R.string.DownladChequeDataFail));
+        //if (chequeData.length() == 0)
+        //    throw new UserException(mContext.getResources().getString(R.string.DownladChequeDataFail));
 
         processNewFormat(masterData);
-        processNewListCheque(chequeData);
+        //processNewListCheque(chequeData);
     }
 
     private void processOldFormat(JSONArray masterData) throws UserException {
@@ -6450,7 +6450,7 @@ public class ClientAndroidInterface {
     public void updateChequeNumberStatut(String Code){
         try {
             ContentValues cv = new ContentValues();
-            cv.put("chequeImportLineStatus", "En cours");
+            cv.put("chequeImportLineStatus", "Non disponible");
             sqlHandler.updateData("tblChequeNumbers", cv,"chequeImportLineCode=?", new String[]{Code});
         } catch (Exception e) {
             e.printStackTrace();
