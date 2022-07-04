@@ -181,8 +181,8 @@ public class SQLHandler extends SQLiteOpenHelper {
             //Joseph
             sqLiteDatabase.execSQL(
                     "CREATE TABLE " + tblChequeNumbers + "(" +
-                            "Number TEXT," +
-                            "Statut TEXT" + ")"
+                            "chequeImportLineCode TEXT," +
+                            "chequeImportLineStatus TEXT" + ")"
             );
             sqLiteDatabase.execSQL(
                     "CREATE TABLE 'tblHF' (" +

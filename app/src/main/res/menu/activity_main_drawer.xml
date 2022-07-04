@@ -28,10 +28,6 @@
         android:icon="@android:drawable/ic_menu_send"
         android:title="@string/Payment"
         android:visible="false" />
-    <item
-        android:id="@+id/nav_renewal"
-        android:icon="@drawable/ic_renew"
-        android:title="@string/Renewal" />
 
     <item
         android:id="@+id/nav_feedback"

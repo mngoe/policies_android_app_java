@@ -438,4 +438,5 @@
     <string name="ConfirmControlNumber">Control number \"%1$s\" is not present in phone memory. Please confirm that this control number is correct.</string>
     <string name="UsedChequeNumber">This cheque number already used</string>
     <string name="AbortedChequeNumber">This cheque number was aborted</string>
+    <string name="DownladChequeDataFail">Could not download cheque numbers data</string>
 </resources>

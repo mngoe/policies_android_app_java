@@ -459,18 +459,18 @@ public class MainActivity extends AppCompatActivity
 //                                            }
                                             JSONArray arr = new JSONArray();
                                             JSONObject object = new JSONObject();
-                                            object.put("Number","2020");
-                                            object.put("Statut","Annulé");
+                                            object.put("chequeImportLineCode","2020");
+                                            object.put("chequeImportLineStatus","Annulé");
                                             arr.put(object);
 
                                             object = new JSONObject();
-                                            object.put("Number","2021");
-                                            object.put("Statut","En cours");
+                                            object.put("chequeImportLineCode","2021");
+                                            object.put("chequeImportLineStatus","En cours");
                                             arr.put(object);
 
                                             object = new JSONObject();
-                                            object.put("Number","2022");
-                                            object.put("Statut","Disponible");
+                                            object.put("chequeImportLineCode","2022");
+                                            object.put("chequeImportLineStatus","Disponible");
                                             arr.put(object);
 
                                             ca.insertChequeNumbers(arr);
@@ -716,6 +716,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_enrolment) {
             wv.loadUrl("file:///android_asset/pages/Enrollment.html");
+            Log.e("list of cheque", ca.getChequeNumbers());
         } else if (id == R.id.nav_modify_family) {
             global = (Global) getApplicationContext();
             if (global.isLoggedIn()) {
@@ -724,11 +725,11 @@ public class MainActivity extends AppCompatActivity
                 wv.loadUrl("file:///android_asset/pages/Login.html?s=1");
             }
 
-        } else if (id == R.id.nav_renewal) {
+        } /*else if (id == R.id.nav_renewal) {
             Intent i = new Intent(this, RenewList.class);
             startActivity(i);
 
-        } else if (id == R.id.nav_reports) {
+        }*/ else if (id == R.id.nav_reports) {
             Global global = (Global) getApplicationContext();
             if (global.isLoggedIn()) {
                 Intent i = new Intent(this, Reports.class);

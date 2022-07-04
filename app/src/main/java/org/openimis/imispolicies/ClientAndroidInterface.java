@@ -333,11 +333,11 @@ public class ClientAndroidInterface {
             return false;
         }
 
-        if(getChequeNumberStatut(InsuranceNumber).equals("En cours")){
+        if(getChequeNumberStatut(InsuranceNumber).equals("Used")){
             ShowDialog(mContext.getResources().getString(R.string.UsedChequeNumber));
             return false;
         }
-        if(getChequeNumberStatut(InsuranceNumber).equals("Annulé")){
+        if(getChequeNumberStatut(InsuranceNumber).equals("Cancel")){
             ShowDialog(mContext.getResources().getString(R.string.AbortedChequeNumber));
             return false;
         }
@@ -4816,12 +4816,21 @@ public class ClientAndroidInterface {
         ToRestApi rest = new ToRestApi();
         String MD = rest.getObjectFromRestApi("master");
 
+        //joseph
+        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyVVVJRCI6IjRhMWZiYjBlLWFhMzctNGRkYS04OTE0LTk3YzQ3YTViNzY2NSIsImV4cCI6MTY1NzAxNTcxNCwiaXNzIjoiaHR0cDovL29wZW5pbWlzLm9yZyIsImF1ZCI6Imh0dHA6Ly9vcGVuaW1pcy5vcmcifQ.z8H_pflIc73W8-wu1WsaHybHSQXXUkBQ7S9bMAXMdT0";
+        String CD = rest.getListChequeFromRestApi("GetListChequeItems",token);
+
+        JSONArray chequeData = new JSONArray(CD);
         JSONObject masterData = new JSONObject(MD);
 
         if (masterData.length() == 0)
             throw new UserException(mContext.getResources().getString(R.string.DownloadMasterDataFailed));
 
+        if (chequeData.length() == 0)
+            throw new UserException(mContext.getResources().getString(R.string.DownladChequeDataFail));
+
         processNewFormat(masterData);
+        processNewListCheque(chequeData);
     }
 
     private void processOldFormat(JSONArray masterData) throws UserException {
@@ -4955,10 +4964,18 @@ public class ClientAndroidInterface {
             insertRelations((JSONArray) masterData.get("relations"));
             insertPhoneDefaults((JSONArray) masterData.get("phoneDefaults"));
             insertGenders((JSONArray) masterData.get("genders"));
-            insertChequeNumbers((JSONArray) masterData.get("chequeNumbers"));
         } catch (JSONException e) {
             e.printStackTrace();
             throw new UserException(mContext.getResources().getString(R.string.DownloadMasterDataFailed));
+        }
+    }
+
+    private void processNewListCheque(JSONArray chequeData) throws UserException{
+        try{
+            insertChequeNumbers(chequeData);
+        }catch (JSONException e) {
+            e.printStackTrace();
+            throw new UserException(mContext.getResources().getString(R.string.DownladChequeDataFail));
         }
     }
 
@@ -5072,7 +5089,7 @@ public class ClientAndroidInterface {
 
     //Joseph : insert  list of cheque number to database
     public boolean insertChequeNumbers(JSONArray jsonArray) throws JSONException {
-        String[] Columns = getColumnNames(jsonArray);
+        String[] Columns = {"chequeImportLineCode","chequeImportLineStatus"};
         sqlHandler.insertData("tblChequeNumbers", Columns, jsonArray.toString(), "DELETE FROM tblChequeNumbers;");
         return true;
     }
@@ -6414,12 +6431,12 @@ public class ClientAndroidInterface {
     public String getChequeNumberStatut(String numero) {
         String statut = "";
         try {
-            String query = "SELECT Statut FROM tblChequeNumbers WHERE Number = " + numero;
+            String query = "SELECT chequeImportLineStatus FROM tblChequeNumbers WHERE chequeImportLineCode = " + numero;
             JSONArray jsonArray = sqlHandler.getResult(query, null);
             // looping through all rows
             if (jsonArray.length() != 0) {
                 JSONObject object = jsonArray.getJSONObject(0);
-                statut = object.getString("Statut");
+                statut = object.getString("chequeImportLineStatus");
             }
         } catch (Exception e) {
             return statut;
@@ -6433,8 +6450,8 @@ public class ClientAndroidInterface {
     public void updateChequeNumberStatut(String Code){
         try {
             ContentValues cv = new ContentValues();
-            cv.put("Statut", "En cours");
-            sqlHandler.updateData("tblChequeNumbers", cv,"Number=?", new String[]{Code});
+            cv.put("chequeImportLineStatus", "En cours");
+            sqlHandler.updateData("tblChequeNumbers", cv,"chequeImportLineCode=?", new String[]{Code});
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -6443,8 +6460,8 @@ public class ClientAndroidInterface {
     public void insertCheque(String numero,String statut){
         ContentValues cv = new ContentValues();
         try{
-            cv.put("Number",numero);
-            cv.put("Statut",statut);
+            cv.put("chequeImportLineCode",numero);
+            cv.put("chequeImportLineStatus",statut);
             sqlHandler.insertData("tblChequeNumbers",cv);
         }catch (Exception e){
             e.printStackTrace();
@@ -6454,7 +6471,7 @@ public class ClientAndroidInterface {
     //get list of cheque numbers
     public String getChequeNumbers() {
         global = (Global) mContext.getApplicationContext();
-        String Query = "SELECT Number,Statut FROM tblChequeNumbers";
+        String Query = "SELECT chequeImportLineCode,chequeImportLineStatus FROM tblChequeNumbers";
         JSONArray chequeNumbers = sqlHandler.getResult(Query, null);
 
         return chequeNumbers.toString();

@@ -438,4 +438,5 @@
     <string name="ConfirmControlNumber">Le numéro de contrôle \"%1$s\" n\'est pas présent dans la mémoire du téléphone. Veuillez confirmer que ce numéro est correct.</string>
     <string name="UsedChequeNumber">Numéro de chèque déjà utilisé</string>
     <string name="AbortedChequeNumber">Numéro de chèque annulé</string>
+    <string name="DownladChequeDataFail">Impossible de télécharger la liste des numéros de chèque</string>
 </resources>

@@ -195,4 +195,32 @@ public class ToRestApi {
         }
         return "";
     }
+
+    private HttpResponse getListChequeNumbers(String function, String token){
+
+        String url = "https://12be-41-92-186-137.eu.ngrok.io/" + FUNCTION_PREFIX;
+
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpGet httpGet = new HttpGet(url + function);
+        httpGet.setHeader(Headers.CONTENT_TYPE, MimeTypes.APPLICATION_JSON);
+        httpGet.setHeader(Headers.ACCEPT, MimeTypes.APPLICATION_JSON);
+        httpGet.setHeader(Headers.AUTHORIZATION, token);
+        httpGet.setHeader(Headers.API_VERSION, String.valueOf(2));
+
+        try {
+            HttpResponse response = httpClient.execute(httpGet);
+
+            int responseCode = response.getStatusLine().getStatusCode();
+            Log.i("HTTP_GET", url + function + " - " + responseCode);
+            return response;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    public String getListChequeFromRestApi(final String function, final String token){
+        return getContent(getListChequeNumbers(function,token));
+    }
 }
