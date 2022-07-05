@@ -36,7 +36,7 @@
     <string name="SelectFamilyType">Select Group type</string>
     <string name="Ok">OK</string>
     <string name="FieldRequired">Please verify all the required fields marked in red border</string>
-    <string name="InsuranceNumber">Insuree number</string>
+    <string name="InsuranceNumber">Cheque number</string>
     <string name="OtherNames">Other Names</string>
     <string name="LastName">Last Name</string>
     <string name="BirthDate">Birth Date</string>

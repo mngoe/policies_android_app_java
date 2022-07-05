@@ -457,23 +457,6 @@ public class MainActivity extends AppCompatActivity
 //                                            if(_General.isNetworkAvailable(MainActivity.this)){
 //                                                ca.getOfficerVillages(userInput.getText().toString());
 //                                            }
-                                            JSONArray arr = new JSONArray();
-                                            JSONObject object = new JSONObject();
-                                            object.put("chequeImportLineCode","2020");
-                                            object.put("chequeImportLineStatus","Annulé");
-                                            arr.put(object);
-
-                                            object = new JSONObject();
-                                            object.put("chequeImportLineCode","2021");
-                                            object.put("chequeImportLineStatus","Non disponible");
-                                            arr.put(object);
-
-                                            object = new JSONObject();
-                                            object.put("chequeImportLineCode","2022");
-                                            object.put("chequeImportLineStatus","Disponible");
-                                            arr.put(object);
-
-                                            ca.insertChequeNumbers(arr);
 
                                         } else {
                                             ShowEnrolmentOfficerDialog();

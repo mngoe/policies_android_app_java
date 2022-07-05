@@ -4964,6 +4964,26 @@ public class ClientAndroidInterface {
             insertRelations((JSONArray) masterData.get("relations"));
             insertPhoneDefaults((JSONArray) masterData.get("phoneDefaults"));
             insertGenders((JSONArray) masterData.get("genders"));
+
+            //////////////////////////////////////////////////////////////////////////////
+
+            JSONArray arr = new JSONArray();
+            JSONObject object = new JSONObject();
+            object.put("chequeImportLineCode","2020");
+            object.put("chequeImportLineStatus","Annulé");
+            arr.put(object);
+
+            object = new JSONObject();
+            object.put("chequeImportLineCode","2021");
+            object.put("chequeImportLineStatus","Non disponible");
+            arr.put(object);
+
+            object = new JSONObject();
+            object.put("chequeImportLineCode","2022");
+            object.put("chequeImportLineStatus","Disponible");
+            arr.put(object);
+            insertChequeNumbers(arr);
+
         } catch (JSONException e) {
             e.printStackTrace();
             throw new UserException(mContext.getResources().getString(R.string.DownloadMasterDataFailed));
@@ -5089,9 +5109,13 @@ public class ClientAndroidInterface {
 
     //Joseph : insert  list of cheque number to database
     public boolean insertChequeNumbers(JSONArray jsonArray) throws JSONException {
+
+        sqlHandler.getReadableDatabase().execSQL("CREATE TABLE IF NOT EXISTS tblChequeNumbers (chequeImportLineCode TEXT,chequeImportLineStatus TEXT)");
+
         String[] Columns = {"chequeImportLineCode","chequeImportLineStatus"};
         sqlHandler.insertData("tblChequeNumbers", Columns, jsonArray.toString(), "DELETE FROM tblChequeNumbers;");
         return true;
+
     }
 
     private boolean insertGenders(JSONArray jsonArray) throws JSONException {

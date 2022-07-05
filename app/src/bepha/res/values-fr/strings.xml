@@ -36,7 +36,7 @@
     <string name="SelectFamilyType">Sélectionner le type de groupe</string>
     <string name="Ok">OK</string>
     <string name="FieldRequired">Veuillez vérifier tous les champs obligatoires marqués en rouge.</string>
-    <string name="InsuranceNumber">Numéro d\'assurance</string>
+    <string name="InsuranceNumber">Numéro de chèque</string>
     <string name="OtherNames">Autres noms</string>
     <string name="LastName">Nom de famille</string>
     <string name="BirthDate">Date de naissance</string>
@@ -82,7 +82,7 @@
     <string name="ErrorOccurred">Une erreur s\'est produite lors du traitement des données.</string>
     <string name="ErrorInsert">Erreur lors de l\'insertion de données</string>
     <string name="ErrorUpdate">Erreur lors de la mise à jour des données</string>
-    <string name="InsuranceNumberExists">Le membre avec ce numéro d\'assurance existe déjà.</string>
+    <string name="InsuranceNumberExists">Le membre avec ce numéro de chèque existe déjà.</string>
     <string name="Add">Ajouter</string>
     <string name="New">Nouveau</string>
     <string name="SelectOfficer">Sél. agent</string>
@@ -132,12 +132,12 @@
     <string name="ReadOnly">La carte SD est en mode lecture seule. Veuillez régler le mode de lecture/écriture et redémarrer l\'application.</string>
     <string name="NoSDCard">openIMIS a besoin d\'une carte mémoire externe pour fonctionner. Veuillez insérer la carte mémoire et redémarrer l\'application.</string>
     <string name="ForceClose">Fermeture forcée</string>
-    <string name="MissingInsuranceNumber">Veuillez entrer le numéro d\'assurance</string>
-    <string name="InvalidInsuranceNumber">Invalid Insurance number</string>
-    <string name="GetingInsuuree">Obtenir des informations sur l\'assurance...</string>
+    <string name="MissingInsuranceNumber">Veuillez entrer le numéro de chèque</string>
+    <string name="InvalidInsuranceNumber">Invalid Cheque number</string>
+    <string name="GetingInsuuree">Obtenir des informations sur le chèque...</string>
     <string name="GetingSnapShotReport">Obtention d\'un aperçu général...</string>
     <string name="GetingCummulativeReport">Obtention d\'un rapport cumulatif...</string>
-    <string name="RecordNotFound">Le membre avec ce numéro d\'assurance n\'existe pas.</string>
+    <string name="RecordNotFound">Le membre avec ce numéro de chèque n\'existe pas.</string>
     <string name="NoRenewalFound">Aucun renouvellement trouvé</string>
     <string name="NoInternet">Veuillez vérifier votre connexion Internet.</string>
     <string name="FileDoesntBelongHere">!Le process a échoué: mauvais fichier ou mauvais code agent.</string>
@@ -192,7 +192,7 @@
     <string name="FamilyUploaded">Famille envoyée avec succès</string>
     <string name="MissingHOF">Chef de famille manquant</string>
     <string name="DuplicateHOF">Une famille avec ce numéro d\'assurance existe déjà.</string>
-    <string name="DuplicateInsuranceNumber">Numéro d\'assurance en double trouvé</string>
+    <string name="DuplicateInsuranceNumber">Numéro de chèque en double trouvé</string>
     <string name="DuplicateReceiptNumber">Numéro de reçu en double trouvé</string>
     <string name="DownloadMasterDataFailed">Impossible de télécharger les données de base.</string>
     <string name="DownloadingMasterData">Téléchargement des données de base</string>
@@ -263,8 +263,8 @@
     <string name="TotalInsureeOnline">Assurés édités</string>
     <string name="TotalPolicyOnline">Contrats révisés</string>
     <string name="TotalPremiumOnline">Contributions éditées</string>
-    <string name="InsuranceNumberNotFound">Numéro d\'assurance introuvable</string>
-    <string name="InsuranceNumberRequired">Numéro d\'assurance requis</string>
+    <string name="InsuranceNumberNotFound">Numéro de chèque introuvable</string>
+    <string name="InsuranceNumberRequired">Numéro de chèque requis</string>
     <string name="Deleting">Suppression...</string>
     <string name="InternetRequiredOnlineData">Une connexion Internet est nécessaire pour supprimer des données en ligne.</string>
     <string name="LoginToDeleteOnlineData">Veuillez d\'abord vous connecter pour supprimer les données en ligne.</string>
@@ -330,7 +330,7 @@
     <string name="product_code">Code du Paquet de bénéfice:</string>
     <string name="names">Noms:</string>
     <string name="renewal">Renouvellement:</string>
-    <string name="insurance_no">N° d\'assuré</string>
+    <string name="insurance_no">N° de chèque</string>
     <string name="requested_to">Demandé au</string>
     <string name="requested_from">Demandé du</string>
     <string name="uploaded_to">Envoi au</string>
