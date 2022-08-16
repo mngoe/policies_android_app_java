@@ -4244,7 +4244,7 @@ public class ClientAndroidInterface {
 
         JSONObject object = new JSONObject();
         try {
-            object.put("UserName", Username);
+            object.put("Username", Username);
             object.put("Password", Password);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -4816,21 +4816,19 @@ public class ClientAndroidInterface {
         ToRestApi rest = new ToRestApi();
         String MD = rest.getObjectFromRestApi("master");
 
-        //joseph
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyVVVJRCI6IjRhMWZiYjBlLWFhMzctNGRkYS04OTE0LTk3YzQ3YTViNzY2NSIsImV4cCI6MTY1NzAxNTcxNCwiaXNzIjoiaHR0cDovL29wZW5pbWlzLm9yZyIsImF1ZCI6Imh0dHA6Ly9vcGVuaW1pcy5vcmcifQ.z8H_pflIc73W8-wu1WsaHybHSQXXUkBQ7S9bMAXMdT0";
-        //String CD = rest.getListChequeFromRestApi("GetListChequeItems",token);
+        String CD = rest.getListChequeFromRestApi("GetListChequeItems");
 
-        //JSONArray chequeData = new JSONArray(CD);
+        JSONArray chequeData = new JSONArray(CD);
         JSONObject masterData = new JSONObject(MD);
 
         if (masterData.length() == 0)
             throw new UserException(mContext.getResources().getString(R.string.DownloadMasterDataFailed));
 
-        //if (chequeData.length() == 0)
-        //    throw new UserException(mContext.getResources().getString(R.string.DownladChequeDataFail));
+        if (chequeData.length() == 0)
+            throw new UserException(mContext.getResources().getString(R.string.DownladChequeDataFail));
 
         processNewFormat(masterData);
-        //processNewListCheque(chequeData);
+        processNewListCheque(chequeData);
     }
 
     private void processOldFormat(JSONArray masterData) throws UserException {
@@ -4965,25 +4963,6 @@ public class ClientAndroidInterface {
             insertPhoneDefaults((JSONArray) masterData.get("phoneDefaults"));
             insertGenders((JSONArray) masterData.get("genders"));
 
-            //////////////////////////////////////////////////////////////////////////////
-
-            JSONArray arr = new JSONArray();
-            JSONObject object = new JSONObject();
-            object.put("chequeImportLineCode","2020");
-            object.put("chequeImportLineStatus","Annulé");
-            arr.put(object);
-
-            object = new JSONObject();
-            object.put("chequeImportLineCode","2021");
-            object.put("chequeImportLineStatus","Non disponible");
-            arr.put(object);
-
-            object = new JSONObject();
-            object.put("chequeImportLineCode","2022");
-            object.put("chequeImportLineStatus","Disponible");
-            arr.put(object);
-            insertChequeNumbers(arr);
-
         } catch (JSONException e) {
             e.printStackTrace();
             throw new UserException(mContext.getResources().getString(R.string.DownloadMasterDataFailed));
@@ -5110,7 +5089,7 @@ public class ClientAndroidInterface {
     //Joseph : insert  list of cheque number to database
     public boolean insertChequeNumbers(JSONArray jsonArray) throws JSONException {
 
-        sqlHandler.getReadableDatabase().execSQL("CREATE TABLE IF NOT EXISTS tblChequeNumbers (chequeImportLineCode TEXT,chequeImportLineStatus TEXT)");
+        //sqlHandler.getReadableDatabase().execSQL("CREATE TABLE IF NOT EXISTS tblChequeNumbers (chequeImportLineCode TEXT,chequeImportLineStatus TEXT)");
 
         String[] Columns = {"chequeImportLineCode","chequeImportLineStatus"};
         sqlHandler.insertData("tblChequeNumbers", Columns, jsonArray.toString(), "DELETE FROM tblChequeNumbers;");

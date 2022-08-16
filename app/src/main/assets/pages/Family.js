@@ -10,7 +10,7 @@ $(document).ready(function () {
     setControls();
 
     // Display of LanguageOfSMS is same as for ApprovalOfSMS
-    $("#LanguageOfSMS").css("display", $("#ApprovalOfSMS").css("display"));
+    //$("#LanguageOfSMS").css("display", $("#ApprovalOfSMS").css("display"));
 
     $('#ddlRegion').change(function () {
         getDistricts($(this).val());

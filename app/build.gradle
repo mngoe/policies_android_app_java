@@ -118,9 +118,9 @@ android {
         }
         bephaDev {
             applicationId "org.openimis.imispolicies.chequeSante"
-            buildConfigField "String", "API_BASE_URL", '"http://3.238.179.83:89/reposApi/"'
+            buildConfigField "String", "API_BASE_URL", '"https://dev-cs.minsante.cm/rest/"'
             buildConfigField "String", "APP_DIR", '"IMIS-CHEQUESANTE"'
-            resValue "string", "app_name_policies", "Policies Chèque Santé"
+            resValue "string", "app_name_policies", "Policies Cheque Sante"
             dimension = 'std'
         }
         tchadDev {

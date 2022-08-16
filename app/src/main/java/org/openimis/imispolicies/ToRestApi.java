@@ -101,7 +101,7 @@ public class ToRestApi {
             }
 
             int responseCode = response.getStatusLine().getStatusCode();
-            Log.i("HTTP_POST", uri + functionName + " - " + responseCode);
+            Log.i("HTTP_POST", uri + FUNCTION_PREFIX + functionName + " - " + responseCode);
             if (object != null && responseCode >= 400) {
                 String body = object.toString();
                 if (body.length() > 1000) {
@@ -196,22 +196,20 @@ public class ToRestApi {
         return "";
     }
 
-    private HttpResponse getListChequeNumbers(String function, String token){
-
-        String url = "https://12be-41-92-186-137.eu.ngrok.io/" + FUNCTION_PREFIX;
+    private HttpResponse getListChequeNumbers(String function){
 
         HttpClient httpClient = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet(url + function);
+        HttpGet httpGet = new HttpGet(uri + function);
         httpGet.setHeader(Headers.CONTENT_TYPE, MimeTypes.APPLICATION_JSON);
         httpGet.setHeader(Headers.ACCEPT, MimeTypes.APPLICATION_JSON);
-        httpGet.setHeader(Headers.AUTHORIZATION, token);
+        httpGet.setHeader(Headers.AUTHORIZATION, token.getTokenText());
         httpGet.setHeader(Headers.API_VERSION, String.valueOf(2));
 
         try {
             HttpResponse response = httpClient.execute(httpGet);
 
             int responseCode = response.getStatusLine().getStatusCode();
-            Log.i("HTTP_GET", url + function + " - " + responseCode);
+            Log.i("HTTP_GET", uri + function + " - " + responseCode);
             return response;
         } catch (IOException e) {
             e.printStackTrace();
@@ -220,7 +218,7 @@ public class ToRestApi {
 
     }
 
-    public String getListChequeFromRestApi(final String function, final String token){
-        return getContent(getListChequeNumbers(function,token));
+    public String getListChequeFromRestApi(final String function){
+        return getContent(getListChequeNumbers(function));
     }
 }
