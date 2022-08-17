@@ -30,10 +30,6 @@
         android:visible="false" />
 
     <item
-        android:id="@+id/nav_feedback"
-        android:icon="@drawable/ic_feedback"
-        android:title="@string/Feedback" />
-    <item
         android:id="@+id/nav_reports"
         android:icon="@drawable/ic_enroll"
         android:title="@string/Reports" />
