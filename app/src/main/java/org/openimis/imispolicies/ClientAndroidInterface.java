@@ -333,11 +333,11 @@ public class ClientAndroidInterface {
             return false;
         }
 
-        if(getChequeNumberStatut(InsuranceNumber).equals("Non disponible")){
+        if(getChequeNumberStatut(InsuranceNumber).equals("Used")){
             ShowDialog(mContext.getResources().getString(R.string.UsedChequeNumber));
             return false;
         }
-        if(getChequeNumberStatut(InsuranceNumber).equals("Annulé")){
+        if(getChequeNumberStatut(InsuranceNumber).equals("Cancel")){
             ShowDialog(mContext.getResources().getString(R.string.AbortedChequeNumber));
             return false;
         }
@@ -1119,7 +1119,7 @@ public class ClientAndroidInterface {
                         //joseph
                         String chequeNumber = data.get("txtInsuranceNumber");
                         updateChequeNumberStatut(chequeNumber);
-                        Log.e("list of cheque", getChequeNumbers());
+                        //Log.e("list of cheque", getChequeNumbers());
 
                         if (PolicyId > 0 && isHead == 0) {
                             getFamilyPolicies(FamilyId);
@@ -6453,7 +6453,7 @@ public class ClientAndroidInterface {
     public void updateChequeNumberStatut(String Code){
         try {
             ContentValues cv = new ContentValues();
-            cv.put("chequeImportLineStatus", "Non disponible");
+            cv.put("chequeImportLineStatus", "Used");
             sqlHandler.updateData("tblChequeNumbers", cv,"chequeImportLineCode=?", new String[]{Code});
         } catch (Exception e) {
             e.printStackTrace();

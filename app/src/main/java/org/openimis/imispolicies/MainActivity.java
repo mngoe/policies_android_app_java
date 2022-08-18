@@ -722,7 +722,6 @@ public class MainActivity extends AppCompatActivity
             }
         } else if (id == R.id.nav_sync) {
             wv.loadUrl("file:///android_asset/pages/Sync.html");
-            Log.e("cheque numbers",ca.getChequeNumbers());
         } else if (id == R.id.nav_about) {
             wv.loadUrl("file:///android_asset/pages/About.html");
         } else if (id == R.id.nav_settings) {
