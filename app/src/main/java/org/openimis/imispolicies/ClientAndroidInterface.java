@@ -799,9 +799,9 @@ public class ClientAndroidInterface {
                 Poverty = data.get("ddlPovertyStatus").equals("1");
             }
 
-            String FamilyType = null;
-            if (!TextUtils.isEmpty(data.get("ddlGroupType")) && !data.get("ddlGroupType").equals("0"))
-                FamilyType = data.get("ddlGroupType");
+            //String FamilyType = null;
+            //if (!TextUtils.isEmpty(data.get("ddlGroupType")) && !data.get("ddlGroupType").equals("0"))
+                //FamilyType = data.get("ddlGroupType");
 
             String PermanentAddress = data.get("txtPermanentAddress");
 
@@ -813,7 +813,6 @@ public class ClientAndroidInterface {
 
             values.put("LocationId", LocationId);
             values.put("Poverty", Poverty);
-            values.put("FamilyType", FamilyType);
             values.put("FamilyAddress", PermanentAddress);
             values.put("Ethnicity", Ethnicity);
             values.put("ConfirmationNo", ConfirmationNo);
@@ -1335,7 +1334,7 @@ public class ClientAndroidInterface {
 
     @JavascriptInterface
     public String getFamily(int FamilyId) {
-        String sSQL = "SELECT R.LocationId RegionId, D.LocationId DistrictId, W.LocationId WardId, V.LocationId VillageId, F.FamilyId, F.InsureeId, F.Poverty, F.isOffline, F.FamilyType, F.FamilyAddress, F.Ethnicity, F.ConfirmationNo, F.ConfirmationType, isOffline \n" +
+        String sSQL = "SELECT R.LocationId RegionId, D.LocationId DistrictId, W.LocationId WardId, V.LocationId VillageId, F.FamilyId, F.InsureeId, F.Poverty, F.isOffline, F.FamilyAddress, F.Ethnicity, F.ConfirmationNo, F.ConfirmationType, isOffline \n" +
                 "FROM tblFamilies F\n" +
                 "INNER JOIN tblLocations V ON V.LocationId= F.LocationId\n" +
                 "INNER JOIN tblLocations W ON W.LocationId = V.ParentLocationId\n" +
@@ -3066,7 +3065,7 @@ public class ClientAndroidInterface {
                 FamilyId = object != null ? object.getString("FamilyId") : null;
                 IsOffline = Integer.parseInt(object.getString("isOffline"));
 
-                Query = "SELECT F.FamilyId, F.InsureeId, F.LocationId, I.CHFID AS HOFCHFID, NULLIF(F.Poverty,'null') Poverty, NULLIF(F.FamilyType,'null') FamilyType, NULLIF(F.FamilyAddress,'null') FamilyAddress, NULLIF(F.Ethnicity,'null') Ethnicity, NULLIF(F.ConfirmationNo,'null') ConfirmationNo, F.ConfirmationType ConfirmationType,F.isOffline FROM tblFamilies F\n" +
+                Query = "SELECT F.FamilyId, F.InsureeId, F.LocationId, I.CHFID AS HOFCHFID, NULLIF(F.Poverty,'null') Poverty, NULLIF(F.FamilyAddress,'null') FamilyAddress, NULLIF(F.Ethnicity,'null') Ethnicity, NULLIF(F.ConfirmationNo,'null') ConfirmationNo, F.ConfirmationType ConfirmationType,F.isOffline FROM tblFamilies F\n" +
                         "INNER JOIN tblInsuree I ON I.InsureeId = F.InsureeId WHERE F.InsureeId != ''";
                 Query += " AND F.FamilyId = " + FamilyId + "";
                 JSONArray familyArray = sqlHandler.getResult(Query, null);
@@ -3230,7 +3229,7 @@ public class ClientAndroidInterface {
 
             if (IsOffline == 2) IsOffline = 0;
 
-            Query = "SELECT F.FamilyId AS FamilyId, F.InsureeId AS InsureeId, F.LocationId, I.CHFID AS HOFCHFID, NULLIF(F.Poverty,'null') Poverty, NULLIF(F.FamilyType,'null') FamilyType, NULLIF(F.FamilyAddress,'null') FamilyAddress, NULLIF(F.Ethnicity,'null') Ethnicity, NULLIF(F.ConfirmationNo,'null') ConfirmationNo, F.ConfirmationType ConfirmationType,F.isOffline isOffline FROM tblFamilies F\n" +
+            Query = "SELECT F.FamilyId AS FamilyId, F.InsureeId AS InsureeId, F.LocationId, I.CHFID AS HOFCHFID, NULLIF(F.Poverty,'null') Poverty, NULLIF(F.FamilyAddress,'null') FamilyAddress, NULLIF(F.Ethnicity,'null') Ethnicity, NULLIF(F.ConfirmationNo,'null') ConfirmationNo, F.ConfirmationType ConfirmationType,F.isOffline isOffline FROM tblFamilies F\n" +
                     "INNER JOIN tblInsuree I ON I.InsureeId = F.InsureeId WHERE";
 
             if (CallerId != 2) {
@@ -3260,8 +3259,6 @@ public class ClientAndroidInterface {
             JSONObject ob1 = null;
             for (int j = 0; j < familyArray.length(); j++) {
                 ob1 = familyArray.getJSONObject(j);
-                String typeofId = ob1.getString("FamilyType");
-                String poverty = ob1.getString("Poverty");
                 String ConfirmationType = ob1.getString("ConfirmationType");
                 String FId = ob1.getString("FamilyId");
 
@@ -3274,9 +3271,6 @@ public class ClientAndroidInterface {
                     // FId = "-" + FId;
                     ob1.put("FamilyId", FId);
                     ob1.put("isOffline", 0);
-                }
-                if (typeofId.equals("0")) {
-                    ob1.put("FamilyType", "");
                 }
                 if (ConfirmationType.equals("0") || ConfirmationType.equals("null")) {
                     ob1.put("ConfirmationType", "");
@@ -5846,7 +5840,7 @@ public class ClientAndroidInterface {
         String QueryCheck = "SELECT FamilyUUID FROM tblFamilies WHERE FamilyUUID = '" + FamilyUUID + "' AND (isOffline = 0 OR isOffline = 2)";
         JSONArray CheckedArrey = sqlHandler.getResult(QueryCheck, null);
         if (CheckedArrey.length() == 0) {
-            String Columns[] = {"familyId", "familyUUID", "insureeId", "insureeUUID", "locationId", "poverty", "isOffline", "familyType",
+            String Columns[] = {"familyId", "familyUUID", "insureeId", "insureeUUID", "locationId", "poverty", "isOffline",
                     "familyAddress", "ethnicity", "confirmationNo", "confirmationType"};
             sqlHandler.insertData("tblFamilies", Columns, jsonArray.toString(), "");
 
