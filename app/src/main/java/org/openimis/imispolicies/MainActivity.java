@@ -708,11 +708,11 @@ public class MainActivity extends AppCompatActivity
                 wv.loadUrl("file:///android_asset/pages/Login.html?s=1");
             }
 
-        } /*else if (id == R.id.nav_renewal) {
+        } else if (id == R.id.nav_renewal) {
             Intent i = new Intent(this, RenewList.class);
             startActivity(i);
 
-        }*/ else if (id == R.id.nav_reports) {
+        } else if (id == R.id.nav_reports) {
             Global global = (Global) getApplicationContext();
             if (global.isLoggedIn()) {
                 Intent i = new Intent(this, Reports.class);

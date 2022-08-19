@@ -3275,13 +3275,6 @@ public class ClientAndroidInterface {
                 if (ConfirmationType.equals("0") || ConfirmationType.equals("null")) {
                     ob1.put("ConfirmationType", "");
                 }
-                JSONObject familySMS = getFamilySMS(FId);
-                if (familySMS != null) {
-                    // Ensure ApprovalOfSMS Is sent as Boolean
-                    familySMS.put("ApprovalOfSMS",
-                            familySMS.getString("ApprovalOfSMS").equals("1"));
-                }
-                ob1.put("FamilySMS", familySMS);
             }
             newFamilyArray.put(ob1);
             familyArray = newFamilyArray;
