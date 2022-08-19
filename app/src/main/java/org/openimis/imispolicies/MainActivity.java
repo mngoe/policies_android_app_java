@@ -32,9 +32,11 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -257,9 +259,13 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.setCheckedItem(R.id.nav_home);
 
-        if (checkRequirements()) {
-            onAllRequirementsMet();
+        if (TextUtils.isEmpty(global.getOfficerCode())){
+            ShowEnrolmentOfficerDialog();
         }
+
+        /*if (checkRequirements()) {
+            onAllRequirementsMet();
+        }*/
 
         setVisibilityOfPaymentMenu();
     }
@@ -425,11 +431,13 @@ public class MainActivity extends AppCompatActivity
             userInput.setVisibility(View.GONE);
         }
 
+        // set dialog message
+        final String result = "";
+
         int positiveButton, negativeButton;
         if (MasterData > 0) {
             positiveButton = R.string.Ok;
             negativeButton = R.string.Cancel;
-
         } else {
             positiveButton = R.string.Yes;
             negativeButton = R.string.No;
@@ -438,41 +446,52 @@ public class MainActivity extends AppCompatActivity
         alertDialogBuilder
                 .setCancelable(false)
                 .setPositiveButton(getResources().getString(positiveButton),
-                        (dialog, id) -> {
-                            try {
-                                if (MasterData > 0) {
-                                    if (ca.isOfficerCodeValid(userInput.getText().toString())) {
-                                        global.setOfficerCode(userInput.getText().toString());
-                                        OfficerName.setText(global.getOfficerName());
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int i) {
+                                try {
+                                    if (MasterData > 0) {
+                                        if (ca.isOfficerCodeValid(userInput.getText().toString())) {
+                                            global.setOfficerCode(userInput.getText().toString());
+                                            OfficerName.setText(global.getOfficerName());
 //                                            if(_General.isNetworkAvailable(MainActivity.this)){
 //                                                ca.getOfficerVillages(userInput.getText().toString());
 //                                            }
-                                    } else {
-                                        ShowEnrolmentOfficerDialog();
-                                        ca.ShowDialog(getResources().getString(R.string.IncorrectOfficerCode));
-                                    }
-                                } else {
-                                    if (!global.isNetworkAvailable()) {
-                                        PickMasterDataFileDialog();
-                                    } else {
-                                        MasterDataAsync masterDataAsync = new MasterDataAsync();
-                                        masterDataAsync.execute();
 
+                                        } else {
+                                            ShowEnrolmentOfficerDialog();
+                                            ca.ShowDialog(getResources().getString(R.string.IncorrectOfficerCode));
+                                        }
+                                    } else {
+                                        if (!global.isNetworkAvailable()) {
+                                            PickMasterDataFileDialog();
+                                        } else {
+                                            MasterDataAsync masterDataAsync = new MasterDataAsync();
+                                            masterDataAsync.execute();
+
+                                        }
+                                        //ca.downloadMasterData();
+                                        //ShowDialogTex();
                                     }
-                                    //ca.downloadMasterData();
-                                    //ShowDialogTex();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
                         })
                 .setNegativeButton(getResources().getString(negativeButton),
-                        (dialog, id) -> {
-                            dialog.cancel();
-                            finish();
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                finish();
+                            }
                         });
 
+        // create alert dialog
+        alertDialog = alertDialogBuilder.create();
+
+        //show it
         alertDialog = alertDialogBuilder.show();
+
     }
 
     public void ShowMasterDataDialog() {
@@ -493,7 +512,7 @@ public class MainActivity extends AppCompatActivity
                 .setNegativeButton(R.string.ForceClose,
                         (dialog, id) -> {
                             dialog.cancel();
-                            finish();
+                            //finish();
                         })
                 .show();
     }
@@ -680,6 +699,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_enrolment) {
             wv.loadUrl("file:///android_asset/pages/Enrollment.html");
+            Log.e("list of cheque", ca.getChequeNumbers());
         } else if (id == R.id.nav_modify_family) {
             global = (Global) getApplicationContext();
             if (global.isLoggedIn()) {
@@ -688,11 +708,11 @@ public class MainActivity extends AppCompatActivity
                 wv.loadUrl("file:///android_asset/pages/Login.html?s=1");
             }
 
-        } else if (id == R.id.nav_renewal) {
+        } /*else if (id == R.id.nav_renewal) {
             Intent i = new Intent(this, RenewList.class);
             startActivity(i);
 
-        } else if (id == R.id.nav_reports) {
+        }*/ else if (id == R.id.nav_reports) {
             Global global = (Global) getApplicationContext();
             if (global.isLoggedIn()) {
                 Intent i = new Intent(this, Reports.class);
@@ -700,9 +720,6 @@ public class MainActivity extends AppCompatActivity
             } else {
                 wv.loadUrl("file:///android_asset/pages/Login.html?s=4");
             }
-        } else if (id == R.id.nav_feedback) {
-            Intent intent = new Intent(this, FeedbackList.class);
-            startActivity(intent);
         } else if (id == R.id.nav_sync) {
             wv.loadUrl("file:///android_asset/pages/Sync.html");
         } else if (id == R.id.nav_about) {
@@ -782,10 +799,10 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(Void aVoid) {
             pd.dismiss();
 
-            Intent refresh = new Intent(MainActivity.this, MainActivity.class);
+            /*Intent refresh = new Intent(MainActivity.this, MainActivity.class);
             startActivity(refresh);
             finish();
-            setPreferences();
+            setPreferences();*/
         }
     }
 
@@ -929,7 +946,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (ca.isMasterDataAvailable() < 1) {
-            ShowMasterDataDialog();
+            ShowEnrolmentOfficerDialog();
             return false;
         }
 

@@ -69,6 +69,7 @@ public class SQLHandler extends SQLiteOpenHelper {
     public static final String tblControls = "tblControls";
     public static final String tblEducations = "tblEducations";
     public static final String tblFamilies = "tblFamilies";
+    public static final String tblChequeNumbers = "tblChequeNumbers";
     public static final String tblFamilyTypes = "tblFamilyTypes";
     public static final String tblFeedbacks = "tblFeedbacks";
     public static final String tblGender = "tblGender";
@@ -176,6 +177,12 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "Gender TEXT," +
                             "AltLanguage TEXT," +
                             "SortOrder NUMERIC" + ")"
+            );
+            //Joseph
+            sqLiteDatabase.execSQL(
+                    "CREATE TABLE " + tblChequeNumbers + "(" +
+                            "chequeImportLineCode TEXT," +
+                            "chequeImportLineStatus TEXT" + ")"
             );
             sqLiteDatabase.execSQL(
                     "CREATE TABLE 'tblHF' (" +
@@ -441,6 +448,7 @@ public class SQLHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + tblControls);
         db.execSQL("DROP TABLE IF EXISTS " + tblEducations);
         db.execSQL("DROP TABLE IF EXISTS " + tblFamilies);
+        db.execSQL("DROP TABLE IF EXISTS " + tblChequeNumbers);
         db.execSQL("DROP TABLE IF EXISTS " + tblFamilyTypes);
         db.execSQL("DROP TABLE IF EXISTS " + tblFeedbacks);
         db.execSQL("DROP TABLE IF EXISTS " + tblGender);
@@ -461,6 +469,7 @@ public class SQLHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + tblRecordedPolicies);
         db.execSQL("DROP TABLE IF EXISTS " + tblRelations);
         db.execSQL("DROP TABLE IF EXISTS " + tblRenewals);
+        db.execSQL("DROP TABLE IF EXISTS " + tblChequeNumbers);
         if (oldVersion < 2) {
             String sql = "ALTER TABLE tblRenewals ADD COLUMN LocationId INTEGER;";
             db.execSQL(sql);

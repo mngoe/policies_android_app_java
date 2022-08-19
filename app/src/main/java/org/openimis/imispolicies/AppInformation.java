@@ -5,7 +5,6 @@ import java.util.Locale;
 
 import static org.openimis.imispolicies.BuildConfig.API_BASE_URL;
 import static org.openimis.imispolicies.BuildConfig.RAR_PASSWORD;
-import static org.openimis.imispolicies.BuildConfig.API_VERSION;
 import static org.openimis.imispolicies.BuildConfig.SHOW_PAYMENT_MENU;
 import static org.openimis.imispolicies.BuildConfig.SHOW_BULK_CN_MENU;
 
@@ -19,9 +18,6 @@ public final class AppInformation {
             return RAR_PASSWORD;
         }
 
-        public static String getApiVersion() {
-            return API_VERSION;
-        }
 
         private DomainInfo() {
         }

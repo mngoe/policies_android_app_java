@@ -67,9 +67,8 @@ android {
         buildConfigField "boolean", "SHOW_PAYMENT_MENU", 'false'
         buildConfigField "boolean", "SHOW_BULK_CN_MENU", 'false'
         buildConfigField "String", "RAR_PASSWORD", '")(#$1HsD"'
-        buildConfigField "String", "API_VERSION", '"3"'
         buildConfigField "String", "APP_DIR", '"IMIS"'
-        resValue "string", "app_name_policies", "Policies"
+        resValue "string", "app_name_policies", "Cheque Sante"
         resValue "string", "ReleaseDateValue", getDate()
     }
     productFlavors {
@@ -118,10 +117,10 @@ android {
             dimension = 'std'
         }
         bephaDev {
-            applicationId "org.openimis.imispolicies.bepha"
-            buildConfigField "String", "API_BASE_URL", '"http://149.210.235.40/devupgrade/rest/"'
-            buildConfigField "String", "APP_DIR", '"IMIS-BEPHADEV"'
-            resValue "string", "app_name_policies", "Policies BEPHA DEV"
+            applicationId "org.openimis.imispolicies.chequeSante"
+            buildConfigField "String", "API_BASE_URL", '"https://cs.minsante.cm/rest/"'
+            buildConfigField "String", "APP_DIR", '"IMIS-CHEQUESANTE"'
+            resValue "string", "app_name_policies", "Policies Cheque Sante"
             dimension = 'std'
         }
         tchadDev {

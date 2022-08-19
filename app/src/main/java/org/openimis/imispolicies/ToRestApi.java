@@ -51,12 +51,10 @@ public class ToRestApi {
 
     private final Token token;
     private final String uri;
-    private final String apiVersion;
 
     public ToRestApi() {
         token = Global.getGlobal().getJWTToken();
         uri = AppInformation.DomainInfo.getDomain() + FUNCTION_PREFIX;
-        apiVersion = AppInformation.DomainInfo.getApiVersion();
     }
 
     public HttpResponse getFromRestApi(String functionName, boolean addToken) {
@@ -64,7 +62,6 @@ public class ToRestApi {
         HttpGet httpGet = new HttpGet(uri + functionName);
         httpGet.setHeader(Headers.CONTENT_TYPE, MimeTypes.APPLICATION_JSON);
         httpGet.setHeader(Headers.ACCEPT, MimeTypes.APPLICATION_JSON);
-        httpGet.setHeader(Headers.API_VERSION, apiVersion);
         if (addToken) {
             httpGet.setHeader(Headers.AUTHORIZATION, buildTokenHeader());
         }
@@ -89,7 +86,6 @@ public class ToRestApi {
         HttpPost httpPost = new HttpPost(uri + functionName);
         httpPost.setHeader(Headers.CONTENT_TYPE, MimeTypes.APPLICATION_JSON);
         httpPost.setHeader(Headers.ACCEPT, MimeTypes.APPLICATION_JSON);
-        httpPost.setHeader(Headers.API_VERSION, apiVersion);
         if (addToken) {
             httpPost.setHeader(Headers.AUTHORIZATION, buildTokenHeader());
         }
@@ -105,7 +101,7 @@ public class ToRestApi {
             }
 
             int responseCode = response.getStatusLine().getStatusCode();
-            Log.i("HTTP_POST", uri + functionName + " - " + responseCode);
+            Log.i("HTTP_POST", uri + FUNCTION_PREFIX + functionName + " - " + responseCode);
             if (object != null && responseCode >= 400) {
                 String body = object.toString();
                 if (body.length() > 1000) {
@@ -150,7 +146,6 @@ public class ToRestApi {
         httpDelete.setHeader(Headers.CONTENT_TYPE, MimeTypes.APPLICATION_JSON);
         httpDelete.setHeader(Headers.AUTHORIZATION, buildTokenHeader());
         httpDelete.setHeader(Headers.ACCEPT, MimeTypes.APPLICATION_JSON);
-        httpDelete.setHeader(Headers.API_VERSION, apiVersion);
 
         HttpResponse response = null;
         try {
@@ -199,5 +194,31 @@ public class ToRestApi {
             return String.format("bearer %s", tokenText.trim());
         }
         return "";
+    }
+
+    private HttpResponse getListChequeNumbers(String function){
+
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpGet httpGet = new HttpGet(uri + function);
+        httpGet.setHeader(Headers.CONTENT_TYPE, MimeTypes.APPLICATION_JSON);
+        httpGet.setHeader(Headers.ACCEPT, MimeTypes.APPLICATION_JSON);
+        httpGet.setHeader(Headers.AUTHORIZATION, token.getTokenText());
+        httpGet.setHeader(Headers.API_VERSION, String.valueOf(2));
+
+        try {
+            HttpResponse response = httpClient.execute(httpGet);
+
+            int responseCode = response.getStatusLine().getStatusCode();
+            Log.i("HTTP_GET", uri + function + " - " + responseCode);
+            return response;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    public String getListChequeFromRestApi(final String function){
+        return getContent(getListChequeNumbers(function));
     }
 }

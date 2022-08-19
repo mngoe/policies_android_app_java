@@ -332,6 +332,15 @@ public class ClientAndroidInterface {
             ShowDialog(mContext.getResources().getString(validInsuranceNumber));
             return false;
         }
+
+        if(getChequeNumberStatut(InsuranceNumber).equals("Used")){
+            ShowDialog(mContext.getResources().getString(R.string.UsedChequeNumber));
+            return false;
+        }
+        if(getChequeNumberStatut(InsuranceNumber).equals("Cancel")){
+            ShowDialog(mContext.getResources().getString(R.string.AbortedChequeNumber));
+            return false;
+        }
         return true;
     }
 
@@ -556,7 +565,7 @@ public class ClientAndroidInterface {
         return Gender.toString();
     }
 
-/*    @JavascriptInterface
+    /*@JavascriptInterface
     public String getGender() {
         JSONArray Gender = new JSONArray();
 
@@ -763,6 +772,7 @@ public class ClientAndroidInterface {
             global = (Global) mContext.getApplicationContext();
             MaxFamilyId = getNextAvailableFamilyId();
 
+
             if (InsureeData.length() > 0) {
                 int validation = isValidInsureeData(jsonToTable(InsureeData));
                 if (validation > 0) {
@@ -809,6 +819,7 @@ public class ClientAndroidInterface {
                 values.put("isOffline", isOffline);
                 values.put("FamilyId", MaxFamilyId);
                 sqlHandler.insertData("tblFamilies", values);
+
                 FamilyId = MaxFamilyId;
             } else {
                 int Online = 2;
@@ -818,6 +829,7 @@ public class ClientAndroidInterface {
                     values.put("isOffline", 2);
                 }
                 sqlHandler.updateData("tblFamilies", values, "FamilyId = ? AND (isOffline = ? OR isOffline = ?) ", new String[]{String.valueOf(FamilyId), String.valueOf(isOffline), String.valueOf(Online)});
+
                 //Automatic sync
                 /*
                 if (isOffline == 0 && global.getUserId() > 0) {
@@ -938,6 +950,7 @@ public class ClientAndroidInterface {
         String Query = "SELECT InsureeId FROM tblInsuree WHERE Trim(CHFID) = ? AND InsureeId <> ?";
         String args[] = {InsuranceNumber, InsureeId};
         JSONArray returnData = sqlHandler.getResult(Query, args);
+
         if (returnData.length() > 0) {
             Result = R.string.InsuranceNumberExists;
         } else {
@@ -1076,6 +1089,8 @@ public class ClientAndroidInterface {
                         values.put("InsureeId", MaxInsureeId);
 
                         sqlHandler.insertData("tblInsuree", values);
+                        updateChequeNumberStatut(data.get("txtInsuranceNumber"));
+
                         if (PolicyId > 0 && isHead == 0) {
                             getFamilyPolicies(FamilyId);
                         }
@@ -1100,6 +1115,12 @@ public class ClientAndroidInterface {
                         }
                     } else {
                         sqlHandler.insertData("tblInsuree", values);
+
+                        //joseph
+                        String chequeNumber = data.get("txtInsuranceNumber");
+                        updateChequeNumberStatut(chequeNumber);
+                        //Log.e("list of cheque", getChequeNumbers());
+
                         if (PolicyId > 0 && isHead == 0) {
                             getFamilyPolicies(FamilyId);
                         }
@@ -1112,6 +1133,7 @@ public class ClientAndroidInterface {
                 } else {//New Family
                     values.put("InsureeId", MaxInsureeId);
                     sqlHandler.insertData("tblInsuree", values);
+                    updateChequeNumberStatut(data.get("txtInsuranceNumber"));
                     if (PolicyId > 0 && isHead == 0) {
                         getFamilyPolicies(FamilyId);
                     }
@@ -4222,7 +4244,7 @@ public class ClientAndroidInterface {
 
         JSONObject object = new JSONObject();
         try {
-            object.put("UserName", Username);
+            object.put("Username", Username);
             object.put("Password", Password);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -4794,12 +4816,19 @@ public class ClientAndroidInterface {
         ToRestApi rest = new ToRestApi();
         String MD = rest.getObjectFromRestApi("master");
 
+        String CD = rest.getListChequeFromRestApi("GetListChequeItems");
+
+        JSONArray chequeData = new JSONArray(CD);
         JSONObject masterData = new JSONObject(MD);
 
         if (masterData.length() == 0)
             throw new UserException(mContext.getResources().getString(R.string.DownloadMasterDataFailed));
 
+        if (chequeData.length() == 0)
+            throw new UserException(mContext.getResources().getString(R.string.DownladChequeDataFail));
+
         processNewFormat(masterData);
+        processNewListCheque(chequeData);
     }
 
     private void processOldFormat(JSONArray masterData) throws UserException {
@@ -4933,9 +4962,19 @@ public class ClientAndroidInterface {
             insertRelations((JSONArray) masterData.get("relations"));
             insertPhoneDefaults((JSONArray) masterData.get("phoneDefaults"));
             insertGenders((JSONArray) masterData.get("genders"));
+
         } catch (JSONException e) {
             e.printStackTrace();
             throw new UserException(mContext.getResources().getString(R.string.DownloadMasterDataFailed));
+        }
+    }
+
+    private void processNewListCheque(JSONArray chequeData) throws UserException{
+        try{
+            insertChequeNumbers(chequeData);
+        }catch (JSONException e) {
+            e.printStackTrace();
+            throw new UserException(mContext.getResources().getString(R.string.DownladChequeDataFail));
         }
     }
 
@@ -5045,6 +5084,17 @@ public class ClientAndroidInterface {
         String[] Columns = getColumnNames(jsonArray);
         sqlHandler.insertData("tblIMISDefaultsPhone", Columns, jsonArray.toString(), "DELETE FROM tblIMISDefaultsPhone;");
         return true;
+    }
+
+    //Joseph : insert  list of cheque number to database
+    public boolean insertChequeNumbers(JSONArray jsonArray) throws JSONException {
+
+        //sqlHandler.getReadableDatabase().execSQL("CREATE TABLE IF NOT EXISTS tblChequeNumbers (chequeImportLineCode TEXT,chequeImportLineStatus TEXT)");
+
+        String[] Columns = {"chequeImportLineCode","chequeImportLineStatus"};
+        sqlHandler.insertData("tblChequeNumbers", Columns, jsonArray.toString(), "DELETE FROM tblChequeNumbers;");
+        return true;
+
     }
 
     private boolean insertGenders(JSONArray jsonArray) throws JSONException {
@@ -6378,5 +6428,55 @@ public class ClientAndroidInterface {
                     "Couldn't get max id " + idFieldName +
                             " for table " + tableName);
         }
+    }
+
+    //get statut of cheque number
+    public String getChequeNumberStatut(String numero) {
+        String statut = "";
+        try {
+            String query = "SELECT chequeImportLineStatus FROM tblChequeNumbers WHERE chequeImportLineCode = " + numero;
+            JSONArray jsonArray = sqlHandler.getResult(query, null);
+            // looping through all rows
+            if (jsonArray.length() != 0) {
+                JSONObject object = jsonArray.getJSONObject(0);
+                statut = object.getString("chequeImportLineStatus");
+            }
+        } catch (Exception e) {
+            return statut;
+        }
+
+        return statut;
+
+    }
+
+    //modifie le statut d'un numéro de cheque
+    public void updateChequeNumberStatut(String Code){
+        try {
+            ContentValues cv = new ContentValues();
+            cv.put("chequeImportLineStatus", "Used");
+            sqlHandler.updateData("tblChequeNumbers", cv,"chequeImportLineCode=?", new String[]{Code});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void insertCheque(String numero,String statut){
+        ContentValues cv = new ContentValues();
+        try{
+            cv.put("chequeImportLineCode",numero);
+            cv.put("chequeImportLineStatus",statut);
+            sqlHandler.insertData("tblChequeNumbers",cv);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //get list of cheque numbers
+    public String getChequeNumbers() {
+        global = (Global) mContext.getApplicationContext();
+        String Query = "SELECT chequeImportLineCode,chequeImportLineStatus FROM tblChequeNumbers";
+        JSONArray chequeNumbers = sqlHandler.getResult(Query, null);
+
+        return chequeNumbers.toString();
     }
 }

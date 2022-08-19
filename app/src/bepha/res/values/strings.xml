@@ -36,7 +36,7 @@
     <string name="SelectFamilyType">Select Group type</string>
     <string name="Ok">OK</string>
     <string name="FieldRequired">Please verify all the required fields marked in red border</string>
-    <string name="InsuranceNumber">Adherent number</string>
+    <string name="InsuranceNumber">Cheque number</string>
     <string name="OtherNames">Other Names</string>
     <string name="LastName">Last Name</string>
     <string name="BirthDate">Birth Date</string>
@@ -224,7 +224,7 @@
     <string name="AddEditPolicy">Add/Edit Policy</string>
     <string name="Premiums">Contributions</string>
     <string name="AddEditPremium">Add/Edit Contribution</string>
-    <string name="QuitAppQuestion">Do you want to quit BEPHA Policies?</string>
+    <string name="QuitAppQuestion">Do you want to quit Cheque Sante?</string>
     <string name="UploadFailureReport">Upload report</string>
     <string name="Go">Go</string>
     <string name="Insuree">Adherent</string>
@@ -263,8 +263,8 @@
     <string name="TotalInsureeOnline">Edited Adherents</string>
     <string name="TotalPolicyOnline">Edited Policies</string>
     <string name="TotalPremiumOnline">Edited Contributions</string>
-    <string name="InsuranceNumberNotFound">Adherent number not found</string>
-    <string name="InsuranceNumberRequired">Adherent number required</string>
+    <string name="InsuranceNumberNotFound">Cheque number not found</string>
+    <string name="InsuranceNumberRequired">Cheque number required</string>
     <string name="Deleting">Deleting…</string>
     <string name="InternetRequiredOnlineData">Internet connection is required to delete online data.</string>
     <string name="LoginToDeleteOnlineData">Please login first, to delete online data</string>
@@ -330,7 +330,7 @@
     <string name="product_code">Product Code:</string>
     <string name="names">Names:</string>
     <string name="renewal">Renewal:</string>
-    <string name="insurance_no">ID adherent</string>
+    <string name="insurance_no">ID cheque</string>
     <string name="requested_to">Requested To</string>
     <string name="requested_from">Requested From</string>
     <string name="uploaded_to">Uploaded To</string>
