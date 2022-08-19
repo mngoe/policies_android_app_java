@@ -460,5 +460,8 @@
   <string name="WithoutPremium"></string>
   <string name="HttpResponse"></string>
   <string name="EnquireNoPolicies"></string>
-    <string name="NotExistChequeNumber">Numéro de cheque inexistant</string>
+  <string name="UsedChequeNumber">Ce cheque a deja ete utilisé</string>
+  <string name="AbortedChequeNumber">Ce cheque est annulé</string>
+  <string name="DownladChequeDataFail">Impossible de telecharger les données de cheques</string>
+  <string name="NotExistChequeNumber">Numéro de cheque inexistant</string>
 </resources>
