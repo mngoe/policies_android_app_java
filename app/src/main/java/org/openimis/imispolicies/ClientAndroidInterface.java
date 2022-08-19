@@ -341,6 +341,10 @@ public class ClientAndroidInterface {
             ShowDialog(mContext.getResources().getString(R.string.AbortedChequeNumber));
             return false;
         }
+        if(getChequeNumberStatut(InsuranceNumber).equals("")){
+            ShowDialog(mContext.getResources().getString(R.string.NotExistChequeNumber));
+            return false;
+        }
         return true;
     }
 
@@ -872,7 +876,7 @@ public class ClientAndroidInterface {
 
                 sqlHandler.updateData("tblFamilies", cvUpdate, "FamilyId= ?", whereArgs);
             }
-            addOrUpdateFamilySmsFromDll(FamilyId, data);
+            //addOrUpdateFamilySmsFromDll(FamilyId, data);
 
             return FamilyId;
 
@@ -920,16 +924,11 @@ public class ClientAndroidInterface {
 
     private void addOrUpdateFamilySmsFromDll(int familyId, HashMap<String, String> familyFormData)
             throws UserException {
-        Boolean approveSMS = familyFormData.get("ddlApprovalOfSMS").equals("1");
-        String languageOfSMS =
-                familyFormData.get("ddlLanguageOfSMS") == "" ? null : familyFormData.get("ddlLanguageOfSMS");
-        addOrUpdateFamilySms(familyId, approveSMS, languageOfSMS);
+        addOrUpdateFamilySms(familyId);
     }
 
-    public void addOrUpdateFamilySms(int familyId, Boolean approve, String language) throws UserException {
+    public void addOrUpdateFamilySms(int familyId) throws UserException {
         ContentValues familySmsValues = new ContentValues();
-        familySmsValues.put("ApprovalOfSMS", approve);
-        familySmsValues.put("LanguageOfSMS", language);
         familySmsValues.put("FamilyID", familyId);
 
         String query = "SELECT FamilyId FROM tblFamilySMS WHERE FamilyId = ?";
@@ -5089,7 +5088,7 @@ public class ClientAndroidInterface {
     //Joseph : insert  list of cheque number to database
     public boolean insertChequeNumbers(JSONArray jsonArray) throws JSONException {
 
-        //sqlHandler.getReadableDatabase().execSQL("CREATE TABLE IF NOT EXISTS tblChequeNumbers (chequeImportLineCode TEXT,chequeImportLineStatus TEXT)");
+        sqlHandler.getReadableDatabase().execSQL("CREATE TABLE IF NOT EXISTS tblChequeNumbers (chequeImportLineCode TEXT,chequeImportLineStatus TEXT)");
 
         String[] Columns = {"chequeImportLineCode","chequeImportLineStatus"};
         sqlHandler.insertData("tblChequeNumbers", Columns, jsonArray.toString(), "DELETE FROM tblChequeNumbers;");
@@ -5851,7 +5850,7 @@ public class ClientAndroidInterface {
                     "familyAddress", "ethnicity", "confirmationNo", "confirmationType"};
             sqlHandler.insertData("tblFamilies", Columns, jsonArray.toString(), "");
 
-            if (object.has("familySMS")) {
+            /*if (object.has("familySMS")) {
                 JSONObject smsData = object.getJSONObject("familySMS");
                 try {
                     addOrUpdateFamilySms(object.getInt("familyId"),
@@ -5862,7 +5861,7 @@ public class ClientAndroidInterface {
                     e.printStackTrace();
                     Log.w("ModifyFamily", "No familySMS data in family payload");
                 }
-            }
+            }*/
         }
         return true;
     }

@@ -132,8 +132,8 @@
     <string name="ReadOnly">SD Card is set to read only mode. Please set the mode to read/write and restart the application.</string>
     <string name="NoSDCard">BEPHA Policies needs external memory card to run. Please insert memory card and restart the application.</string>
     <string name="ForceClose">Force Close</string>
-    <string name="MissingInsuranceNumber">Please enter the Adherent number</string>
-    <string name="InvalidInsuranceNumber">Invalid Adherent number</string>
+    <string name="MissingInsuranceNumber">Please enter the Cheque number</string>
+    <string name="InvalidInsuranceNumber">Invalid cheque number</string>
     <string name="GetingInsuuree">Getting adherent info…</string>
     <string name="GetingSnapShotReport">Getting Snap Shots Report…</string>
     <string name="GetingCummulativeReport">Getting Cumulative Report…</string>
