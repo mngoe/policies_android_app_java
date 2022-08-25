@@ -3545,14 +3545,6 @@ public class ClientAndroidInterface {
                         // InsureePolicy
                         familyObj.put("insureePolicy", InsureePolicyArray);
 
-                        /*JSONObject familySMS = new JSONObject();
-                        familySMS.put("FamilyID","0");
-                        familySMS.put("ApprovalOfSMS",false);
-                        familySMS.put("LanguageOfSMS","0");
-
-                        ob1.put("FamilySMS", familySMS);*/
-
-
                         familyArr.put(familyObj);
                         resultObj.put("family", familyArr);
 

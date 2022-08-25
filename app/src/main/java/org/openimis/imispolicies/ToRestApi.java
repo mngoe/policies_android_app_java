@@ -102,7 +102,7 @@ public class ToRestApi {
 
             int responseCode = response.getStatusLine().getStatusCode();
             Log.i("HTTP_POST", uri + functionName + " - " + responseCode);
-            if (object != null && responseCode >= 400 || responseCode == 200) {
+            if (object != null && responseCode >= 400) {
                 String body = object.toString();
                 if (body.length() > 10000) {
                     body = body.substring(0,10000);
