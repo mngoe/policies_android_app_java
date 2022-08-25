@@ -341,10 +341,10 @@ public class ClientAndroidInterface {
             ShowDialog(mContext.getResources().getString(R.string.AbortedChequeNumber));
             return false;
         }
-        /*if(getChequeNumberStatut(InsuranceNumber).equals("")){
+        if(getChequeNumberStatut(InsuranceNumber).equals("")){
             ShowDialog(mContext.getResources().getString(R.string.NotExistChequeNumber));
             return false;
-        }*/
+        }
         return true;
     }
 
@@ -875,7 +875,7 @@ public class ClientAndroidInterface {
 
                 sqlHandler.updateData("tblFamilies", cvUpdate, "FamilyId= ?", whereArgs);
             }
-            addOrUpdateFamilySmsFromDll(FamilyId, data);
+            //addOrUpdateFamilySmsFromDll(FamilyId, data);
 
             return FamilyId;
 
@@ -923,16 +923,13 @@ public class ClientAndroidInterface {
 
     private void addOrUpdateFamilySmsFromDll(int familyId, HashMap<String, String> familyFormData)
             throws UserException {
-        Boolean approveSMS = false; /*familyFormData.get("ddlApprovalOfSMS").equals("1");*/
-        String languageOfSMS =
-                familyFormData.get("ddlLanguageOfSMS") == "" ? "l" : familyFormData.get("ddlLanguageOfSMS");
-        addOrUpdateFamilySms(familyId, approveSMS, languageOfSMS);
+        addOrUpdateFamilySms(familyId);
     }
 
-    public void addOrUpdateFamilySms(int familyId,Boolean approve, String language) throws UserException {
+    public void addOrUpdateFamilySms(int familyId) throws UserException {
         ContentValues familySmsValues = new ContentValues();
-        familySmsValues.put("ApprovalOfSMS", approve);
-        familySmsValues.put("LanguageOfSMS", language);
+        //familySmsValues.put("ApprovalOfSMS", approve);
+        //familySmsValues.put("LanguageOfSMS", language);
         familySmsValues.put("FamilyID", familyId);
 
         String query = "SELECT FamilyId FROM tblFamilySMS WHERE FamilyId = ?";
@@ -3242,7 +3239,7 @@ public class ClientAndroidInterface {
 
             if (IsOffline == 2) IsOffline = 0;
 
-            Query = "SELECT F.FamilyId AS FamilyId, F.InsureeId AS InsureeId, F.LocationId, I.CHFID AS HOFCHFID, NULLIF(F.Poverty,'null') Poverty, NULLIF(F.FamilyType,'null') FamilyType, NULLIF(F.FamilyAddress,'null') FamilyAddress, NULLIF(F.Ethnicity,'null') Ethnicity, NULLIF(F.ConfirmationNo,'null') ConfirmationNo, F.ConfirmationType ConfirmationType,F.isOffline isOffline FROM tblFamilies F\n" +
+            Query = "SELECT F.FamilyId AS FamilyId, F.InsureeId AS InsureeId, F.LocationId, I.CHFID AS HOFCHFID, NULLIF(F.Poverty,'null') Poverty, NULLIF(F.FamilyAddress,'null') FamilyAddress, NULLIF(F.Ethnicity,'null') Ethnicity, NULLIF(F.ConfirmationNo,'null') ConfirmationNo, F.ConfirmationType ConfirmationType,F.isOffline isOffline FROM tblFamilies F\n" +
                     "INNER JOIN tblInsuree I ON I.InsureeId = F.InsureeId WHERE";
 
             if (CallerId != 2) {
@@ -3288,13 +3285,6 @@ public class ClientAndroidInterface {
                 if (ConfirmationType.equals("0") || ConfirmationType.equals("null")) {
                     ob1.put("ConfirmationType", "");
                 }
-                JSONObject familySMS = getFamilySMS(FId);
-                if (familySMS != null) {
-                    // Ensure ApprovalOfSMS Is sent as Boolean
-                    familySMS.put("ApprovalOfSMS",
-                            familySMS.getString("ApprovalOfSMS").equals("1"));
-                }
-                ob1.put("FamilySMS", familySMS);
             }
             newFamilyArray.put(ob1);
             familyArray = newFamilyArray;
@@ -3554,6 +3544,13 @@ public class ClientAndroidInterface {
                         }
                         // InsureePolicy
                         familyObj.put("insureePolicy", InsureePolicyArray);
+
+                        /*JSONObject familySMS = new JSONObject();
+                        familySMS.put("FamilyID","0");
+                        familySMS.put("ApprovalOfSMS",false);
+                        familySMS.put("LanguageOfSMS","0");
+
+                        ob1.put("FamilySMS", familySMS);*/
 
 
                         familyArr.put(familyObj);
