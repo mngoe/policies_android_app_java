@@ -86,7 +86,6 @@ public class ToRestApi {
         HttpPost httpPost = new HttpPost(uri + functionName);
         httpPost.setHeader(Headers.CONTENT_TYPE, MimeTypes.APPLICATION_JSON);
         httpPost.setHeader(Headers.ACCEPT, MimeTypes.APPLICATION_JSON);
-        httpPost.setHeader(Headers.API_VERSION, String.valueOf(3));
         if (addToken) {
             httpPost.setHeader(Headers.AUTHORIZATION, buildTokenHeader());
         }
