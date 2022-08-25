@@ -116,8 +116,10 @@ $(document).ready(function () {
                     $("#divProgress").hide();
                     window.open("FamilyAndInsurees.html?f=" + FamilyId, "_self");
                 }
+
             }
-        } else {
+        }else {
+
             $("#divProgress").hide();
             Android.ShowDialog(Android.getString('FieldRequired'));
         }
@@ -153,7 +155,6 @@ $(document).ready(function () {
                 $("#Relationship").hide();
             }
         }
-
 
         var Ins = $('#txtInsuranceNumber').val();
         if (PhotoPath.length == 0) {

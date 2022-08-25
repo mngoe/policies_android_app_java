@@ -30,11 +30,6 @@
         android:visible="false" />
 
     <item
-        android:id="@+id/nav_renewal"
-        android:icon="@drawable/ic_renew"
-        android:title="@string/Renewal" />
-
-    <item
         android:id="@+id/nav_reports"
         android:icon="@drawable/ic_enroll"
         android:title="@string/Reports" />

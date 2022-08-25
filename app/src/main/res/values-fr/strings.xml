@@ -464,4 +464,5 @@
   <string name="AbortedChequeNumber">Ce cheque est annulé</string>
   <string name="DownladChequeDataFail">Impossible de telecharger les données de cheques</string>
   <string name="NotExistChequeNumber">Numéro de cheque inexistant</string>
+    <string name="PhotoRequired">Veuillez ajouter une photo</string>
 </resources>
