@@ -74,51 +74,60 @@ $(document).ready(function () {
             Android.clearInsuranceNo();
             var jsonInsuree = createJSONString();
 
-            if (sessionStorage.getItem("FamilyData") !== null) {
-                var FamilyId = Android.SaveFamily(sessionStorage.getItem("FamilyData"), jsonInsuree);
+            if ($('#hfNewPhotoPath').val() != "" || $('#hfImagePath').val() != "") {
 
-                if (FamilyId > 0) {
-                    sessionStorage.removeItem("FamilyData");
-                    $(this).attr("disabled", "disabled");
+                if (sessionStorage.getItem("FamilyData") !== null) {
+                    var FamilyId = Android.SaveFamily(sessionStorage.getItem("FamilyData"), jsonInsuree);
 
-                    window.open("FamilyAndInsurees.html?f=" + FamilyId, "_self");
+                    if (FamilyId > 0) {
+                        sessionStorage.removeItem("FamilyData");
+                        $(this).attr("disabled", "disabled");
+
+                        window.open("FamilyAndInsurees.html?f=" + FamilyId, "_self");
+
+                    }
+
+                } else {
+                    var FamilyId = parseInt(queryString('f'));
+                    var FamilyPolicy = Android.getFamilyPolicy(FamilyId);
+                    var $Policy = $.parseJSON(FamilyPolicy);
+                    var MemberCount = parseInt($Policy[0]["MemberCount"]);
+                    var Threshold = parseInt($Policy[0]["Threshold"]);
+                    var TotalIns = parseInt($Policy[0]["Ins"]);
+                    var PolicyId = parseInt($Policy[0]["PolicyId"]);
+                    var IsNewIns = parseInt($("#hfInsureeId").val());
+                    var MemberDialog = -1;
+                    var ExceedThreshold = -1;
+
+                    if (PolicyId > 0 && IsNewIns == 0) {
+                        var PolicyStatus = Android.getPolicyStatus(PolicyId);
+                        if (TotalIns >= MemberCount) {
+                            ExceedThreshold = 0;
+                            Android.ShowDialog(Android.getString('ExceedMemberCount'));
+                        } else if (TotalIns >= Threshold) {
+                            ExceedThreshold = 1;
+                        } else if (PolicyStatus == 2) {
+                            ExceedThreshold = 0;
+                        }
+
+                    }
+                    var InsureeId = Android.SaveInsuree(jsonInsuree, FamilyId, 0, parseInt(ExceedThreshold), PolicyId);
+                    if (InsureeId == 7 || InsureeId == 6) {
+                        $("#divProgress").hide();
+                    } else {
+                        $("#divProgress").hide();
+                        window.open("FamilyAndInsurees.html?f=" + FamilyId, "_self");
+                    }
 
                 }
 
             } else {
-                var FamilyId = parseInt(queryString('f'));
-                var FamilyPolicy = Android.getFamilyPolicy(FamilyId);
-                var $Policy = $.parseJSON(FamilyPolicy);
-                var MemberCount = parseInt($Policy[0]["MemberCount"]);
-                var Threshold = parseInt($Policy[0]["Threshold"]);
-                var TotalIns = parseInt($Policy[0]["Ins"]);
-                var PolicyId = parseInt($Policy[0]["PolicyId"]);
-                var IsNewIns = parseInt($("#hfInsureeId").val());
-                var MemberDialog = -1;
-                var ExceedThreshold = -1;
-
-                if (PolicyId > 0 && IsNewIns == 0) {
-                    var PolicyStatus = Android.getPolicyStatus(PolicyId);
-                    if (TotalIns >= MemberCount) {
-                        ExceedThreshold = 0;
-                        Android.ShowDialog(Android.getString('ExceedMemberCount'));
-                    } else if (TotalIns >= Threshold) {
-                        ExceedThreshold = 1;
-                    } else if (PolicyStatus == 2) {
-                        ExceedThreshold = 0;
-                    }
-
-                }
-                var InsureeId = Android.SaveInsuree(jsonInsuree, FamilyId, 0, parseInt(ExceedThreshold), PolicyId);
-                if (InsureeId == 7 || InsureeId == 6) {
-                    $("#divProgress").hide();
-                } else {
-                    $("#divProgress").hide();
-                    window.open("FamilyAndInsurees.html?f=" + FamilyId, "_self");
-                }
-
+                $("#divProgress").hide();
+                Android.ShowDialog(Android.getString('PhotoRequired'));
             }
-        }else {
+
+
+        } else {
 
             $("#divProgress").hide();
             Android.ShowDialog(Android.getString('FieldRequired'));

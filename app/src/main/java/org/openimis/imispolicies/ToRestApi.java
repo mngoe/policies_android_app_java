@@ -86,6 +86,8 @@ public class ToRestApi {
         HttpPost httpPost = new HttpPost(uri + functionName);
         httpPost.setHeader(Headers.CONTENT_TYPE, MimeTypes.APPLICATION_JSON);
         httpPost.setHeader(Headers.ACCEPT, MimeTypes.APPLICATION_JSON);
+        //httpPost.setHeader(Headers.API_VERSION, String.valueOf(3));
+
         if (addToken) {
             httpPost.setHeader(Headers.AUTHORIZATION, buildTokenHeader());
         }
@@ -104,8 +106,8 @@ public class ToRestApi {
             Log.i("HTTP_POST", uri + functionName + " - " + responseCode);
             if (object != null && responseCode >= 400) {
                 String body = object.toString();
-                if (body.length() > 10000) {
-                    body = body.substring(0,10000);
+                if (body.length() > 100000) {
+                    body = body.substring(0,100000);
                 }
                 Log.e("HTTP_POST", "Body: " + body);
             }
