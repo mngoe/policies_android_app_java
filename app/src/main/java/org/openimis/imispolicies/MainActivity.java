@@ -699,7 +699,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_enrolment) {
             wv.loadUrl("file:///android_asset/pages/Enrollment.html");
-            //Log.e("list of cheque", ca.getChequeNumbers());
+            Log.e("list of cheque", ca.getChequeNumbers());
         } else if (id == R.id.nav_modify_family) {
             global = (Global) getApplicationContext();
             if (global.isLoggedIn()) {
