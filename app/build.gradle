@@ -120,7 +120,7 @@ android {
             applicationId "org.openimis.imispolicies.chequeSante"
             buildConfigField "String", "API_BASE_URL", '"https://cs.minsante.cm/rest/"'
             buildConfigField "String", "APP_DIR", '"IMIS-CHEQUESANTE"'
-            resValue "string", "app_name_policies", "Policies Cheque Sante"
+            resValue "string", "app_name_policies", "Enregistrement bénéficiaire CS"
             dimension = 'std'
         }
         tchadDev {
