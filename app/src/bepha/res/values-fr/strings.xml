@@ -463,4 +463,8 @@
   <string name="UsedChequeNumber">Ce chèque a déja été utilisé</string>
   <string name="AbortedChequeNumber">Ce chèque est annulé</string>
   <string name="DownladChequeDataFail">Impossible de télécharger les données de chèques</string>
+  <string name="EnquirePolicyCovered"></string>
+  <string name="EnquirePolicyLabel"></string>
+  <string name="NotExistChequeNumber">Ce numéro de cheque n\'existe pas</string>
+  <string name="PhotoRequired">Veuillez ajouter une photo</string>
 </resources>
