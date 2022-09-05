@@ -8,7 +8,7 @@
   <string name="HeaderTitle">chèques santé openIMIS</string>
   <string name="HeaderEmail">admin@imis.com</string>
   <string name="Home">Accueil</string>
-  <string name="Enrolment">Inscription</string>
+  <string name="Enrolment">Enregistrement</string>
   <string name="Renewal">Renouvellement</string>
   <string name="Feedback">Retour d\'information</string>
   <string name="Sync">Synchroniser</string>
@@ -88,7 +88,7 @@
   <string name="SelectOfficer">Sél. agent</string>
   <string name="SelectProduct">Sél. une Prestation</string>
   <string name="SelectMonth">Sél. Mois</string>
-  <string name="EnrolmentDate">Date d\'Inscription</string>
+  <string name="EnrolmentDate">Date d\'activation</string>
   <string name="Product">Prestation</string>
   <string name="EffectiveDate">Date d\'entrée en vigueur</string>
   <string name="StartDate">Date de début</string>
