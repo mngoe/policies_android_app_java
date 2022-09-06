@@ -467,4 +467,8 @@
   <string name="EnquirePolicyLabel"></string>
   <string name="NotExistChequeNumber">Ce numéro de cheque n\'existe pas</string>
   <string name="PhotoRequired">Veuillez ajouter une photo</string>
+  <string name="NotFound"></string>
+  <string name="Unauthorized"></string>
+  <string name="UnknownError"></string>
+  <string name="Forbidden"></string>
 </resources>
