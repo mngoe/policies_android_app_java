@@ -437,7 +437,7 @@
     <string name="InvalidRenewalFile">Invalid renewal file</string>
     <string name="ConfirmControlNumber">Control number \"%1$s\" is not present in phone memory. Please confirm that this control number is correct.</string>
     <string name="UsedChequeNumber">This cheque number already used</string>
-    <string name="AbortedChequeNumber">This cheque n    umber was aborted</string>
+    <string name="AbortedChequeNumber">This cheque number was aborted</string>
     <string name="NotExistChequeNumber">This cheque number not exist</string>
     <string name="DownladChequeDataFail">Could not download cheque numbers data</string>
     <string name="PhotoRequired">Please add a picture</string>
