@@ -40,115 +40,182 @@ In case of dispute arising out or in relation to the use of the program, it is s
 </div>
 <div>
     <ul class="ulEntry">
-        <li id="Relationship">
+        <li style="display:none;">
             <span strName="Relation">Relation</span>
             <select id="ddlRelationship" dataField="Relationship"></select>
         </li>
-        <li>
-            <input type="hidden" datafield="InsureeId" id="hfInsureeId" value="0"/>
-            <input type="hidden" datafld="isOffline" id="hfIsOffline" value="."/>
-            <input type="hidden" datafield="isHead" id="hfisHead" value="-1"/>
-            <span strName="InsuranceNumber">Insurance Number</span>
-            <div style="display:flex">
-            <input type="text" maxlength="12" id="txtInsuranceNumber" dataField="CHFID" onkeyup="getImage()" min="0" required />
-            <img src="" alt="Scan" id="btnScan" style="width:50px !important"  />
-            </div>
+        <li id="RegionBefore">
+            <span strName="RegionBefore">Region Before</span>
+            <select id="ddlRegionBefore" datafield="BefRegion"></select>
+        </li>
+        <li id="DistrictBefore">
+            <span strName="DistrictBefore">District Before</span>
+            <select id="ddlDistrictBefore" datafield="BefDistrict"></select>
+        </li>
+        <li id="HealthAreaBefore">
+            <span strName="HealthAreaBefore">Health Area Before</span>
+            <select id="ddlHealthAreaBefore" datafield="HealthAreaBefore"></select>
+        </li>
+        <li id="MunicipalityBefore">
+            <span strName="MunicipalityBefore">Municipality Before</span>
+            <select id="ddlMunicipalityBefore" datafield="BefWard"></select>
+        </li>
+        <li id="VillageBefore">
+            <span strName="VillageBefore">Village Before</span>
+            <select id="ddlVillageBefore" datafield="BefVillage"></select>
+        </li>
+
+
+        <li id="FSPRegion">
+            <span strName="FSPRegion"></span>
+            <select id="ddlFSPRegion" datafield="FSPRegion"></select>
+        </li>
+        <li id="FSP">
+            <span strName="FSP">First Service Point</span>
+            <select id="ddlFSP" datafield="HFID"></select>
+        </li>
+        <li id="PermanentAddress">
+            <span strName="PermanentAddress">Permanent Address Details</span>
+            <textarea id="txtPermanentAddress" datafield="NgoAddress"></textarea>
+        </li>
+        <li id="NameOfPersonFillingForm">
+            <span strName="EnrolerName">Name Of Person Filling Form</span>
+            <input type="text" maxlength="50" id="txtEnrolerName" dataField="EnrolerName" required/>
         </li>
         <li>
-            <span strName="OtherNames">Other Names</span>
-            <input type="text" maxlength="50" id="txtOtherNames" dataField="OtherNames" required/>
+            <span strName="SubscriptionDate">Subscribe date</span>
+            <input type="date" id="txtSubscribeDate" dataField="DOS"/>
+        </li>
+
+
+        <li id="IdentificationType">
+            <span strName="IdentificationType">Identification Type</span>
+            <select id="ddlIdentificationType" datafield="TypeOfId" required></select>
+        </li>
+        <li id="IdentificationNumber">
+            <span strName="IdentificationNumber">Identification Number</span>
+            <input type="text" id="txtIdentificationNumber" maxlength="50" datafield="IdentificationNumber" required/>
         </li>
         <li>
             <span strName="LastName">Last Name</span>
             <input type="text" maxlength="50" id="txtLastName" dataField="LastName" required/>
         </li>
         <li>
+            <span strName="OtherNames">Other Names</span>
+            <input type="text" maxlength="50" id="txtOtherNames" dataField="OtherNames" required/>
+        </li>
+        <li>
+            <span strName="PhoneNumber">Phone number</span>
+            <input type="number" id="txtPhoneNumber" datafield="Phone" maxlength="50" required/>
+        </li>
+        <li>
+            <span strName="PhoneNumberContact">Phone number contact</span>
+            <input type="number" id="txtPhoneNumberContact" datafield="PhoneContact" maxlength="50"/>
+        </li>
+        <li>
+            <span strName="BirthDate">Birth date</span>
+            <input type="date" id="txtBirthDate" dataField="DOB"/>
+        </li>
+        <li>
+            <span strName="Gender">Gender</span>
+            <select id="ddlGender" datafield="Gender" required></select>
+        </li>
+        <li>
+            <span strName="Cohabitation">Cohabitation</span>
+            <select id="ddlCohabitation" datafield="Cohabitation" required></select>
+        </li>
+        <li id="MaritalStatus">
+            <span strName="MaritalStatus">Marital Status</span>
+            <select id="ddlMaritalStatus" datafield="Marital" required></select>
+        </li>
+        <li>
+            <span strName="NumberOfChildren">Number of Children</span>
+            <select id="ddlNumberOfChildren" datafield="NumberOfChildren" required></select>
+        </li>
+
+
+        <li id="PreviousProfession">
+            <span strName="PreviousProfession">Previous Profession</span>
+            <select id="ddlPreviousProfession" datafield="Profession" required></select>
+        </li>
+        <li id="CurrentProfession">
+            <span strName="CurrentProfession">Current Profession</span>
+            <select id="ddlCurrentProfession" datafield="Profession" required></select>
+        </li>
+        <li id="Education">
+            <span strName="Education">Education</span>
+            <select id="ddlEducation" datafield="Education" required></select>
+        </li>
+        <li>
+            <span strName="DurationTown">Duration In Current Town</span>
+            <input type="number" maxlength="2" id="DurationTown" dataField="DurationTown" required/>
+        </li>
+        <li id="HabitatSituation">
+            <span strName="HabitatSituation">Habitat Situation</span>
+            <select id="ddlHabitatSituation" datafield="HabitatSituation" required></select>
+        </li>
+        <li>
+            <span strName="NumberOfRoom">Number of Room</span>
+            <input type="number" maxlength="3" id="NumberOfRoom" dataField="NumberOfRoom" required/>
+        </li>
+        <li>
+            <span strName="NumberOfPeopleRoom">Number of people House</span>
+            <input type="number" maxlength="3" id="NumberOfPeopleRoom" dataField="NumberOfPeopleRoom" required/>
+        </li>
+        <li id="Salary">
+            <span strName="Salary">Salary</span>
+            <select id="ddlSalary" datafield="Salary" required></select>
+        </li>
+
+
+
+
+        <li style="display:none;">
+            <input type="hidden" datafield="InsureeId" id="hfInsureeId" value="0"/>
+            <input type="hidden" datafld="isOffline" id="hfIsOffline" value="."/>
+            <input type="hidden" datafield="isHead" id="hfisHead" value="-1"/>
+            <span strName="InsuranceNumber">Insurance Number</span>
+            <div style="display:flex">
+                <input type="text" maxlength="12" id="txtInsuranceNumber" dataField="CHFID" onkeyup="getImage()" min="0" required />
+                <img src="" alt="Scan" id="btnScan" style="width:50px !important"  />
+            </div>
+        </li>
+
+        <li style="display:none;">
             <input type="hidden" id="hfImagePath" datafield="PhotoPath" />
             <input type="hidden" id="hfNewPhotoPath" datafield="newPhotoPath" />
             <div id="imgDiv">
                 <img src="" alt="Image" onerror="noImage(this);" id="imgInsuree"/>
             </div>
         </li>
-        <li>
-            <span strName="BirthDate">Birth date</span>
-            <input type="date" id="txtBirthDate" dataField="DOB" required/>
-        </li>
-        <li>
-            <span strName="Gender">Gender</span>
-            <select id="ddlGender" datafield="Gender" required></select>
-        </li>
-        <li id="MaritalStatus">
-            <span strName="MaritalStatus">Marital Status</span>
-            <select id="ddlMaritalStatus" datafield="Marital"></select>
-        </li>
-        <li id="BeneficiaryCard">
+
+        <li style="display:none;">
             <span strName="BeneficiaryCard">Beneficiary Card</span>
             <select id="ddlBeneficiaryCard" datafield="CardIssued"></select>
         </li>
-        <li id="CurrentRegion">
-            <span strName="CurrentRegion">Current Region</span>
-            <select id="ddlCurrentRegion" datafield="CurRegion"></select>
-        </li>
-        <li id="CurrentDistrict">
-            <span strName="CurrentDistrict">Current District</span>
-            <select id="ddlCurrentDistrict" datafield="CurDistrict"></select>
-        </li>
-        <li id="CurrentMunicipality">
-            <span strName="CurrentMunicipality">Current Municipality</span>
-            <select id="ddlCurrentMunicipality" datafield="CurWard"></select>
-        </li>
-        <li id="CurrentVillage">
-            <span strName="CurrentVillage">Current Village</span>
-            <select id="ddlCurrentVillage" datafield="CurVillage"></select>
-        </li>
-        <li id="CurrentAddress">
+
+        <li style="display:none;">
             <span strName="CurrentAddress">Current Address</span>
             <textarea id="txtCurrentAddress" maxlength="200" datafield="CurrentAddress"></textarea>
         </li>
-        <li id="Profession">
-            <span strName="Profession">Profession</span>
-            <select id="ddlProfession" datafield="Profession"></select>
-        </li>
-        <li id="Education">
-            <span strName="Education">Education</span>
-            <select id="ddlEducation" datafield="Education"></select>
-        </li>
-        <li>
-            <span strName="PhoneNumber">Phone number</span>
-            <input type="number" id="txtPhoneNumber" datafield="Phone" maxlength="50"/>
-        </li>
-        <li id="InsureeEmail">
+
+        <li style="display:none;">
             <span strName="Email">Email</span>
             <input type="email" maxlength="200" id="txtEmail" datafield="Email"/>
         </li>
-        <li id="IdentificationType">
-            <span strName="IdentificationType">Identification Type</span>
-            <select id="ddlIdentificationType" datafield="TypeOfId"></select>
-        </li>
-        <li id="IdentificationNumber">
-            <span strName="IdentificationNumber">Identification Number</span>
-            <input type="text" id="txtIdentificationNumber" maxlength="50" datafield="IdentificationNumber"/>
-        </li>
-        <li id="FSPRegion">
-            <span strName="FSPRegion"></span>
-            <select id="ddlFSPRegion" datafield="FSPRegion"></select>
-        </li>
-        <li id="FSPDistrict">
-            <span strName="FSPDistrict">District of FSP</span>
-            <select id="ddlFSPDistrict" datafield="FSPDistrict"></select>
-        </li>
-        <li id="FSPCategory">
-            <span strName="FSPCategory">Level of FSP</span>
-            <select id="ddlFSPCategory" datafield="FSPCategory"></select>
-        </li>
-        <li id="FSP">
-            <span strName="FSP">First Service Point</span>
-            <select id="ddlFSP" datafield="HFID"></select>
-        </li>
+
+
         <li id="Vulnerability">
             <span strName="Vulnerability">Vulnerability</span>
             <select id="ddlVulnerability" datafield="Vulnerability"></select>
         </li>
+
+
+        <li style="display:none;">
+            <span strName="FSPCategory">Level of FSP</span>
+            <select id="ddlFSPCategory" datafield="FSPCategory"></select>
+        </li>
+
     </ul>
 </div>
 <div class="footer">

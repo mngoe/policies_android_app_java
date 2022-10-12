@@ -16,8 +16,10 @@
     <string name="Quit">Quitter</string>
     <string name="Region">Région</string>
     <string name="District">District</string>
-    <string name="Ward">Section</string>
-    <string name="Village">Village/GO</string>
+    <string name="Ward">Municipalité</string>
+    <string name="HealthArea">Aire de Santé</string>
+    <string name="Village">Village/Quartier</string>
+    <string name="OriginVillage">Village d\'origine</string>
     <string name="PovertyStatus">Situation de pauvreté</string>
     <string name="ConfirmationType">Type de confirmation</string>
     <string name="ConfirmationNo">No. de confirmation</string>
@@ -217,7 +219,7 @@
     <string name="PleaseWait">Un instant s\'il vous plait</string>
     <string name="Language">Langue</string>
     <string name="Families">Familles</string>
-    <string name="AddNewFamily">Ajouter une nouvelle famille</string>
+    <string name="AddNewFamily">Ajouter un nouveau bénéficiaire</string>
     <string name="FamilyAndInsurees">Famille et assurés</string>
     <string name="FamilyAndPolicies">Famille et contrats</string>
     <string name="AddEditInsuree">Ajouter/Modifier assuré</string>
