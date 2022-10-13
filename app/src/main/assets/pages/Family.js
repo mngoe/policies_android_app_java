@@ -65,6 +65,7 @@ $(document).ready(function () {
             $("#ddlApprovalOfSMS").val($Family[0]["familySMS"]["ApprovalOfSMS"]).trigger("change");
             $("#ddlLanguageOfSMS").val($Family[0]["familySMS"]["LanguageOfSMS"]).trigger("change");
         }
+
         //Load remaining fields
         bindDataFromDatafield(strFamily);
 

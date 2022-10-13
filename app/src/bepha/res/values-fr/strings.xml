@@ -449,5 +449,22 @@
     <string name="DurationTown">Durée dans ville actuelle (mois)</string>
     <string name="HabitatSituation">Situation de l\'habitat</string>
     <string name="Salary">Combien gagnez vous en moyenne (Montant par mois en CFA)?</string>
+    <string name="BeforeAdress">Adresse avant la crise</string>
+    <string name="informationsNGO">Information des ONG</string>
+    <string name="PersonnalDetails">Données personnelles du bénéficiare</string>
+    <string name="PersonnalConditions">Conditions personnelles du bénéficiare</string>
+    <string name="Displaced">Êtes-vous une personne déplacée</string>
+    <string name="MotifDisplace">Motif du déplacement</string>
+    <string name="ConditionsDisplace">Conditions de déplacement</string>
+    <string name="Trauma">Décrire le traumatisme psychologique qui affecte la personne</string>
+    <string name="NumberOfPeopleCare">Nombre de personnes dont vous avez la charge (même si elles ne vivent pas avec vous pour le moment)</string>
+    <string name="DisablePersonFamily">Existence d\'une personne handicapée dans la famille (aveugle,infirme, sourde)</string>
+    <string name="HandicapPerson">Nombre de personnes handicapées dans la famille</string>
+    <string name="TakingCare">Vous vous occupez seul de la personne handicapée?</string>
+    <string name="FoodPerDay">Nombre de repas par jour</string>
+    <string name="ChronicCondition">Antécédants médicaux</string>
+    <string name="TypeOfFood">Quel type de soutien alimentaire recevez vous de la part d\'une organisation?</string>
+    <string name="TypeOfMaterial">Quel type de soutien matériel recevez vous d\'une organisation quelconque?</string>
+    <string name="TypeOfHealth">Quel type de soins de santé maternelle et autre soutien sanitaire recevez vous de la part d\'une organisation quelconque?</string>
 </resources>
 

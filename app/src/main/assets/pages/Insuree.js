@@ -209,6 +209,10 @@ $(document).ready(function () {
         $('#btnScan').hide();
     }
 
+    if($('#ddlDisplaced').val() == "Oui"){
+        $('#txtMotifDisplace').attr("disabled", true);
+    }
+
 });
 
 function fillDropdowns() {

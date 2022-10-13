@@ -493,4 +493,21 @@
     <string name="Cohabitation">Cohabitation</string>
     <string name="NumberOfChildren">Number of children</string>
     <string name="Salary">How much do you earn on average (Amount per month in CFA)?</string>
+    <string name="BeforeAdress">Adress before the crisis</string>
+    <string name="informationsNGO">NGO Information</string>
+    <string name="PersonnalDetails">Personnal details of beneficiary</string>
+    <string name="PersonnalConditions">Personnal conditions of beneficiary</string>
+    <string name="Displaced">Are you a displaced person</string>
+    <string name="MotifDisplace">Motif of displacement</string>
+    <string name="ConditionsDisplace">Displacement conditions</string>
+    <string name="Trauma">Describe psychological Trauma affecting the person</string>
+    <string name="NumberOfPeopleCare">Number of person under your care (even if the are not living with you at the moment)</string>
+    <string name="DisablePersonFamily">Existence of a disable/handicap person in the family(blind, deaf,dumb)</string>
+    <string name="HandicapPerson">Number of disable/handicap persons in the family</string>
+    <string name="TakingCare">Are you taking care of the disable person alone</string>
+    <string name="FoodPerDay">Nutrition status</string>
+    <string name="ChronicCondition">Are suffering for any chronic condition</string>
+    <string name="TypeOfFood">Which type of food support are you receiving from any organization </string>
+    <string name="TypeOfMaterial">Which type of maternal support are you receiving from any organization </string>
+    <string name="TypeOfHealth">Which type of maternal health care and other health support are you receiving from any organization </string>
 </resources>

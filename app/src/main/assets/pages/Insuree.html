@@ -44,28 +44,31 @@ In case of dispute arising out or in relation to the use of the program, it is s
             <span strName="Relation">Relation</span>
             <select id="ddlRelationship" dataField="Relationship"></select>
         </li>
+
+        <h3><font strName="BeforeAdress" color="#ff000d">Before Adress</font></h3>
         <li id="RegionBefore">
-            <span strName="RegionBefore">Region Before</span>
+            <span strName="Region">Region Before</span>
             <select id="ddlRegionBefore" datafield="BefRegion"></select>
         </li>
         <li id="DistrictBefore">
-            <span strName="DistrictBefore">District Before</span>
+            <span strName="District">District Before</span>
             <select id="ddlDistrictBefore" datafield="BefDistrict"></select>
         </li>
         <li id="HealthAreaBefore">
-            <span strName="HealthAreaBefore">Health Area Before</span>
+            <span strName="HealthArea">Health Area Before</span>
             <select id="ddlHealthAreaBefore" datafield="HealthAreaBefore"></select>
         </li>
         <li id="MunicipalityBefore">
-            <span strName="MunicipalityBefore">Municipality Before</span>
+            <span strName="Municipality">Municipality Before</span>
             <select id="ddlMunicipalityBefore" datafield="BefWard"></select>
         </li>
         <li id="VillageBefore">
-            <span strName="VillageBefore">Village Before</span>
+            <span strName="Village">Village Before</span>
             <select id="ddlVillageBefore" datafield="BefVillage"></select>
         </li>
 
 
+        <h3><font strName="informationsNGO" color="#ff000d">NGO Informations</font></h3>
         <li id="FSPRegion">
             <span strName="FSPRegion"></span>
             <select id="ddlFSPRegion" datafield="FSPRegion"></select>
@@ -88,6 +91,7 @@ In case of dispute arising out or in relation to the use of the program, it is s
         </li>
 
 
+        <h3><font strName="PersonnalDetails" color="#ff000d">Personnal Details of Beneficiary</font></h3>
         <li id="IdentificationType">
             <span strName="IdentificationType">Identification Type</span>
             <select id="ddlIdentificationType" datafield="TypeOfId" required></select>
@@ -134,6 +138,7 @@ In case of dispute arising out or in relation to the use of the program, it is s
         </li>
 
 
+        <h3><font strName="PersonnalConditions" color="#ff000d">Personnal Conditions of Beneficiary</font></h3>
         <li id="PreviousProfession">
             <span strName="PreviousProfession">Previous Profession</span>
             <select id="ddlPreviousProfession" datafield="Profession" required></select>
@@ -165,6 +170,58 @@ In case of dispute arising out or in relation to the use of the program, it is s
         <li id="Salary">
             <span strName="Salary">Salary</span>
             <select id="ddlSalary" datafield="Salary" required></select>
+        </li>
+        <li id="Displaced">
+            <span strName="Displaced">Displaced</span>
+            <select id="ddlDisplaced" datafield="Displaced"></select>
+        </li>
+        <li>
+            <span strName="MotifDisplace">Motif for displacement</span>
+            <input type="text" maxlength="100" id="txtMotifDisplace" dataField="MotifDisplace" required/>
+        </li>
+        <li>
+            <span strName="ConditionsDisplace">Displacement conditions</span>
+            <select id="ddlConditionsDisplace" datafield="ConditionsDisplace" required></select>
+        </li>
+        <li>
+            <span strName="Trauma">Psychological Trauma</span>
+            <select id="ddlTrauma" datafield="Trauma"></select>
+        </li>
+        <li>
+            <span strName="NumberOfPeopleCare">Number of persons under your care</span>
+            <input type="number" maxlength="3" id="NumberOfPeopleCare" dataField="NumberOfPeopleCare" required/>
+        </li>
+        <li>
+            <span strName="DisablePersonFamily">Disable person family</span>
+            <select id="ddlDisablePersonFamily" datafield="DisablePersonFamily"></select>
+        </li>
+        <li>
+            <span strName="HandicapPerson">Number of handicap/disable person</span>
+            <input type="number" maxlength="3" id="HandicapPerson" dataField="HandicapPerson" required/>
+        </li>
+        <li>
+            <span strName="TakingCare">Taking Care Person</span>
+            <select id="ddlTakingCare" datafield="TakingCare"></select>
+        </li>
+        <li>
+            <span strName="FoodPerDay">Food per day</span>
+            <select id="ddlFoodPerDay" datafield="FoodPerDay"></select>
+        </li>
+        <li>
+            <span strName="ChronicCondition">Chronic condition</span>
+            <select id="ddlChronicCondition" datafield="ChronicCondition"></select>
+        </li>
+        <li>
+            <span strName="TypeOfFood">Type of food</span>
+            <select id="ddlTypeOfFood" datafield="TypeOfFood"></select>
+        </li>
+        <li>
+            <span strName="TypeOfMaterial">Type of material</span>
+            <select id="ddlTypeOfMaterial" datafield="TypeOfMaterial"></select>
+        </li>
+        <li>
+            <span strName="TypeOfHealth">Type of health</span>
+            <select id="ddlTypeOfHealth" datafield="TypeOfHealth"></select>
         </li>
 
 
