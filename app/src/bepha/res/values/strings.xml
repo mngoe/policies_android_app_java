@@ -49,7 +49,7 @@
     <string name="DistrictBefore">District Before Crisis</string>
     <string name="MunicipalityBefore">Municipality Before Crisis</string>
     <string name="VillageBefore">Village/Quarter Before Crisis</string>
-    <string name="CurrentAddress">Current Address Details</string>
+    <string name="CurrentAddress">Present Address</string>
     <string name="Profession">Profession</string>
     <string name="PreviousProfession">Previous Profession</string>
     <string name="CurrentProfession">Current Profession</string>
@@ -417,7 +417,7 @@
     <string name="SelectAllButton">Select All</string>
     <string name="DeselectAllButton">Deselect All</string>
     <string name="SyncProcessing">Synchronization processing</string>
-    <string name="Vulnerability">Vulnerability</string>
+    <string name="Vulnerability">Vulnerability Score</string>
     <string name="SelectVulnerability">Select Vulnerability</string>
     <string name="BulkCN">Bulk Control Numbers</string>
     <string name="AssignedCN">Assigned Control Numbers:</string>
@@ -510,4 +510,12 @@
     <string name="TypeOfFood">Which type of food support are you receiving from any organization </string>
     <string name="TypeOfMaterial">Which type of maternal support are you receiving from any organization </string>
     <string name="TypeOfHealth">Which type of maternal health care and other health support are you receiving from any organization </string>
+    <string name="ExternalSupport">External support</string>
+    <string name="HousingCondition">Housing condition</string>
+    <string name="NutritionStatus">Nutrition status</string>
+    <string name="HealthStatus">Health status</string>
+    <string name="Revenu">Revenu</string>
+    <string name="DisplacementCondition">Displacement Condition</string>
+    <string name="TotalPoints">Total points</string>
+    <string name="SpecifyHabitat">Specify habitat situation</string>
 </resources>

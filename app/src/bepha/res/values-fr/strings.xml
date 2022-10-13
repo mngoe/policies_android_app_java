@@ -412,7 +412,7 @@
     <string name="SelectAllButton">Select All</string>
     <string name="DeselectAllButton">Deselect All</string>
     <string name="SyncProcessing">Synchronization processing</string>
-    <string name="Vulnerability">Vulnerability</string>
+    <string name="Vulnerability">Score de vulnérabilité</string>
     <string name="SelectVulnerability">Select Vulnerability</string>
     <string name="BulkCN">Bulk Control Numbers</string>
     <string name="AssignedCN">Assigned Control Numbers:</string>
@@ -466,5 +466,13 @@
     <string name="TypeOfFood">Quel type de soutien alimentaire recevez vous de la part d\'une organisation?</string>
     <string name="TypeOfMaterial">Quel type de soutien matériel recevez vous d\'une organisation quelconque?</string>
     <string name="TypeOfHealth">Quel type de soins de santé maternelle et autre soutien sanitaire recevez vous de la part d\'une organisation quelconque?</string>
+    <string name="ExternalSupport">Support externe</string>
+    <string name="HousingCondition">Condition de logement</string>
+    <string name="NutritionStatus">Taille de la famille</string>
+    <string name="HealthStatus">Etat de santé</string>
+    <string name="Revenu">Revenu</string>
+    <string name="DisplacementCondition">Condition de déplacement</string>
+    <string name="TotalPoints">Total de points</string>
+    <string name="SpecifyHabitat">Précisez la sitation de l\'habitat</string>
 </resources>
 
