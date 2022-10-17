@@ -712,21 +712,27 @@ public class ClientAndroidInterface {
     }
 
     @JavascriptInterface
-    public String getHF(int DistrictId, String HFLevel) {
+    public String getHF(int RegionId) {
         JSONArray HFs;
-        if (HFLevel != null) {
-            String Query = "SELECT HFID,  HFCode ||\" : \"||  HFName HF FROM tblHF WHERE LocationId = ? AND HFLevel = ?";
-            String[] args = {String.valueOf(DistrictId), HFLevel};
 
-            HFs = sqlHandler.getResult(Query, args);
-        } else {
-            String Query = "SELECT HFID,  HFCode ||\" : \"||  HFName HF FROM tblHF WHERE LocationId = ?";
-            String[] args = {String.valueOf(DistrictId)};
+        String Query = "SELECT HFID,  HFCode ||\" : \"||  HFName HF FROM tblHF WHERE LocationId = ?";
+        String[] args = {String.valueOf(RegionId)};
 
-            HFs = sqlHandler.getResult(Query, args);
-        }
+        HFs = sqlHandler.getResult(Query, args);
 
         return HFs.toString();
+    }
+
+    @JavascriptInterface
+    public String getHFAddress(int HFId) {
+        JSONArray HFsAddress;
+
+        String Query = "SELECT HFAddress FROM tblHF WHERE HFID = ?";
+        String[] args = {String.valueOf(HFId)};
+
+        HFsAddress = sqlHandler.getResult(Query, args);
+
+        return HFsAddress.toString();
     }
 
     private HashMap<String, String> jsonToTable(String jsonString) {

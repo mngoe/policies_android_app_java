@@ -39,37 +39,60 @@ In case of dispute arising out or in relation to the use of the program, it is s
     <span id="spPleaseWait"></span>
 </div>
 <div>
+    <h3><font strName="PresentAddress" color="#800000">Present Address</font></h3>
     <ul class="ulEntry">
-        <li style="display:none;">
-            <span strName="Relation">Relation</span>
-            <select id="ddlRelationship" dataField="Relationship"></select>
+        <li id="CurrentRegion">
+            <span strName="Region">Current Region</span>
+            <select id="ddlCurrentRegion" datafield="RegionId" ></select>
         </li>
+        <li id="CurrentDistrict">
+            <span strName="District"> Current District</span>
+            <select id="ddlCurrentDistrict" datafield="DistrictId" ></select>
+        </li>
+        <li id="CurrentHealthArea">
+            <span strName="HealthArea">Current Health Area</span>
+            <select id="ddlCurrentHealthArea" datafield="HealthArea"></select>
+        </li>
+        <li id="CurrentMunicipality">
+            <span strName="Ward">Current Ward</span>
+            <select id="ddlCurrentMunicipality" datafield="CurrWard" required></select>
+        </li>
+        <li id="CurrentVillage">
+            <span strName="Village">Current Village</span>
+            <select id="ddlCurrentVillage" datafield="CurrVillage" required></select>
+        </li>
+        <li id="OriginVillage">
+            <span strName="OriginVillage">Village of Origin</span>
+            <select id="ddlOriginVillage" datafield="OriginVillageId" required></select>
+        </li>
+    </ul>
 
+    <h3><font strName="BeforeAdress" color="#800000">Before Adress</font></h3>
+    <ul class="ulEntry">
+        <li id="PreviousRegion">
+            <span strName="Region">Previous Region</span>
+            <select id="ddlPreviousRegion" datafield="PrevRegion"></select>
+        </li>
+        <li id="PreviousDistrict">
+            <span strName="District">Previous District</span>
+            <select id="ddlPreviousDistrict" datafield="PrevDistrict"></select>
+        </li>
+        <li id="PreviousHealthArea">
+            <span strName="HealthArea">Previous Health Area</span>
+            <select id="ddlPreviousHealthArea" datafield="PrevHealthArea"></select>
+        </li>
+        <li id="PreviousMunicipality">
+            <span strName="Ward">Previous Municipality</span>
+            <select id="ddlPreviousMunicipality" datafield="PrevWard" required></select>
+        </li>
+        <li id="PreviousVillage">
+            <span strName="Village">Previous Village</span>
+            <select id="ddlPreviousVillage" datafield="PrevVillage" required></select>
+        </li>
+    </ul>
 
-        <h3><font strName="BeforeAdress" color="#ff000d">Before Adress</font></h3>
-        <li id="RegionBefore">
-            <span strName="Region">Region Before</span>
-            <select id="ddlRegionBefore" datafield="BefRegion"></select>
-        </li>
-        <li id="DistrictBefore">
-            <span strName="District">District Before</span>
-            <select id="ddlDistrictBefore" datafield="BefDistrict"></select>
-        </li>
-        <li id="HealthAreaBefore">
-            <span strName="HealthArea">Health Area Before</span>
-            <select id="ddlHealthAreaBefore" datafield="HealthAreaBefore"></select>
-        </li>
-        <li id="MunicipalityBefore">
-            <span strName="Ward">Municipality Before</span>
-            <select id="ddlMunicipalityBefore" datafield="BefWard" required></select>
-        </li>
-        <li id="VillageBefore">
-            <span strName="Village">Village Before</span>
-            <select id="ddlVillageBefore" datafield="BefVillage" required></select>
-        </li>
-
-
-        <h3><font strName="informationsNGO" color="#ff000d">NGO Informations</font></h3>
+    <h3><font strName="informationsNGO" color="#800000">NGO Informations</font></h3>
+    <ul class="ulEntry">
         <li id="FSPRegion">
             <span strName="FSPRegion"></span>
             <select id="ddlFSPRegion" datafield="FSPRegion" required></select>
@@ -78,9 +101,9 @@ In case of dispute arising out or in relation to the use of the program, it is s
             <span strName="FSP">First Service Point</span>
             <select id="ddlFSP" datafield="HFID" required></select>
         </li>
-        <li id="PermanentAddress">
+        <li id="FSPAddress">
             <span strName="PermanentAddress">Permanent Address Details</span>
-            <textarea id="txtPermanentAddress" datafield="NgoAddress" required></textarea>
+            <select id="ddlFSPAddress" datafield="NgoAddress" required></select>
         </li>
         <li id="NameOfPersonFillingForm">
             <span strName="EnrolerName">Name Of Person Filling Form</span>
@@ -90,9 +113,10 @@ In case of dispute arising out or in relation to the use of the program, it is s
             <span strName="SubscriptionDate">Subscribe date</span>
             <input type="date" id="txtSubscribeDate" dataField="DOS"/>
         </li>
+    </ul>
 
-
-        <h3><font strName="PersonnalDetails" color="#ff000d">Personnal Details of Beneficiary</font></h3>
+    <h3><font strName="PersonnalDetails" color="#800000">Personnal Details of Beneficiary</font></h3>
+    <ul class="ulEntry">
         <li id="IdentificationType">
             <span strName="IdentificationType">Identification Type</span>
             <select id="ddlIdentificationType" datafield="TypeOfId" required></select>
@@ -137,9 +161,10 @@ In case of dispute arising out or in relation to the use of the program, it is s
             <span strName="NumberOfChildren">Number of Children</span>
             <select id="ddlNumberOfChildren" datafield="NumberOfChildren" required></select>
         </li>
+    </ul>
 
-
-        <h3><font strName="PersonnalConditions" color="#ff000d">Personnal Conditions of Beneficiary</font></h3>
+    <h3><font strName="PersonnalConditions" color="#800000">Personnal Conditions of Beneficiary</font></h3>
+    <ul class="ulEntry">
         <li id="PreviousProfession">
             <span strName="PreviousProfession">Previous Profession</span>
             <select id="ddlPreviousProfession" datafield="Profession" required></select>
@@ -228,87 +253,6 @@ In case of dispute arising out or in relation to the use of the program, it is s
             <span strName="TypeOfHealth">Type of health</span>
             <select id="ddlTypeOfHealth" datafield="TypeOfHealth"></select>
         </li>
-
-
-        <h3><font strName="Vulnerability" color="#ff000d">Vulnerability score</font></h3>
-        <li>
-            <span strName="Revenu">Revenu</span>
-            <select id="ddlRevenu" datafield="Revenu"></select>
-        </li>
-        <li>
-            <span strName="HealthStatus">Health Status</span>
-            <select id="ddlHealthStatus" datafield="HealthStatus"></select>
-        </li>
-        <li>
-            <span strName="NutritionStatus">Nutrition Status</span>
-            <select id="ddlNutritionStatus" datafield="NutritionStatus"></select>
-        </li>
-        <li>
-            <span strName="HousingCondition">Housing Condition</span>
-            <select id="ddlHousingCondition" datafield="HousingCondition"></select>
-        </li>
-        <li>
-            <span strName="ExternalSupport">External Support</span>
-            <select id="ddlExternalSupport" datafield="ExternalSupport"></select>
-        </li>
-        <li>
-            <span strName="DisplacementCondition">Displacement Condition</span>
-            <select id="ddlDisplacementCondition" datafield="DisplacementCondition"></select>
-        </li>
-        <li>
-            <span strName="TotalPoints">Total Points</span>
-        </li>
-        <li>
-            <span id="ddlTotalPoints" datafield="TotalPoints">0</span>
-        </li>
-
-
-        <li style="display:none;">
-            <input type="hidden" datafield="InsureeId" id="hfInsureeId" value="0"/>
-            <input type="hidden" datafld="isOffline" id="hfIsOffline" value="."/>
-            <input type="hidden" datafield="isHead" id="hfisHead" value="-1"/>
-            <span strName="InsuranceNumber">Insurance Number</span>
-            <div style="display:flex">
-                <input type="text" maxlength="12" id="txtInsuranceNumber" dataField="CHFID" onkeyup="getImage()" min="0" required />
-                <img src="" alt="Scan" id="btnScan" style="width:50px !important"  />
-            </div>
-        </li>
-
-        <li style="display:none;">
-            <input type="hidden" id="hfImagePath" datafield="PhotoPath" />
-            <input type="hidden" id="hfNewPhotoPath" datafield="newPhotoPath" />
-            <div id="imgDiv">
-                <img src="" alt="Image" onerror="noImage(this);" id="imgInsuree"/>
-            </div>
-        </li>
-
-        <li style="display:none;">
-            <span strName="BeneficiaryCard">Beneficiary Card</span>
-            <select id="ddlBeneficiaryCard" datafield="CardIssued"></select>
-        </li>
-
-        <li style="display:none;">
-            <span strName="CurrentAddress">Current Address</span>
-            <textarea id="txtCurrentAddress" maxlength="200" datafield="CurrentAddress"></textarea>
-        </li>
-
-        <li style="display:none;">
-            <span strName="Email">Email</span>
-            <input type="email" maxlength="200" id="txtEmail" datafield="Email"/>
-        </li>
-
-
-        <li style="display:none;">
-            <span strName="Vulnerability">Vulnerability</span>
-            <select id="ddlVulnerability" datafield="Vulnerability"></select>
-        </li>
-
-
-        <li style="display:none;">
-            <span strName="FSPCategory">Level of FSP</span>
-            <select id="ddlFSPCategory" datafield="FSPCategory"></select>
-        </li>
-
     </ul>
 </div>
 <div class="footer">

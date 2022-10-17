@@ -23,16 +23,32 @@ $(document).ready(function () {
         fillCurrentDistricts(parseInt($(this).val()));
     });
 
+    $('#ddlPreviousRegion').change(function () {
+        fillPreviousDistricts(parseInt($(this).val()));
+    });
+
     $('#ddlFSPRegion').change(function () {
-        fillFSPDistricts($(this).val());
+        fillFSP($(this).val());
+    });
+
+    $('#ddlFSP').change(function () {
+        fillFSPAddress($(this).val());
     });
 
     $('#ddlCurrentDistrict').change(function () {
         fillCurrentWards(parseInt($(this).val()));
     });
 
+    $('#ddlPreviousDistrict').change(function () {
+        fillPreviousWards(parseInt($(this).val()));
+    });
+
     $('#ddlCurrentMunicipality').change(function () {
         fillCurrentVillages(parseInt($(this).val()));
+    });
+
+    $('#ddlPreviousMunicipality').change(function () {
+        fillPreviousVillages(parseInt($(this).val()));
     });
 
     $('#ddlFSPDistrict, #ddlFSPCategory').change(function () {
@@ -221,13 +237,12 @@ function fillDropdowns() {
     fillMaritalStatus();
     fillBeneficiaryCard();
     fillCurrentRegion();
+    fillPreviousRegion();
     //fillCurrentDistricts();
     fillProfessions();
     fillEducations();
     fillIdentificationTypes();
     fillFSPRegions();
-    fillFSPDistricts();
-    fillFSPCategory();
     fillVulnerability();
 }
 
@@ -272,6 +287,11 @@ function fillCurrentRegion() {
     bindDropdown('ddlCurrentRegion', $Regions, 'LocationId', 'LocationName', 0, Android.getString('SelectRegion'));
 }
 
+function fillPreviousRegion() {
+    var $Regions = Android.getRegionsWO();
+    bindDropdown('ddlPreviousRegion', $Regions, 'LocationId', 'LocationName', 0, Android.getString('SelectRegion'));
+}
+
 function fillFSPRegions() {
     var $Regions = Android.getRegionsWO();
     bindDropdown('ddlFSPRegion', $Regions, 'LocationId', 'LocationName', 0, Android.getString('SelectRegion'));
@@ -282,9 +302,20 @@ function fillCurrentDistricts(RegionId) {
     bindDropdown('ddlCurrentDistrict', $Districts, 'LocationId', 'LocationName', 0, Android.getString('SelectDistrict'));
 }
 
+function fillPreviousDistricts(RegionId) {
+    var $Districts = Android.getDistrictsWO(RegionId);
+    bindDropdown('ddlPreviousDistrict', $Districts, 'LocationId', 'LocationName', 0, Android.getString('SelectDistrict'));
+}
+
 function fillCurrentWards(DistrictId) {
     var $Wards = Android.getWards(parseInt(DistrictId));
     bindDropdown('ddlCurrentMunicipality', $Wards, 'LocationId', 'LocationName', 0, Android.getString('SelectWard'));
+
+}
+
+function fillPreviousWards(DistrictId) {
+    var $Wards = Android.getWards(parseInt(DistrictId));
+    bindDropdown('ddlPreviousMunicipality', $Wards, 'LocationId', 'LocationName', 0, Android.getString('SelectWard'));
 
 }
 
@@ -293,13 +324,19 @@ function fillCurrentVillages(WardId) {
     bindDropdown('ddlCurrentVillage', $Villages, 'LocationId', 'LocationName', 0, Android.getString('SelectVillage'));
 }
 
+function fillPreviousVillages(WardId) {
+    var $Villages = Android.getVillages(parseInt(WardId));
+    bindDropdown('ddlPreviousVillage', $Villages, 'LocationId', 'LocationName', 0, Android.getString('SelectVillage'));
+}
+
 function fillProfessions() {
     $textLanguage = "Profession";
     if (Android.getSelectedLanguage() != "en") {
         $textLanguage = "AltLanguage";
     }
     var $Professions = Android.getProfessions();
-    bindDropdown('ddlProfession', $Professions, 'ProfessionId', $textLanguage, 0, Android.getString('SelectProfession'));
+    bindDropdown('ddlCurrentProfession', $Professions, 'ProfessionId', $textLanguage, 0, Android.getString('SelectProfession'));
+    bindDropdown('ddlPreviousProfession', $Professions, 'ProfessionId', $textLanguage, 0, Android.getString('SelectProfession'));
 }
 
 function fillEducations() {
@@ -330,9 +367,14 @@ function fillFSPCategory() {
     bindDropdown('ddlFSPCategory', $HFLevels, 'Code', 'HFLevel', null, null);
 }
 
-function fillFSP(DistrictId, HFLevel) {
-    var $HF = Android.getHF(parseInt(DistrictId), HFLevel);
+function fillFSP(RegionId) {
+    var $HF = Android.getHF(parseInt(RegionId));
     bindDropdown('ddlFSP', $HF, 'HFID', 'HF', 0, Android.getString('SelectHF'));
+}
+
+function fillFSPAddress(FSPId) {
+    var $HFAddress = Android.getHFAddress(parseInt(FSPId));
+    bindDropdown('ddlFSPAddress', $HF, 'HFID', 'HF', 0, Android.getString('SelectHFAddress'));
 }
 
 function fillVulnerability() {

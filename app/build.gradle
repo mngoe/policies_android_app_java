@@ -124,6 +124,13 @@ android {
             resValue "string", "app_name_policies", "Policies BEPHA DEV"
             dimension = 'std'
         }
+        idps {
+            applicationId "org.openimis.imispolicies.idps"
+            buildConfigField "String", "API_BASE_URL", '"https://demo.openimis.org/rest/"'
+            buildConfigField "String", "APP_DIR", '"IMIS-IDPS"'
+            resValue "string", "app_name_policies", "Policies IDPS"
+            dimension = 'std'
+        }
         tchadDev {
             applicationId "org.openimis.imispolicies.tchadDev"
             buildConfigField "String", "API_BASE_URL", '"http://imis-tchad-dev.swisstph-mis.ch/rest/"'
@@ -191,6 +198,9 @@ android {
 
         bephaDev.java.srcDir 'src/bepha/java'
         bephaDev.res.srcDir 'src/bepha/res'
+
+        idps.java.srcDir 'src/idps/java'
+        idps.res.srcDir 'src/idps/res'
 
         niger.java.srcDir 'src/niger/java'
         niger.res.srcDir 'src/niger/res'
