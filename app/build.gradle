@@ -123,6 +123,13 @@ android {
             resValue "string", "app_name_policies", "Enregistrement au CS"
             dimension = 'std'
         }
+        csDev {
+            applicationId "org.openimis.imispolicies.chequeSante"
+            buildConfigField "String", "API_BASE_URL", '"https://cs.minsante.cm/rest/"'
+            buildConfigField "String", "APP_DIR", '"IMIS-CHEQUESANTE"'
+            resValue "string", "app_name_policies", "Enregistrement au CS"
+            dimension = 'std'
+        }
         tchadDev {
             applicationId "org.openimis.imispolicies.tchadDev"
             buildConfigField "String", "API_BASE_URL", '"http://imis-tchad-dev.swisstph-mis.ch/rest/"'
@@ -190,6 +197,9 @@ android {
 
         bephaDev.java.srcDir 'src/bepha/java'
         bephaDev.res.srcDir 'src/bepha/res'
+
+        csDev.java.srcDir 'src/cs/java'
+        csDev.res.srcDir 'src/cs/res'
 
         niger.java.srcDir 'src/niger/java'
         niger.res.srcDir 'src/niger/res'
