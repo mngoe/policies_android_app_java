@@ -59,6 +59,7 @@
 
         <activity
             android:name=".MainActivity"
+            android:exported="true"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name_policies"
             android:screenOrientation="portrait"
