@@ -22,7 +22,7 @@ $(document).ready(function () {
 
         var Policies = Android.getFamilyPolicies(parseInt(FamilyId));
 
-        if(Policies != 0){
+        if(Policies != "[]"){
             Android.ShowDialog(Android.getString('MaxPolicie'));
         }else{
             var url = 'FamilyPolicies.html?f=' + FamilyId + '&l=' + LocationId + '&r=' + RegionId + '&d=' + DistrictId;
