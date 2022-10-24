@@ -19,9 +19,17 @@ $(document).ready(function () {
     LoadFamilyPolicies(parseInt(FamilyId));
 
     $(".plusButton").click(function () {
-        var url = 'FamilyPolicies.html?f=' + FamilyId + '&l=' + LocationId + '&r=' + RegionId + '&d=' + DistrictId;
-        Android.SetUrl(url);
-        window.open('Policy.html?f=' + FamilyId + '&l=' + LocationId + '&p=' + 0 + '&r=' + RegionId + '&d=' + DistrictId, '_self');
+
+        var Policies = Android.getFamilyPolicies(parseInt(FamilyId));
+
+        if(Policies != "[]"){
+            Android.ShowDialog(Android.getString('MaxPolicie'));
+        }else{
+            var url = 'FamilyPolicies.html?f=' + FamilyId + '&l=' + LocationId + '&r=' + RegionId + '&d=' + DistrictId;
+            Android.SetUrl(url);
+            window.open('Policy.html?f=' + FamilyId + '&l=' + LocationId + '&p=' + 0 + '&r=' + RegionId + '&d=' + DistrictId, '_self');
+        }
+
 
     });
 
