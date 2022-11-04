@@ -471,6 +471,98 @@ public class ClientAndroidInterface {
     }
 
     @JavascriptInterface
+    public String getNutritionStatus() {
+        JSONArray nutrition = new JSONArray();
+
+        try {
+            JSONObject object = new JSONObject();
+            object.put("key", "0-1");
+            object.put("value", 1);
+            nutrition.put(object);
+
+            object = new JSONObject();
+            object.put("key", "2-3");
+            object.put("value", 2);
+            nutrition.put(object);
+
+            object = new JSONObject();
+            object.put("key", "3+");
+            object.put("value", 3);
+            nutrition.put(object);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return nutrition.toString();
+    }
+
+    @JavascriptInterface
+    public String getSupport() {
+        JSONArray nutrition = new JSONArray();
+
+        try {
+            JSONObject object = new JSONObject();
+            object.put("key", mContext.getResources().getString(R.string.Regular));
+            object.put("value", 1);
+            nutrition.put(object);
+
+            object = new JSONObject();
+            object.put("key", mContext.getResources().getString(R.string.Irregular));
+            object.put("value", 2);
+            nutrition.put(object);
+
+            object = new JSONObject();
+            object.put("key", mContext.getResources().getString(R.string.None));
+            object.put("value", 3);
+            nutrition.put(object);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return nutrition.toString();
+    }
+
+    @JavascriptInterface
+    public String getDisplacement() {
+        JSONArray displacement = new JSONArray();
+
+        try {
+            JSONObject object = new JSONObject();
+            object.put("key", mContext.getResources().getString(R.string.LostPropertyLiveliHood));
+            object.put("value", 1);
+            displacement.put(object);
+
+            object = new JSONObject();
+            object.put("key", mContext.getResources().getString(R.string.LostLiveliHood));
+            object.put("value", 2);
+            displacement.put(object);
+
+            object = new JSONObject();
+            object.put("key", mContext.getResources().getString(R.string.LostProperty));
+            object.put("value", 3);
+            displacement.put(object);
+
+            object = new JSONObject();
+            object.put("key", mContext.getResources().getString(R.string.LostNone));
+            object.put("value", 4);
+            displacement.put(object);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return displacement.toString();
+    }
+
+    @JavascriptInterface
     public String getConfirmationTypes() {
         String tableName = "tblConfirmationTypes";
         String[] columns = {"ConfirmationTypeCode", "ConfirmationType", "AltLanguage"};
@@ -518,6 +610,50 @@ public class ClientAndroidInterface {
             object = new JSONObject();
             object.put("key", mContext.getResources().getString(R.string.No));
             object.put("value", 0);
+            selectJsonArray.put(object);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return selectJsonArray.toString();
+    }
+
+    @JavascriptInterface
+    public String getSalaries() {
+        JSONArray selectJsonArray = new JSONArray();
+        try {
+            JSONObject object = new JSONObject();
+            object.put("key", "0-15000");
+            object.put("value", 1);
+            selectJsonArray.put(object);
+
+            object = new JSONObject();
+            object.put("key", "15001-30000");
+            object.put("value", 2);
+            selectJsonArray.put(object);
+
+            object = new JSONObject();
+            object.put("key", "30001-65000");
+            object.put("value", 3);
+            selectJsonArray.put(object);
+
+            object = new JSONObject();
+            object.put("key", "65001-140000");
+            object.put("value", 4);
+            selectJsonArray.put(object);
+
+            object = new JSONObject();
+            object.put("key", "140000-330000");
+            object.put("value", 5);
+            selectJsonArray.put(object);
+
+            object = new JSONObject();
+            object.put("key", "330000-1000000");
+            object.put("value", 6);
+            selectJsonArray.put(object);
+
+            object = new JSONObject();
+            object.put("key", "1000000+");
+            object.put("value", 7);
             selectJsonArray.put(object);
         } catch (JSONException e) {
             e.printStackTrace();
