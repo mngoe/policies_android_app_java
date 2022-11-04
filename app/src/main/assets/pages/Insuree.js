@@ -220,11 +220,18 @@ function fillDropdowns() {
     //fillCurrentDistricts();
     fillProfessions();
     fillEducations();
+    fillSalaries();
     fillIdentificationTypes();
     fillFSPRegions();
     fillFSPDistricts();
     fillFSPCategory();
     fillVulnerability();
+    fillHealthStatus();
+    fillNutritionStatus();
+    fillFoodSupport();
+    fillMaterialSupport();
+    fillHealthSupport();
+    fillDisplacementCondition();
 }
 
 // called from java after the image was selected by the user
@@ -307,6 +314,15 @@ function fillEducations() {
     bindDropdown('ddlEducation', $Educations, 'EducationId', $textLanguage, 0, Android.getString('SelectEducation'));
 }
 
+function fillSalaries() {
+    $textLanguage = "Salary";
+    if (Android.getSelectedLanguage() != "en") {
+        $textLanguage = "AltLanguage";
+    }
+    var $Salaries = Android.getSalaries();
+    bindDropdown('ddlSalary', $Salaries, 'value', 'key', "", Android.getString('SelectSalary'));
+}
+
 function fillIdentificationTypes() {
     $textLanguage = "IdentificationTypes";
     if (Android.getSelectedLanguage() != "en") {
@@ -334,6 +350,36 @@ function fillFSP(DistrictId, HFLevel) {
 function fillVulnerability() {
     var $Vulnerability = Android.getVulnerability();
     bindDropdown('ddlVulnerability', $Vulnerability, 'value', 'key', "", Android.getString('SelectVulnerability'));
+}
+
+function fillHealthStatus() {
+    var $HealthStatus = Android.getYesNo();
+    bindDropdown('ddlHealthStatus', $HealthStatus, 'value', 'key', "", Android.getString('SelectHealthStatus'));
+}
+
+function fillNutritionStatus() {
+    var $NutritionStatus = Android.getNutritionStatus();
+    bindDropdown('ddlNutritionStatus', $NutritionStatus, 'value', 'key', "", Android.getString('SelectNutritionStatus'));
+}
+
+function fillFoodSupport() {
+    var $FoodSupport = Android.getSupport();
+    bindDropdown('ddlFoodSupport', $FoodSupport, 'value', 'key', "", Android.getString('SelectSupport'));
+}
+
+function fillMaterialSupport() {
+    var $MaterialSupport = Android.getSupport();
+    bindDropdown('ddlMaterialSupport', $MaterialSupport, 'value', 'key', "", Android.getString('SelectSupport'));
+}
+
+function fillHealthSupport() {
+    var $HealthSupport = Android.getSupport();
+    bindDropdown('ddlHealthSupport', $HealthSupport, 'value', 'key', "", Android.getString('SelectSupport'));
+}
+
+function fillDisplacementCondition() {
+    var $DisplacementCondition = Android.getDisplacement();
+    bindDropdown('ddlDisplacementCondition', $DisplacementCondition, 'value', 'key', "", Android.getString('SelectCondition'));
 }
 
 function createJSONString() {
