@@ -1122,6 +1122,10 @@ public class ClientAndroidInterface {
             if (data.get("ddlMaritalStatus") != "" && data.get("ddlMaritalStatus") != null)
                 Marital = data.get("ddlMaritalStatus");
 
+            String HealthStatus = null;
+            if (data.get("ddlHealthStatus") != "" && data.get("ddlHealthStatus") != null)
+                HealthStatus = data.get("ddlHealthStatus");
+
             Boolean CardIssued = null;
             if (!TextUtils.isEmpty(data.get("ddlBeneficiaryCard"))) {
                 if (data.get("ddlBeneficiaryCard").equals("1")) {
@@ -1142,6 +1146,30 @@ public class ClientAndroidInterface {
             Integer Education = null;
             if (!TextUtils.isEmpty(data.get("ddlEducation")) && !data.get("ddlEducation").equals("0"))
                 Education = Integer.valueOf(data.get("ddlEducation"));
+
+            Integer Salary = null;
+            if (!TextUtils.isEmpty(data.get("ddlSalary")) && !data.get("ddlSalary").equals("0"))
+                Salary = Integer.valueOf(data.get("ddlSalary"));
+
+            Integer NutritionStatus = null;
+            if (!TextUtils.isEmpty(data.get("ddlNutritionStatus")) && !data.get("ddlNutritionStatus").equals("0"))
+                NutritionStatus = Integer.valueOf(data.get("ddlNutritionStatus"));
+
+            Integer FoodSupport = null;
+            if (!TextUtils.isEmpty(data.get("ddlFoodSupport")) && !data.get("ddlFoodSupport").equals("0"))
+                FoodSupport = Integer.valueOf(data.get("ddlFoodSupport"));
+
+            Integer MaterialSupport = null;
+            if (!TextUtils.isEmpty(data.get("ddlMaterialSupport")) && !data.get("ddlMaterialSupport").equals("0"))
+                MaterialSupport = Integer.valueOf(data.get("ddlMaterialSupport"));
+
+            Integer HealthSupport = null;
+            if (!TextUtils.isEmpty(data.get("ddlHealthSupport")) && !data.get("ddlHealthSupport").equals("0"))
+                HealthSupport = Integer.valueOf(data.get("ddlHealthSupport"));
+
+            Integer DisplacementCondition = null;
+            if (!TextUtils.isEmpty(data.get("ddlDisplacementCondition")) && !data.get("ddlDisplacementCondition").equals("0"))
+                DisplacementCondition = Integer.valueOf(data.get("ddlDisplacementCondition"));
 
             String IdentificationType = "null";
             if (!TextUtils.isEmpty(data.get("ddlIdentificationType")) && !data.get("ddlIdentificationType").equals(""))
@@ -1184,6 +1212,17 @@ public class ClientAndroidInterface {
             values.put("Education", Education);
             values.put("Email", data.get("txtEmail"));
             values.put("TypeOfId", IdentificationType);
+
+            //for IDPS
+            values.put("Salary", Salary);
+            values.put("HealthStatus", HealthStatus);
+            values.put("NutritionStatus", NutritionStatus);
+            values.put("FoodSupport", FoodSupport);
+            values.put("MaterialSupport", MaterialSupport);
+            values.put("HealthSupport", HealthSupport);
+            values.put("DisplacementCondition", DisplacementCondition);
+            values.put("PeopleHouse", data.get("txtPeopleHouse"));
+            values.put("NumberOfRoom", data.get("txtNumberOfRoom"));
 
             if (data.get("ddlVulnerability") != null && !data.get("ddlVulnerability").equals("")) {
                 values.put("Vulnerability", data.get("ddlVulnerability"));
