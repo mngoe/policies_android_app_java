@@ -414,7 +414,7 @@
   <string name="Vulnerability">Vulnérabilité</string>
   <string name="SelectVulnerability">Sélectionnez la vulnérabilité</string>
   <string name="BulkCN">Numéros de contrôle en masse</string>
-  <string name="AssignedCN">Numéros de contrôle attribués :</string>
+  <string name="AssignedCN">Numéros de contrôle attribués :</string>
   <string name="FreeCN">Numéros de contrôle disponibles :</string>
   <string name="FetchBulkCN">Récupérer les numéros de contrôle en masse</string>
   <string name="Fetch">Chercher</string>
@@ -471,4 +471,9 @@
   <string name="Unauthorized"></string>
   <string name="UnknownError"></string>
   <string name="Forbidden"></string>
+  <string name="LanguageCode"></string>
+  <string name="LanguageSettings"></string>
+  <string name="CurrentResourceLanguage"></string>
+  <string name="SystemLanguageNotSupported"></string>
+  <string name="DataDownloadedFailed"></string>
 </resources>
