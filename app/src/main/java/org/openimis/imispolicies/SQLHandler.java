@@ -198,7 +198,7 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "SortOrder NUMERIC" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE 'tblInsuree' (" +
+                    "CREATE TABLE " + tblInsuree + "(" +
                             "InsureeId INTEGER," +
                             "FamilyId NUMERIC," +
                             "CHFID TEXT," +
@@ -222,6 +222,15 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "CurrentAddress TEXT," +
                             "GeoLocation TEXT," +
                             "CurVillage NUMERIC," +
+                            "PeopleHouse TEXT," +
+                            "NumberOfRoom TEXT," +
+                            "HealthStatus TEXT," +
+                            "Salary INTEGER," +
+                            "NutritionStatus INTEGER," +
+                            "FoodSupport INTEGER," +
+                            "MaterialSupport INTEGER," +
+                            "HealthSupport INTEGER," +
+                            "DisplacementCondition INTEGER," +
                             "Vulnerability BOOLEAN" + ")"
             );
             sqLiteDatabase.execSQL(

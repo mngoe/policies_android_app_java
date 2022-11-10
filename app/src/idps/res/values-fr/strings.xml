@@ -453,6 +453,8 @@
     <string name="LostProperty">Perte de biens</string>
     <string name="LostNone">Perte d\'aucun</string>
     <string name="SelectSupport">Selectionner une assistance</string>
+    <string name="Beneficiaries">Bénéficiaires</string>
+    <string name="AddNewBeneficiary">Ajouter un nouveau bénéficiaire</string>
     <string name="FoodSupport">Quel type de soutien matériel recevez-vous de la part d\'une organisation?</string>
     <string name="MaterialSupport">Quel type de soutien matériel recevez-vous d\'une organisation quelconque?</string>
     <string name="HealthSupport">Quel type de soins de santé maternelle recevez-vous de la part d\'une organisation quelconque</string>

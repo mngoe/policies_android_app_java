@@ -1,13 +1,13 @@
 $(document).ready(function () {
     Android.SetUrl('Home.html');
-    document.title = Android.getString('Families');
+    document.title = Android.getString('Beneficiaries');
     LoadFamilies();
 
     var FamilyId = 0;
     $('#btnAddNew').click(function () {
         var url = 'Enrollment.html?f=' + FamilyId;
         Android.SetUrl(url);
-        window.open("Insuree.html", "_self");
+        window.open("Family.html?f=0", "_self");
     });
 
 
