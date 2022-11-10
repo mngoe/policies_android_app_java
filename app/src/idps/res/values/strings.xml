@@ -217,7 +217,7 @@
     <string name="PleaseWait">Please Wait…</string>
     <string name="Language">Language</string>
     <string name="Families">Families</string>
-    <string name="AddNewFamily">Add new Household</string>
+    <string name="AddNewFamily">Add new Family</string>
     <string name="FamilyAndInsurees">Household and Beneficiary</string>
     <string name="FamilyAndPolicies">Household and Policies</string>
     <string name="AddEditInsuree">Add/Edit Beneficiary</string>
@@ -453,6 +453,8 @@
     <string name="LostNone">Lost of none</string>
     <string name="SelectCondition">Select condition</string>
     <string name="SelectSupport">Select support</string>
+    <string name="Beneficiaries">Beneficiaries</string>
+    <string name="AddNewBeneficiary">Add new Beneficiary</string>
     <string name="FoodSupport">Which type of food support are you receiving from any organization?</string>
     <string name="MaterialSupport">Which type of Material support are you receiving from any organization?</string>
     <string name="HealthSupport">Which type of maternal health care and other health support are you receiving from any organization?</string>

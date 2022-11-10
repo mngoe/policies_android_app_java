@@ -1,6 +1,6 @@
 $(document).ready(function () {
     Android.SetUrl('Home.html');
-    document.title = Android.getString('Families');
+    document.title = Android.getString('Beneficiaries');
     LoadFamilies();
 
     var FamilyId = 0;

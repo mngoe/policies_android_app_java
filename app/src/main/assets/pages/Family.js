@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    document.title = Android.getString('AddNewFamily');
+    document.title = Android.getString('AddNewBeneficiary');
     var FamilyId = queryString('f');
 
     if (parseInt(FamilyId) != 0)
