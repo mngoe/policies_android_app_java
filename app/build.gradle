@@ -104,8 +104,8 @@ android {
         }
         csuDev {
             applicationId "org.openimis.imispolicies.csuDev"
-            buildConfigField "String", "API_BASE_URL", '"https://release.openimis.org/rest/"'
-            resValue "string", "app_name_policies", "Policies CSU"
+            buildConfigField "String", "API_BASE_URL", '"https://dev-csuapps.minsante.cm/rest/"'
+            resValue "string", "app_name_policies", "Enrolement CSU"
             dimension = 'std'
         }
         mvDev {
