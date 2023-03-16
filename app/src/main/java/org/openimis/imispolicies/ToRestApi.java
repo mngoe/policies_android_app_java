@@ -8,8 +8,14 @@ import cz.msebera.android.httpclient.client.HttpClient;
 import cz.msebera.android.httpclient.client.methods.HttpDelete;
 import cz.msebera.android.httpclient.client.methods.HttpGet;
 import cz.msebera.android.httpclient.client.methods.HttpPost;
+import cz.msebera.android.httpclient.conn.ssl.AllowAllHostnameVerifier;
+import cz.msebera.android.httpclient.conn.ssl.NoopHostnameVerifier;
+import cz.msebera.android.httpclient.conn.ssl.TrustAllStrategy;
 import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.impl.client.CloseableHttpClient;
 import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
+import cz.msebera.android.httpclient.impl.client.HttpClients;
+import cz.msebera.android.httpclient.ssl.SSLContextBuilder;
 import cz.msebera.android.httpclient.util.EntityUtils;
 
 import org.json.JSONObject;
@@ -17,6 +23,9 @@ import org.openimis.imispolicies.tools.Log;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 
 public class ToRestApi {
     public static class UploadStatus {
@@ -61,16 +70,21 @@ public class ToRestApi {
     }
 
     public HttpResponse getFromRestApi(String functionName, boolean addToken) {
-        HttpClient httpClient = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet(uri + functionName);
-        httpGet.setHeader(Headers.CONTENT_TYPE, MimeTypes.APPLICATION_JSON);
-        httpGet.setHeader(Headers.ACCEPT, MimeTypes.APPLICATION_JSON);
-        httpGet.setHeader(Headers.API_VERSION, apiVersion);
-        if (addToken) {
-            httpGet.setHeader(Headers.AUTHORIZATION, buildTokenHeader());
-        }
 
         try {
+            HttpClient httpClient = HttpClients
+                    .custom()
+                    .setSSLContext(new SSLContextBuilder().loadTrustMaterial(null, TrustAllStrategy.INSTANCE).build())
+                    .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
+                    .build();
+            HttpGet httpGet = new HttpGet(uri + functionName);
+            httpGet.setHeader(Headers.CONTENT_TYPE, MimeTypes.APPLICATION_JSON);
+            httpGet.setHeader(Headers.ACCEPT, MimeTypes.APPLICATION_JSON);
+            httpGet.setHeader(Headers.API_VERSION, apiVersion);
+            if (addToken) {
+                httpGet.setHeader(Headers.AUTHORIZATION, buildTokenHeader());
+            }
+
             HttpResponse response = httpClient.execute(httpGet);
             if (addToken) {
                 checkToken(response);
@@ -81,21 +95,36 @@ public class ToRestApi {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+            return null;
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+            return null;
         }
+
     }
 
     public HttpResponse postToRestApi(JSONObject object, String functionName, boolean addToken) {
-        HttpClient httpClient = new DefaultHttpClient();
 
-        HttpPost httpPost = new HttpPost(uri + functionName);
-        httpPost.setHeader(Headers.CONTENT_TYPE, MimeTypes.APPLICATION_JSON);
-        httpPost.setHeader(Headers.ACCEPT, MimeTypes.APPLICATION_JSON);
-        httpPost.setHeader(Headers.API_VERSION, apiVersion);
-        if (addToken) {
-            httpPost.setHeader(Headers.AUTHORIZATION, buildTokenHeader());
-        }
 
         try {
+            HttpClient httpClient = HttpClients
+                    .custom()
+                    .setSSLContext(new SSLContextBuilder().loadTrustMaterial(null, TrustAllStrategy.INSTANCE).build())
+                    .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
+                    .build();
+            HttpPost httpPost = new HttpPost(uri + functionName);
+            httpPost.setHeader(Headers.CONTENT_TYPE, MimeTypes.APPLICATION_JSON);
+            httpPost.setHeader(Headers.ACCEPT, MimeTypes.APPLICATION_JSON);
+            httpPost.setHeader(Headers.API_VERSION, apiVersion);
+            if (addToken) {
+                httpPost.setHeader(Headers.AUTHORIZATION, buildTokenHeader());
+            }
+
             if (object != null) {
                 StringEntity postingString = new StringEntity(object.toString());
                 httpPost.setEntity(postingString);
@@ -116,6 +145,15 @@ public class ToRestApi {
             }
             return response;
         } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+            return null;
+        } catch (KeyManagementException e) {
             e.printStackTrace();
             return null;
         }

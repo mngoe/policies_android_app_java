@@ -20,6 +20,7 @@ static def getDate() {
 }
 
 android {
+    useLibrary  'org.apache.http.legacy'
     compileSdkVersion 33
     buildToolsVersion '33.0.0'
     if (keystorePropertiesFile.exists()) {

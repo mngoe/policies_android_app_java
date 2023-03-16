@@ -3625,12 +3625,12 @@ public class ClientAndroidInterface {
                             InsureeImages img = new InsureeImages("", empty);
                             images[j] = img;
                         } else {
-                            mylist.add(getInsureeValidationError(
+                            /*mylist.add(getInsureeValidationError(
                                     chfid, lastname, othername,
                                     R.string.WithoutPhoto
-                            ));
-                            ShowErrorMessages();
-                            break;
+                            ));*/
+                            //ShowErrorMessages();
+                            //break;
                         }
                     } else {
                         byte[] empty = new byte[0];
