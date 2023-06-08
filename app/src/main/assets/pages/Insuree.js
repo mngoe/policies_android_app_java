@@ -35,6 +35,10 @@ $(document).ready(function () {
         fillCurrentVillages(parseInt($(this).val()));
     });
 
+    $('#txtBirthDate').change(function () {
+        fillAge($(this).val());
+    });
+
     $('#ddlFSPDistrict, #ddlFSPCategory').change(function () {
         var DistrictId = $('#ddlFSPDistrict').val();
         var FSPCategory = $('#ddlFSPCategory').val();
@@ -361,4 +365,18 @@ function getImage() {
         $('#imgInsuree').attr('src', '');
     }
     $("#hfImagePath").val($('#imgInsuree').attr('src'));
+}
+
+function fillAge(Birthday){
+    var today = new Date ();
+    var birthDate = new Date (Birthday)
+
+    var age = today.getFullYear() - birthDate.getFullYear();
+
+    if (age < 13){
+        Android.ShowDialog(Android.getString('MinorBeneficiary'));
+    }else if(age > 50){
+        Android.ShowDialog(Android.getString('MenopausedBeneficiary'));
+    }
+    $("#txtAge").val(age);
 }

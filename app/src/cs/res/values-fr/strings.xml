@@ -472,4 +472,7 @@
   <string name="Unauthorized"></string>
   <string name="UnknownError"></string>
   <string name="Forbidden"></string>
+  <string name="Age">Age</string>
+  <string name="MinorBeneficiary">Ce bénéficiaire est mineur</string>
+  <string name="MenopausedBeneficiary">Ce bénéficiaire est ménopausé</string>
 </resources>

@@ -437,4 +437,7 @@
     <string name="InvalidRenewalFile">Invalid renewal file</string>
     <string name="MaxPolicie">You cannot add policie</string>
     <string name="ConfirmControlNumber">Control number \"%1$s\" is not present in phone memory. Please confirm that this control number is correct.</string>
+    <string name="Age">Age</string>
+    <string name="MinorBeneficiary">This beneficiary is minor</string>
+    <string name="MenopausedBeneficiary">This beneficiary is menopaused</string>
 </resources>
