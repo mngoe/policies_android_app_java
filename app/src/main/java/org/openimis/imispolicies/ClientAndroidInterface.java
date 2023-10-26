@@ -65,11 +65,13 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import org.intellij.lang.annotations.Language;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openimis.imispolicies.domain.entity.Family;
 import org.openimis.imispolicies.domain.entity.FeedbackRequest;
+import org.openimis.imispolicies.domain.entity.Insuree;
 import org.openimis.imispolicies.domain.entity.PendingFeedback;
 import org.openimis.imispolicies.network.exception.HttpException;
 import org.openimis.imispolicies.network.exception.UserNotAuthenticatedException;
@@ -79,6 +81,7 @@ import org.openimis.imispolicies.tools.StorageManager;
 import org.openimis.imispolicies.usecase.CreatePolicy;
 import org.openimis.imispolicies.usecase.DeletePolicyRenewal;
 import org.openimis.imispolicies.usecase.FetchFamily;
+import org.openimis.imispolicies.usecase.FetchInsureeInquire;
 import org.openimis.imispolicies.usecase.FetchMasterData;
 import org.openimis.imispolicies.usecase.Login;
 import org.openimis.imispolicies.usecase.PostFeedback;
@@ -3094,6 +3097,9 @@ public class ClientAndroidInterface {
                         case -6:
                             ErrMsg = "[" + CHFNumber + "] " + activity.getString(R.string.Interuption);
                             break;
+                        case -7:
+                            ErrMsg = "[" + CHFNumber + "] " + activity.getString(R.string.RecordNotFound);
+                            break;
                         case -400:
                             ErrMsg = "[" + CHFNumber + "] " + activity.getString(R.string.ServerError);
                             break;
@@ -3127,34 +3133,53 @@ public class ClientAndroidInterface {
             @NonNull Pair<String, byte[]>[] insureeImages
     ) throws JSONException {
         JSONObject familyObj = familyArray.getJSONObject(0);
-
         Family family = familyFromJSONObject(familyObj, insureesArray, insureeImages);
+        JSONObject insureeObj = insureesArray.getJSONObject(0);
+
+        //search family in webserver by head insuree CHFID
+        int existingFamilyId = 0;
+        try {
+            existingFamilyId = new FetchFamily().fetchFamilyId(insureeObj.getString("CHFID"));
+        } catch (HttpException e) {
+            if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
+                throw e;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (existingFamilyId == 0){
+            //insuree don't exist
+            return -7;
+        }else{
+            for (int j = 0; j < policiesArray.length(); j++) {
+                JSONArray policyPremiums = new JSONArray();
+                String policyId = policiesArray.getJSONObject(j).getString("PolicyId");
+                for (int k = 0; k < premiumsArray.length(); k++) {
+                    JSONObject premiumObject = premiumsArray.getJSONObject(k);
+                    if (StringUtils.equals(policyId, premiumObject.getString("PolicyId"))) {
+                        policyPremiums.put(premiumObject);
+                    }
+                }
+                policiesArray.getJSONObject(j).put("premium", policyPremiums);
+            }
+
+            List<Family.Policy> policies = familyPolicyFromJSONObject(family.getUuid(), existingFamilyId, policiesArray);
+            try {
+                new CreatePolicy().execute(policies);
+            } catch (Exception e) {
+                enrolMessages.add(e.getMessage());
+                return -400;
+            }
+        }
+
+        /*Family family = familyFromJSONObject(familyObj, insureesArray, insureeImages);
         try {
             new UpdateFamily().execute(family);
         } catch (Exception e) {
             enrolMessages.add(e.getMessage());
             return -400;
-        }
-
-        for (int j = 0; j < policiesArray.length(); j++) {
-            JSONArray policyPremiums = new JSONArray();
-            String policyId = policiesArray.getJSONObject(j).getString("PolicyId");
-            for (int k = 0; k < premiumsArray.length(); k++) {
-                JSONObject premiumObject = premiumsArray.getJSONObject(k);
-                if (StringUtils.equals(policyId, premiumObject.getString("PolicyId"))) {
-                    policyPremiums.put(premiumObject);
-                }
-            }
-            policiesArray.getJSONObject(j).put("premium", policyPremiums);
-        }
-
-        List<Family.Policy> policies = familyPolicyFromJSONObject(family.getUuid(), policiesArray);
-        try {
-            new CreatePolicy().execute(policies);
-        } catch (Exception e) {
-            enrolMessages.add(e.getMessage());
-            return -400;
-        }
+        }*/
 
         return 0;
     }
@@ -3226,6 +3251,7 @@ public class ClientAndroidInterface {
     @NonNull
     private List<Family.Policy> familyPolicyFromJSONObject(
             @NonNull String familyUUID,
+            @NotNull int familyId,
             @NonNull JSONArray array
     ) throws JSONException {
         List<Family.Policy> policies = new ArrayList<>();
@@ -3235,7 +3261,7 @@ public class ClientAndroidInterface {
             policies.add(new Family.Policy(
                     /* id = */ Integer.parseInt(object.getString("PolicyId")),
                     /* uuid = */ policyUuid,
-                    /* familyId = */ Integer.parseInt(object.getString("FamilyId")),
+                    /* familyId = */ familyId,
                     /* familyUuid = */ familyUUID,
                     /* enrollDate = */ Objects.requireNonNull(JsonUtils.getDateOrDefault(object, "EnrollDate")),
                     /* startDate = */ Objects.requireNonNull(JsonUtils.getDateOrDefault(object, "StartDate")),

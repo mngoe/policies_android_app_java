@@ -37,6 +37,13 @@ public class FetchFamily {
 
     @WorkerThread
     @NonNull
+    public int fetchFamilyId(@NonNull String headChfid) throws Exception{
+        GetFamilyQuery.Node node = getFamilyGraphQLRequest.get(headChfid);
+        return IdUtils.getIdFromGraphQLString(node.id());
+    }
+
+    @WorkerThread
+    @NonNull
     public Family execute(@NonNull String headChfId) throws Exception {
         GetFamilyQuery.Node node = getFamilyGraphQLRequest.get(headChfId);
         return new Family(
