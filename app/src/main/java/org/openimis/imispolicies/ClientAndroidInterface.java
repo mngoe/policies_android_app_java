@@ -3203,7 +3203,7 @@ public class ClientAndroidInterface {
                 /* identificationNumber = */ JsonUtils.getStringOrDefault(object, "IdentificationNumber"),
                 /* lastName = */ object.getString("LastName"),
                 /* otherNames = */ object.getString("OtherNames"),
-                /* dateOfBirth = */ Objects.requireNonNull(JsonUtils.getDateOrDefault(object, "DOB")),
+                /* dateOfBirth = */ Calendar.getInstance().getTime(),
                 /* gender = */ object.getString("Gender"),
                 /* marital = */ JsonUtils.getStringOrDefault(object, "Marital"),
                 /* phone = */ JsonUtils.getStringOrDefault(object, "Phone"),
@@ -3332,12 +3332,12 @@ public class ClientAndroidInterface {
                             Pair<String, byte[]> img = new Pair<>("", empty);
                             images[j] = img;
                         } else {
-                            myList.add(getInsureeValidationError(
-                                    chfId, lastName, otherNames,
+                            /*mylist.add(getInsureeValidationError(
+                                    chfid, lastname, othername,
                                     R.string.WithoutPhoto
-                            ));
-                            ShowErrorMessages();
-                            break;
+                            ));*/
+                            //ShowErrorMessages();
+                            //break;
                         }
                     } else {
                         images[j] = new Pair<>("", new byte[0]);

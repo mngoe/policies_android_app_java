@@ -714,10 +714,10 @@ public class MainActivity extends AppCompatActivity
             } else {
                 wv.loadUrl("file:///android_asset/pages/Login.html?s=4");
             }
-        } else if (id == R.id.nav_feedback) {
+        }/*else if (id == R.id.nav_feedback) {
             Intent intent = new Intent(this, FeedbackList.class);
             startActivity(intent);
-        } else if (id == R.id.nav_sync) {
+        }*/ else if (id == R.id.nav_sync) {
             wv.loadUrl("file:///android_asset/pages/Sync.html");
         } else if (id == R.id.nav_about) {
             wv.loadUrl("file:///android_asset/pages/About.html");
