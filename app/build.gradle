@@ -108,6 +108,12 @@ android {
             resValue "string", "app_name_policies", "Enrolement CSU"
             dimension = 'std'
         }
+        csuVIHDev {
+            applicationId "org.openimis.imispolicies.csuVIHDev"
+            buildConfigField "String", "API_BASE_URL", '"https://dev-csuapps.minsante.cm/"'
+            resValue "string", "app_name_policies", "Enrolement CSU VIH"
+            dimension = 'std'
+        }
         mvDev {
             applicationId "org.openimis.imispolicies.mv"
             buildConfigField "String", "API_BASE_URL", '"http://imis-mv.swisstph-mis.ch/"'
@@ -173,6 +179,9 @@ android {
 
         csuDev.java.srcDir 'src/csu/java'
         csuDev.res.srcDirs = ['src/csu/res', 'src/localeCsu/res']
+
+        csuVIHDev.java.srcDir 'src/csuVIH/java'
+        csuVIHDev.res.srcDirs = ['src/csuVIH/res', 'src/localeCsuVIH/res']
 
         niger.java.srcDir 'src/niger/java'
         niger.res.srcDir 'src/niger/res'

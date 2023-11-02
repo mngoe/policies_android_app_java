@@ -1598,7 +1598,7 @@ public class ClientAndroidInterface {
     @SuppressWarnings("unused")
     public String getProducts(int RegionId, int DistrictId, String EnrolmentDate) {
         @Language("SQL")
-        String ProductQuery = "SELECT  ProdId, ProductCode, ProductName, ProductCode ||\" - \"|| ProductName ProductNameCombined  \n" +
+        String ProductQuery = "SELECT  ProdId, ProductCode, ProductName, Program, ProductCode ||\" - \"|| ProductName ProductNameCombined  \n" +
                 "FROM tblProduct P\n" +
                 "INNER JOIN  uvwLocations L ON (P.LocationId = L.LocationId) \n" +
                 "WHERE  ((L.RegionId = " + RegionId + " OR L.RegionId ='null') AND (L.DistrictId =  " + DistrictId + " OR L.DistrictId ='null') OR L.LocationId='null') AND " +
@@ -1607,6 +1607,53 @@ public class ClientAndroidInterface {
 
         JSONArray Products = sqlHandler.getResult(ProductQuery, null);
         return Products.toString();
+    }
+
+    @JavascriptInterface
+    @SuppressWarnings("unused")
+    public String getCSUProducts(int RegionId, int DistrictId, String EnrolmentDate){
+        JSONArray products = new JSONArray();
+        String idVIH ="";
+        String appName = BuildConfig.FLAVOR;
+
+        try{
+            JSONArray ProductArray = new JSONArray(getProducts(RegionId, DistrictId, EnrolmentDate));
+            JSONArray ProgramsArray = new JSONArray(getProgram());
+
+
+            for(int j = 0; j < ProgramsArray.length(); j++ ){
+                JSONObject objProgram = ProgramsArray.getJSONObject(j);
+                if(objProgram.get("Name").equals("VIH")){
+                    idVIH = objProgram.getString("idProgram");
+                }
+            }
+
+            if(idVIH != ""){
+
+                if(appName.equals("csuDev")){
+                    for (int i = 0; i<ProductArray.length(); i++){
+                        JSONObject objProduct = ProductArray.getJSONObject(i);
+                        if(!objProduct.getString("Program").equals(idVIH)){
+                            products.put(objProduct);
+                        }
+                    }
+                }else if(appName.equals("csuVIHDev")){
+                    for (int i = 0; i<ProductArray.length(); i++){
+                        JSONObject objProduct = ProductArray.getJSONObject(i);
+                        if(objProduct.getString("Program").equals(idVIH)){
+                            products.put(objProduct);
+                        }
+                    }
+                }
+            }else{
+                Log.e("error", "pas de programme VIH");
+            }
+
+        } catch(JSONException e){
+            e.printStackTrace();
+        }
+
+        return products.toString();
     }
 
     public String getProductsRD() {
