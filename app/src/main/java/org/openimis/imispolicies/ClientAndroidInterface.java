@@ -534,6 +534,30 @@ public class ClientAndroidInterface {
 
     @JavascriptInterface
     @SuppressWarnings("unused")
+    public String getProgram() {
+        String tableName = "tblProgram";
+        String[] columns = {"idProgram", "Name"};
+        String where = null;
+
+        JSONArray program = sqlHandler.getResult(tableName, columns, null, null);
+
+        return program.toString();
+    }
+
+    @JavascriptInterface
+    @SuppressWarnings("unused")
+    public String getCheque() {
+        String tableName = "tblCheque";
+        String[] columns = {"idChequeImportLine", "chequeImportLineCode", "chequeImportLineStatus"};
+        String where = null;
+
+        JSONArray program = sqlHandler.getResult(tableName, columns, null, null);
+
+        return program.toString();
+    }
+
+    @JavascriptInterface
+    @SuppressWarnings("unused")
     public String getMaritalStatus() {
         JSONArray maritalStatus = new JSONArray();
         JSONObject object = new JSONObject();
@@ -4009,6 +4033,8 @@ public class ClientAndroidInterface {
         JSONArray Relations = new JSONArray();
         JSONArray PhoneDefaults = new JSONArray();
         JSONArray Genders = new JSONArray();
+        JSONArray Programs = new JSONArray();
+        JSONArray Cheques = new JSONArray();
         //JSONArray OfficerVillages = new JSONArray();
 
         try {
@@ -4105,6 +4131,8 @@ public class ClientAndroidInterface {
             insertRelations((JSONArray) masterData.get("relations"));
             insertPhoneDefaults((JSONArray) masterData.get("phoneDefaults"));
             insertGenders((JSONArray) masterData.get("genders"));
+            insertPrograms((JSONArray) masterData.get("programs"));
+            insertCheques((JSONArray) masterData.get("cheques"));
         } catch (JSONException e) {
             e.printStackTrace();
             throw new UserException(activity.getResources().getString(R.string.DownloadMasterDataFailed), e);
@@ -4223,6 +4251,18 @@ public class ClientAndroidInterface {
     private void insertGenders(JSONArray jsonArray) throws JSONException {
         String[] Columns = getColumnNames(jsonArray);
         sqlHandler.insertData("tblGender", Columns, jsonArray, "DELETE FROM tblGender;");
+    }
+
+    @WorkerThread
+    private void insertPrograms(JSONArray jsonArray) throws JSONException {
+        String[] Columns = getColumnNames(jsonArray);
+        sqlHandler.insertData("tblProgram", Columns, jsonArray, "DELETE FROM tblProgram;");
+    }
+
+    @WorkerThread
+    private void insertCheques(JSONArray jsonArray) throws JSONException {
+        String[] Columns = getColumnNames(jsonArray);
+        sqlHandler.insertData("tblCheque", Columns, jsonArray, "DELETE FROM tblCheque;");
     }
     // endregion Insert Master Data
 

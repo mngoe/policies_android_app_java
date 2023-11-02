@@ -90,6 +90,8 @@ public class SQLHandler extends SQLiteOpenHelper {
     public static final String tblRenewals = "tblRenewals";
     public static final String tblBulkControlNumbers = "tblBulkControlNumbers";
     public static final String tblFamilySMS = "tblFamilySMS";
+    public static final String tblCheque = "tblCheque";
+    public static final String tblProgram = "tblProgram";
 
     public SQLHandler(Context context) {
         super(context, DBNAME, null, DATABASE_VERSION);
@@ -318,6 +320,7 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "MaxInstallments NUMERIC," +
                             "WaitingPeriod NUMERIC," +
                             "Threshold NUMERIC," +
+                            "Program TEXT," +
                             "RenewalDiscountPerc NUMERIC," +
                             "RenewalDiscountPeriod NUMERIC," +
                             "AdministrationPeriod NUMERIC," +
@@ -412,6 +415,20 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "Amount REAL," +
                             "PolicyId INTEGER" + ")"
             );
+            sqLiteDatabase.execSQL(
+                    "CREATE TABLE " + tblProgram + "(" +
+                            "idProgram INTEGER," +
+                            "Name TEXT," +
+                            "validityDateFrom TEXT," +
+                            "validityDateTo TEXT" + ")"
+            );
+            sqLiteDatabase.execSQL(
+                    "CREATE TABLE " + tblCheque + "(" +
+                            "idChequeImportLine INTEGER," +
+                            "chequeImportLineCode TEXT," +
+                            "chequeImportLineDate TEXT," +
+                            "chequeImportLineStatus TEXT" + ")"
+            );
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -451,6 +468,8 @@ public class SQLHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + tblRecordedPolicies);
         db.execSQL("DROP TABLE IF EXISTS " + tblRelations);
         db.execSQL("DROP TABLE IF EXISTS " + tblRenewals);
+        db.execSQL("DROP TABLE IF EXISTS " + tblProgram);
+        db.execSQL("DROP TABLE IF EXISTS " + tblCheque);
         if (oldVersion < 2) {
             String sql = "ALTER TABLE tblRenewals ADD COLUMN LocationId INTEGER;";
             db.execSQL(sql);
