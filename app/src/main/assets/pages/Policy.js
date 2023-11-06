@@ -91,6 +91,15 @@ $(document).ready(function () {
 
     });
 
+    $('#txtPolicyNumber').change(function () {
+            var Pol = $('#txtPolicyNumber').val();
+            var ans = Android.isValidInsuranceNumber(Pol);
+            if (ans != true) {
+                $('#txtPolicyNumber').val("");
+                $('#txtPolicyNumber').focus();
+            }
+        });
+
     $('#txtEnrolmentDate, #ddlProduct').change(function () {
         var EnrolmentDate = $('#txtEnrolmentDate').val();
         var ProdId = $('#ddlProduct').val();
@@ -117,8 +126,10 @@ $(document).ready(function () {
 
         if($('#ddlProduct').val() == csProductId){
             $('#PolicyNumber').show();
+            $('#PolicyNumber').attr("required", true);
         }else{
             $('#PolicyNumber').hide();
+            $('#PolicyNumber').attr("required", false);
         }
     });
 
@@ -131,6 +142,7 @@ $(document).ready(function () {
 
     $('#btnSave').click(function () {
         var passed = isFormValidated();
+        var csProductId = Android.getIdCsProduct();
 
         if (passed == true) {
             if(Android.IsBulkCNUsed() && !$('#AssignedControlNumber').val()) {

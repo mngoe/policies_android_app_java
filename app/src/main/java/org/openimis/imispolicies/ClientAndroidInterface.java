@@ -326,8 +326,52 @@ public class ClientAndroidInterface {
             ShowDialog(activity.getResources().getString(validInsuranceNumber));
             return false;
         }
+        if(getChequeStatut(InsuranceNumber).equals("used")){
+            ShowDialog(activity.getResources().getString(R.string.UsedChequeNumber));
+            return false;
+        }
+        if(getChequeStatut(InsuranceNumber).equals("cancel")){
+            ShowDialog(activity.getResources().getString(R.string.AbortedChequeNumber));
+            return false;
+        }
+        if(getChequeStatut(InsuranceNumber).equals("")){
+            ShowDialog(activity.getResources().getString(R.string.NotExistChequeNumber));
+            return false;
+        }
         return true;
     }
+
+    //get statut of cheque number
+    public String getChequeStatut(String numero) {
+        String statut = "";
+        try {
+            @Language("SQL")
+            String query = "SELECT chequeImportLineStatus FROM tblCheque WHERE chequeImportLineCode = ?";
+            JSONArray jsonArray = sqlHandler.getResult(query, new String[]{numero});
+            // looping through all rows
+            if (jsonArray.length() != 0) {
+                JSONObject object = jsonArray.getJSONObject(0);
+                statut = object.getString("chequeImportLineStatus");
+            }
+        } catch (Exception e) {
+            return statut;
+        }
+
+        return statut;
+
+    }
+
+    //modifie le statut d'un numéro de cheque
+    public void updateChequeStatut(String Code){
+        try {
+            ContentValues cv = new ContentValues();
+            cv.put("chequeImportLineStatus", "Used");
+            sqlHandler.updateData("tblCheque", cv,"chequeImportLineCode=?", new String[]{Code});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     //get Region Without Officer
     @JavascriptInterface
@@ -551,9 +595,9 @@ public class ClientAndroidInterface {
         String[] columns = {"idChequeImportLine", "chequeImportLineCode", "chequeImportLineStatus"};
         String where = null;
 
-        JSONArray program = sqlHandler.getResult(tableName, columns, null, null);
+        JSONArray cheque = sqlHandler.getResult(tableName, columns, null, null);
 
-        return program.toString();
+        return cheque.toString();
     }
 
     @JavascriptInterface
@@ -1794,6 +1838,7 @@ public class ClientAndroidInterface {
             if (rtPolicyId == 0) {
                 values.put("PolicyId", MaxPolicyId);
                 sqlHandler.insertData("tblPolicy", values);
+                updateChequeStatut(data.get("txtInsuranceNumber"));
                 rtPolicyId = MaxPolicyId;
                 InsertPolicyInsuree(rtPolicyId, 1);
                 if (IsBulkCNUsed()) {
@@ -1803,6 +1848,7 @@ public class ClientAndroidInterface {
             } else {
                 int Online = 2;
                 sqlHandler.updateData("tblPolicy", values, "PolicyId = ? AND (isOffline = ? OR isOffline = ?) ", new String[]{String.valueOf(PolicyId), String.valueOf(isOffline), String.valueOf(Online)});
+                updateChequeStatut(data.get("txtInsuranceNumber"));
                 if (IsBulkCNUsed()) {
                     sqlHandler.clearCnAssignedToPolicy(PolicyId);
                     sqlHandler.assignCnToPolicy(PolicyId, controlNumber);
