@@ -1656,6 +1656,53 @@ public class ClientAndroidInterface {
         return products.toString();
     }
 
+    @JavascriptInterface
+    @SuppressWarnings("unused")
+    public int getIdCsProgram(){
+        int idCsProgram = 0;
+
+        try{
+            JSONArray programs = new JSONArray(getProgram());
+
+
+            for(int i = 0 ; i < programs.length(); i++){
+                String programName = programs.getJSONObject(i).getString("Name").toUpperCase();
+                if(programName.equals("CHEQUE SANTE") || programName.equals("CHEQUE SANTÉ")){
+                    idCsProgram = programs.getJSONObject(i).getInt("idProgram");
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return idCsProgram;
+
+    }
+
+    @JavascriptInterface
+    @SuppressWarnings("unused")
+    public int getIdCsProduct() {
+        String tableName = "tblProduct";
+        String[] columns = {"ProdId", "Program"};
+        String where = null;
+        int idCSProd = 0;
+
+        JSONArray products = sqlHandler.getResult(tableName, columns, null, null);
+
+        try{
+            for(int i = 0; i< products.length();i++){
+                String prodId = products.getJSONObject(i).getString("Program");
+                if(prodId.equals(String.valueOf(getIdCsProgram()))){
+                    idCSProd = products.getJSONObject(i).getInt("ProdId");
+                }
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        return idCSProd;
+    }
+
     public String getProductsRD() {
         JSONArray Products = null;
         int RegionId = 0, DistrictId = 0;
@@ -1738,6 +1785,7 @@ public class ClientAndroidInterface {
             values.put("PolicyValue", data.get("hfPolicyValue"));
             values.put("ProdId", data.get("ddlProduct"));
             values.put("OfficerId", data.get("ddlOfficer"));
+            values.put("PolicyNumber", data.get("txtPolicyNumber"));
 
             String controlNumber = data.get("AssignedControlNumber");
             values.put("isOffline", isOffline);
@@ -1865,7 +1913,7 @@ public class ClientAndroidInterface {
     @SuppressWarnings("unused")
     public String getPolicy(int PolicyId) {
         @Language("SQL")
-        String Query = "SELECT  P.PolicyId, P.ProdId, OfficerId , Prod.ProductCode, ProductName, PolicyStage, EffectiveDate, IFNULL(PolicyValue,0) PolicyValue, StartDate, EnrollDate, bcn.ControlNumber, \n" +
+        String Query = "SELECT  P.PolicyId, P.ProdId, OfficerId , Prod.ProductCode, ProductName, PolicyStage, EffectiveDate, IFNULL(PolicyValue,0) PolicyValue, StartDate, PolicyNumber, EnrollDate, bcn.ControlNumber, \n" +
                 "   CASE    WHEN PolicyStatus = 1 THEN '" + activity.getResources().getString(R.string.Idle) + "'   " +
                 "   WHEN PolicyStatus = 2 THEN '" + activity.getResources().getString(R.string.Active) + "'  " +
                 "   WHEN PolicyStatus = 4 THEN '" + activity.getResources().getString(R.string.Suspended) + "'  " +

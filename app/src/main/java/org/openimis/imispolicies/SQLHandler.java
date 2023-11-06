@@ -421,6 +421,7 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "idProgram INTEGER," +
                             "Name TEXT," +
                             "validityDateFrom TEXT," +
+                            "programCode TEXT," +
                             "validityDateTo TEXT" + ")"
             );
             sqLiteDatabase.execSQL(

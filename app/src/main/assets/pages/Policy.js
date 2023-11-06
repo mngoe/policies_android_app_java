@@ -5,6 +5,8 @@ $(document).ready(function () {
         $('#ControlNumber').hide();
     }
 
+    $('#PolicyNumber').hide()
+
     $("#dialog-confirm").attr("title", Android.getString('Confirm'));
 
     var LocationId = parseInt(queryString("l"));
@@ -39,6 +41,12 @@ $(document).ready(function () {
         var ProdId = parseInt($Policy[0]["ProdId"]);
         var CurrentPolicyValue = $Policy[0]["PolicyValue"];
         var isOffline = parseInt($Policy[0]["isOffline"]);
+
+        var csProductId = Android.getIdCsProduct();
+        if($Policy[0]["ProdId"] == csProductId){
+             $('#PolicyNumber').show();
+             $("#textPolicyNumber").val($Policy[0]["PolicyNumber"]);
+        }
 
         bindDataFromDatafield(strPolicy);
 
@@ -91,6 +99,7 @@ $(document).ready(function () {
     });
 
     $('#ddlProduct').change(function () {
+        var csProductId = Android.getIdCsProduct();
         if(Android.IsBulkCNUsed()) {
             var productId = $('#ddlProduct').val();
             if(productId == '0') {
@@ -104,6 +113,12 @@ $(document).ready(function () {
             } else {
                 $('#AssignedControlNumber').val(controlNumber);
             }
+        }
+
+        if($('#ddlProduct').val() == csProductId){
+            $('#PolicyNumber').show();
+        }else{
+            $('#PolicyNumber').hide();
         }
     });
 
