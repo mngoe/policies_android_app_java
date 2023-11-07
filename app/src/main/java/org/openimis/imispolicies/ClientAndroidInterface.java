@@ -1711,7 +1711,8 @@ public class ClientAndroidInterface {
 
             for(int i = 0 ; i < programs.length(); i++){
                 String programName = programs.getJSONObject(i).getString("Name").toUpperCase();
-                if(programName.equals("CHEQUE SANTE") || programName.equals("CHEQUE SANTÉ")){
+                if(programName.equals("CHEQUE SANTE") || programName.equals("CHEQUE SANTÉ") ||
+                        programName.equals("CHÈQUE SANTÉ")){
                     idCsProgram = programs.getJSONObject(i).getInt("idProgram");
                 }
             }
