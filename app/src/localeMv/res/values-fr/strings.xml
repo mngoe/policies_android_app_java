@@ -465,9 +465,9 @@
     <string name="DownladChequeDataFail">Could not download cheque numbers data</string>
     <string name="EnquirePolicyCovered">Policy Status: Covered</string>
     <string name="EnquirePolicyNotCovered">Policy Status: Not Covered</string>
-    <string name="EnquirePolicyLabel">Policy Status</string>
-    <string name="NotExistChequeNumber">This cheque number not exist</string>
-    <string name="PhotoRequired">Please add a picture</string>
+    <string name="EnquirePolicyLabel">Statut de la police</string>
+    <string name="NotExistChequeNumber">Ce numéro de cheque n'existe pas</string>
+    <string name="PhotoRequired">Veuillez ajouter une photo svp</string>
     <string name="NotFound">Entry does not exist.</string>
     <string name="Unauthorized">Authorization failed.</string>
     <string name="UnknownError">Unknown Error.</string>
@@ -477,4 +477,5 @@
     <string name="CurrentResourceLanguage">Current resource language: %1$s</string>
     <string name="SystemLanguageNotSupported">Current system language is not supported. The app will use the default language.</string>
     <string name="SupportedLanguages">Supported languages:\n%1$s</string>
+    <string name="PolicyNumber">Numéro de chèque</string>
 </resources>

@@ -65,11 +65,13 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import org.intellij.lang.annotations.Language;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openimis.imispolicies.domain.entity.Family;
 import org.openimis.imispolicies.domain.entity.FeedbackRequest;
+import org.openimis.imispolicies.domain.entity.Insuree;
 import org.openimis.imispolicies.domain.entity.PendingFeedback;
 import org.openimis.imispolicies.network.exception.HttpException;
 import org.openimis.imispolicies.network.exception.UserNotAuthenticatedException;
@@ -79,6 +81,7 @@ import org.openimis.imispolicies.tools.StorageManager;
 import org.openimis.imispolicies.usecase.CreatePolicy;
 import org.openimis.imispolicies.usecase.DeletePolicyRenewal;
 import org.openimis.imispolicies.usecase.FetchFamily;
+import org.openimis.imispolicies.usecase.FetchInsureeInquire;
 import org.openimis.imispolicies.usecase.FetchMasterData;
 import org.openimis.imispolicies.usecase.Login;
 import org.openimis.imispolicies.usecase.PostFeedback;
@@ -323,8 +326,52 @@ public class ClientAndroidInterface {
             ShowDialog(activity.getResources().getString(validInsuranceNumber));
             return false;
         }
+        if(getChequeStatut(InsuranceNumber).equals("used")){
+            ShowDialog(activity.getResources().getString(R.string.UsedChequeNumber));
+            return false;
+        }
+        if(getChequeStatut(InsuranceNumber).equals("cancel")){
+            ShowDialog(activity.getResources().getString(R.string.AbortedChequeNumber));
+            return false;
+        }
+        if(getChequeStatut(InsuranceNumber).equals("")){
+            ShowDialog(activity.getResources().getString(R.string.NotExistChequeNumber));
+            return false;
+        }
         return true;
     }
+
+    //get statut of cheque number
+    public String getChequeStatut(String numero) {
+        String statut = "";
+        try {
+            @Language("SQL")
+            String query = "SELECT chequeImportLineStatus FROM tblCheque WHERE chequeImportLineCode = ?";
+            JSONArray jsonArray = sqlHandler.getResult(query, new String[]{numero});
+            // looping through all rows
+            if (jsonArray.length() != 0) {
+                JSONObject object = jsonArray.getJSONObject(0);
+                statut = object.getString("chequeImportLineStatus");
+            }
+        } catch (Exception e) {
+            return statut;
+        }
+
+        return statut;
+
+    }
+
+    //modifie le statut d'un numéro de cheque
+    public void updateChequeStatut(String Code){
+        try {
+            ContentValues cv = new ContentValues();
+            cv.put("chequeImportLineStatus", "Used");
+            sqlHandler.updateData("tblCheque", cv,"chequeImportLineCode=?", new String[]{Code});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     //get Region Without Officer
     @JavascriptInterface
@@ -527,6 +574,30 @@ public class ClientAndroidInterface {
         JSONArray Gender = sqlHandler.getResult(tableName, columns, null, OrderBy);
 
         return Gender.toString();
+    }
+
+    @JavascriptInterface
+    @SuppressWarnings("unused")
+    public String getProgram() {
+        String tableName = "tblProgram";
+        String[] columns = {"idProgram", "Name"};
+        String where = null;
+
+        JSONArray program = sqlHandler.getResult(tableName, columns, null, null);
+
+        return program.toString();
+    }
+
+    @JavascriptInterface
+    @SuppressWarnings("unused")
+    public String getCheque() {
+        String tableName = "tblCheque";
+        String[] columns = {"idChequeImportLine", "chequeImportLineCode", "chequeImportLineStatus"};
+        String where = null;
+
+        JSONArray cheque = sqlHandler.getResult(tableName, columns, null, null);
+
+        return cheque.toString();
     }
 
     @JavascriptInterface
@@ -1571,7 +1642,7 @@ public class ClientAndroidInterface {
     @SuppressWarnings("unused")
     public String getProducts(int RegionId, int DistrictId, String EnrolmentDate) {
         @Language("SQL")
-        String ProductQuery = "SELECT  ProdId, ProductCode, ProductName, ProductCode ||\" - \"|| ProductName ProductNameCombined  \n" +
+        String ProductQuery = "SELECT  ProdId, ProductCode, ProductName, Program, ProductCode ||\" - \"|| ProductName ProductNameCombined  \n" +
                 "FROM tblProduct P\n" +
                 "INNER JOIN  uvwLocations L ON (P.LocationId = L.LocationId) \n" +
                 "WHERE  ((L.RegionId = " + RegionId + " OR L.RegionId ='null') AND (L.DistrictId =  " + DistrictId + " OR L.DistrictId ='null') OR L.LocationId='null') AND " +
@@ -1580,6 +1651,101 @@ public class ClientAndroidInterface {
 
         JSONArray Products = sqlHandler.getResult(ProductQuery, null);
         return Products.toString();
+    }
+
+    @JavascriptInterface
+    @SuppressWarnings("unused")
+    public String getCSUProducts(int RegionId, int DistrictId, String EnrolmentDate){
+        JSONArray products = new JSONArray();
+        String idVIH ="";
+        String appName = BuildConfig.FLAVOR;
+
+        try{
+            JSONArray ProductArray = new JSONArray(getProducts(RegionId, DistrictId, EnrolmentDate));
+            JSONArray ProgramsArray = new JSONArray(getProgram());
+
+
+            for(int j = 0; j < ProgramsArray.length(); j++ ){
+                JSONObject objProgram = ProgramsArray.getJSONObject(j);
+                if(objProgram.get("Name").equals("VIH")){
+                    idVIH = objProgram.getString("idProgram");
+                }
+            }
+
+            if(idVIH != ""){
+
+                if(appName.equals("csuDev")){
+                    for (int i = 0; i<ProductArray.length(); i++){
+                        JSONObject objProduct = ProductArray.getJSONObject(i);
+                        if(!objProduct.getString("Program").equals(idVIH)){
+                            products.put(objProduct);
+                        }
+                    }
+                }else if(appName.equals("csuVIHDev")){
+                    for (int i = 0; i<ProductArray.length(); i++){
+                        JSONObject objProduct = ProductArray.getJSONObject(i);
+                        if(objProduct.getString("Program").equals(idVIH)){
+                            products.put(objProduct);
+                        }
+                    }
+                }
+            }else{
+                Log.e("error", "pas de programme VIH");
+            }
+
+        } catch(JSONException e){
+            e.printStackTrace();
+        }
+
+        return products.toString();
+    }
+
+    @JavascriptInterface
+    @SuppressWarnings("unused")
+    public int getIdCsProgram(){
+        int idCsProgram = 0;
+
+        try{
+            JSONArray programs = new JSONArray(getProgram());
+
+
+            for(int i = 0 ; i < programs.length(); i++){
+                String programName = programs.getJSONObject(i).getString("Name").toUpperCase();
+                if(programName.equals("CHEQUE SANTE") || programName.equals("CHEQUE SANTÉ") ||
+                        programName.equals("CHÈQUE SANTÉ")){
+                    idCsProgram = programs.getJSONObject(i).getInt("idProgram");
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return idCsProgram;
+
+    }
+
+    @JavascriptInterface
+    @SuppressWarnings("unused")
+    public int getIdCsProduct() {
+        String tableName = "tblProduct";
+        String[] columns = {"ProdId", "Program"};
+        String where = null;
+        int idCSProd = 0;
+
+        JSONArray products = sqlHandler.getResult(tableName, columns, null, null);
+
+        try{
+            for(int i = 0; i< products.length();i++){
+                String prodId = products.getJSONObject(i).getString("Program");
+                if(prodId.equals(String.valueOf(getIdCsProgram()))){
+                    idCSProd = products.getJSONObject(i).getInt("ProdId");
+                }
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        return idCSProd;
     }
 
     public String getProductsRD() {
@@ -1664,6 +1830,7 @@ public class ClientAndroidInterface {
             values.put("PolicyValue", data.get("hfPolicyValue"));
             values.put("ProdId", data.get("ddlProduct"));
             values.put("OfficerId", data.get("ddlOfficer"));
+            values.put("PolicyNumber", data.get("txtPolicyNumber"));
 
             String controlNumber = data.get("AssignedControlNumber");
             values.put("isOffline", isOffline);
@@ -1672,6 +1839,7 @@ public class ClientAndroidInterface {
             if (rtPolicyId == 0) {
                 values.put("PolicyId", MaxPolicyId);
                 sqlHandler.insertData("tblPolicy", values);
+                updateChequeStatut(data.get("txtInsuranceNumber"));
                 rtPolicyId = MaxPolicyId;
                 InsertPolicyInsuree(rtPolicyId, 1);
                 if (IsBulkCNUsed()) {
@@ -1681,6 +1849,7 @@ public class ClientAndroidInterface {
             } else {
                 int Online = 2;
                 sqlHandler.updateData("tblPolicy", values, "PolicyId = ? AND (isOffline = ? OR isOffline = ?) ", new String[]{String.valueOf(PolicyId), String.valueOf(isOffline), String.valueOf(Online)});
+                updateChequeStatut(data.get("txtInsuranceNumber"));
                 if (IsBulkCNUsed()) {
                     sqlHandler.clearCnAssignedToPolicy(PolicyId);
                     sqlHandler.assignCnToPolicy(PolicyId, controlNumber);
@@ -1791,7 +1960,7 @@ public class ClientAndroidInterface {
     @SuppressWarnings("unused")
     public String getPolicy(int PolicyId) {
         @Language("SQL")
-        String Query = "SELECT  P.PolicyId, P.ProdId, OfficerId , Prod.ProductCode, ProductName, PolicyStage, EffectiveDate, IFNULL(PolicyValue,0) PolicyValue, StartDate, EnrollDate, bcn.ControlNumber, \n" +
+        String Query = "SELECT  P.PolicyId, P.ProdId, OfficerId , Prod.ProductCode, ProductName, PolicyStage, EffectiveDate, IFNULL(PolicyValue,0) PolicyValue, StartDate, PolicyNumber, EnrollDate, bcn.ControlNumber, \n" +
                 "   CASE    WHEN PolicyStatus = 1 THEN '" + activity.getResources().getString(R.string.Idle) + "'   " +
                 "   WHEN PolicyStatus = 2 THEN '" + activity.getResources().getString(R.string.Active) + "'  " +
                 "   WHEN PolicyStatus = 4 THEN '" + activity.getResources().getString(R.string.Suspended) + "'  " +
@@ -3094,6 +3263,9 @@ public class ClientAndroidInterface {
                         case -6:
                             ErrMsg = "[" + CHFNumber + "] " + activity.getString(R.string.Interuption);
                             break;
+                        case -7:
+                            ErrMsg = "[" + CHFNumber + "] " + activity.getString(R.string.RecordNotFound);
+                            break;
                         case -400:
                             ErrMsg = "[" + CHFNumber + "] " + activity.getString(R.string.ServerError);
                             break;
@@ -3127,34 +3299,53 @@ public class ClientAndroidInterface {
             @NonNull Pair<String, byte[]>[] insureeImages
     ) throws JSONException {
         JSONObject familyObj = familyArray.getJSONObject(0);
-
         Family family = familyFromJSONObject(familyObj, insureesArray, insureeImages);
+        JSONObject insureeObj = insureesArray.getJSONObject(0);
+
+        //search family in webserver by head insuree CHFID
+        int existingFamilyId = 0;
+        try {
+            existingFamilyId = new FetchFamily().fetchFamilyId(insureeObj.getString("CHFID"));
+        } catch (HttpException e) {
+            if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
+                throw e;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (existingFamilyId == 0){
+            //insuree don't exist
+            return -7;
+        }else{
+            for (int j = 0; j < policiesArray.length(); j++) {
+                JSONArray policyPremiums = new JSONArray();
+                String policyId = policiesArray.getJSONObject(j).getString("PolicyId");
+                for (int k = 0; k < premiumsArray.length(); k++) {
+                    JSONObject premiumObject = premiumsArray.getJSONObject(k);
+                    if (StringUtils.equals(policyId, premiumObject.getString("PolicyId"))) {
+                        policyPremiums.put(premiumObject);
+                    }
+                }
+                policiesArray.getJSONObject(j).put("premium", policyPremiums);
+            }
+
+            List<Family.Policy> policies = familyPolicyFromJSONObject(family.getUuid(), existingFamilyId, policiesArray);
+            try {
+                new CreatePolicy().execute(policies);
+            } catch (Exception e) {
+                enrolMessages.add(e.getMessage());
+                return -400;
+            }
+        }
+
+        /*Family family = familyFromJSONObject(familyObj, insureesArray, insureeImages);
         try {
             new UpdateFamily().execute(family);
         } catch (Exception e) {
             enrolMessages.add(e.getMessage());
             return -400;
-        }
-
-        for (int j = 0; j < policiesArray.length(); j++) {
-            JSONArray policyPremiums = new JSONArray();
-            String policyId = policiesArray.getJSONObject(j).getString("PolicyId");
-            for (int k = 0; k < premiumsArray.length(); k++) {
-                JSONObject premiumObject = premiumsArray.getJSONObject(k);
-                if (StringUtils.equals(policyId, premiumObject.getString("PolicyId"))) {
-                    policyPremiums.put(premiumObject);
-                }
-            }
-            policiesArray.getJSONObject(j).put("premium", policyPremiums);
-        }
-
-        List<Family.Policy> policies = familyPolicyFromJSONObject(family.getUuid(), policiesArray);
-        try {
-            new CreatePolicy().execute(policies);
-        } catch (Exception e) {
-            enrolMessages.add(e.getMessage());
-            return -400;
-        }
+        }*/
 
         return 0;
     }
@@ -3226,6 +3417,7 @@ public class ClientAndroidInterface {
     @NonNull
     private List<Family.Policy> familyPolicyFromJSONObject(
             @NonNull String familyUUID,
+            @NotNull int familyId,
             @NonNull JSONArray array
     ) throws JSONException {
         List<Family.Policy> policies = new ArrayList<>();
@@ -3235,7 +3427,7 @@ public class ClientAndroidInterface {
             policies.add(new Family.Policy(
                     /* id = */ Integer.parseInt(object.getString("PolicyId")),
                     /* uuid = */ policyUuid,
-                    /* familyId = */ Integer.parseInt(object.getString("FamilyId")),
+                    /* familyId = */ familyId,
                     /* familyUuid = */ familyUUID,
                     /* enrollDate = */ Objects.requireNonNull(JsonUtils.getDateOrDefault(object, "EnrollDate")),
                     /* startDate = */ Objects.requireNonNull(JsonUtils.getDateOrDefault(object, "StartDate")),
@@ -3983,6 +4175,8 @@ public class ClientAndroidInterface {
         JSONArray Relations = new JSONArray();
         JSONArray PhoneDefaults = new JSONArray();
         JSONArray Genders = new JSONArray();
+        JSONArray Programs = new JSONArray();
+        JSONArray Cheques = new JSONArray();
         //JSONArray OfficerVillages = new JSONArray();
 
         try {
@@ -4079,6 +4273,8 @@ public class ClientAndroidInterface {
             insertRelations((JSONArray) masterData.get("relations"));
             insertPhoneDefaults((JSONArray) masterData.get("phoneDefaults"));
             insertGenders((JSONArray) masterData.get("genders"));
+            insertPrograms((JSONArray) masterData.get("programs"));
+            insertCheques((JSONArray) masterData.get("cheques"));
         } catch (JSONException e) {
             e.printStackTrace();
             throw new UserException(activity.getResources().getString(R.string.DownloadMasterDataFailed), e);
@@ -4197,6 +4393,18 @@ public class ClientAndroidInterface {
     private void insertGenders(JSONArray jsonArray) throws JSONException {
         String[] Columns = getColumnNames(jsonArray);
         sqlHandler.insertData("tblGender", Columns, jsonArray, "DELETE FROM tblGender;");
+    }
+
+    @WorkerThread
+    private void insertPrograms(JSONArray jsonArray) throws JSONException {
+        String[] Columns = getColumnNames(jsonArray);
+        sqlHandler.insertData("tblProgram", Columns, jsonArray, "DELETE FROM tblProgram;");
+    }
+
+    @WorkerThread
+    private void insertCheques(JSONArray jsonArray) throws JSONException {
+        String[] Columns = getColumnNames(jsonArray);
+        sqlHandler.insertData("tblCheque", Columns, jsonArray, "DELETE FROM tblCheque;");
     }
     // endregion Insert Master Data
 

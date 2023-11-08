@@ -41,23 +41,23 @@ $(document).ready(function () {
         fillFSP(DistrictId, FSPCategory);
     });
 
-    $('#txtInsuranceNumber').change(function () {
-        var Ins = $('#txtInsuranceNumber').val();
-        var ans = Android.isValidInsuranceNumber(Ins);
-        if (ans != true) {
-            $('#txtInsuranceNumber').val("");
-            $('#txtInsuranceNumber').focus();
-        }
-        var ImagePath = Android.GetListOfImagesContain(Ins);
+    //$('#txtInsuranceNumber').change(function () {
+    //    var Ins = $('#txtInsuranceNumber').val();
+    //    var ans = Android.isValidInsuranceNumber(Ins);
+    //    if (ans != true) {
+    //        $('#txtInsuranceNumber').val("");
+    //        $('#txtInsuranceNumber').focus();
+    //    }
+    //    var ImagePath = Android.GetListOfImagesContain(Ins);
 
-        if (ImagePath.length > 0) {
-            $('#imgInsuree').attr('src', 'file://' + ImagePath);
-        } else {
-            $('#imgInsuree').attr('src', '');
-        }
+    //    if (ImagePath.length > 0) {
+    //        $('#imgInsuree').attr('src', 'file://' + ImagePath);
+    //    } else {
+    //        $('#imgInsuree').attr('src', '');
+    //    }
 
-        $("#hfNewPhotoPath").val("");
-    });
+    //    $("#hfNewPhotoPath").val("");
+    //});
 
 
     $('#spPleaseWait').text(Android.getString('saving'));

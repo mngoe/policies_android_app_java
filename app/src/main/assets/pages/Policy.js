@@ -5,6 +5,8 @@ $(document).ready(function () {
         $('#ControlNumber').hide();
     }
 
+    $('#PolicyNumber').hide()
+
     $("#dialog-confirm").attr("title", Android.getString('Confirm'));
 
     var LocationId = parseInt(queryString("l"));
@@ -39,6 +41,12 @@ $(document).ready(function () {
         var ProdId = parseInt($Policy[0]["ProdId"]);
         var CurrentPolicyValue = $Policy[0]["PolicyValue"];
         var isOffline = parseInt($Policy[0]["isOffline"]);
+
+        var csProductId = Android.getIdCsProduct();
+        if($Policy[0]["ProdId"] == csProductId){
+             $('#PolicyNumber').show();
+             $("#textPolicyNumber").val($Policy[0]["PolicyNumber"]);
+        }
 
         bindDataFromDatafield(strPolicy);
 
@@ -83,6 +91,15 @@ $(document).ready(function () {
 
     });
 
+    $('#txtPolicyNumber').change(function () {
+            var Pol = $('#txtPolicyNumber').val();
+            var ans = Android.isValidInsuranceNumber(Pol);
+            if (ans != true) {
+                $('#txtPolicyNumber').val("");
+                $('#txtPolicyNumber').focus();
+            }
+        });
+
     $('#txtEnrolmentDate, #ddlProduct').change(function () {
         var EnrolmentDate = $('#txtEnrolmentDate').val();
         var ProdId = $('#ddlProduct').val();
@@ -91,6 +108,7 @@ $(document).ready(function () {
     });
 
     $('#ddlProduct').change(function () {
+        var csProductId = Android.getIdCsProduct();
         if(Android.IsBulkCNUsed()) {
             var productId = $('#ddlProduct').val();
             if(productId == '0') {
@@ -105,6 +123,14 @@ $(document).ready(function () {
                 $('#AssignedControlNumber').val(controlNumber);
             }
         }
+
+        if($('#ddlProduct').val() == csProductId){
+            $('#PolicyNumber').show();
+            $('#PolicyNumber').attr("required", true);
+        }else{
+            $('#PolicyNumber').hide();
+            $('#PolicyNumber').attr("required", false);
+        }
     });
 
     function savePolicy() {
@@ -116,6 +142,7 @@ $(document).ready(function () {
 
     $('#btnSave').click(function () {
         var passed = isFormValidated();
+        var csProductId = Android.getIdCsProduct();
 
         if (passed == true) {
             if(Android.IsBulkCNUsed() && !$('#AssignedControlNumber').val()) {
@@ -203,7 +230,7 @@ function LoadOfficers(LocationId, EnrolmentDate) {
 
 }
 function LoadProduct(RegionId, DistrictId, EnrolmentDate) {
-    var $Products = Android.getProducts(parseInt(RegionId), parseInt(DistrictId), EnrolmentDate);
+    var $Products = Android.getCSUProducts(parseInt(RegionId), parseInt(DistrictId), EnrolmentDate);
     bindDropdown('ddlProduct', $Products, 'ProdId', 'ProductNameCombined', 0, Android.getString('SelectProduct'));
 }
 

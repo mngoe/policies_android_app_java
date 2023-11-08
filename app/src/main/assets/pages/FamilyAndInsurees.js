@@ -44,7 +44,7 @@ $(document).ready(function () {
 
 
     AssignDotClass();
-    contextMenu.createContextMenu([Android.getString('Edit'), Android.getString('Delete')], function () {
+    contextMenu.createContextMenu([ Android.getString('Delete')], function () {
         var clicked = $(this).text();
         if (clicked == Android.getString('Edit')) {
             var url = 'FamilyAndInsurees.html?f=' + FamilyId;
