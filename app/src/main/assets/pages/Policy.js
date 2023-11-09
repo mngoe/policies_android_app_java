@@ -42,8 +42,8 @@ $(document).ready(function () {
         var CurrentPolicyValue = $Policy[0]["PolicyValue"];
         var isOffline = parseInt($Policy[0]["isOffline"]);
 
-        var csProductId = Android.getIdCsProduct();
-        if($Policy[0]["ProdId"] == csProductId){
+        var prodId = $Policy[0]["ProdId"];
+        if(Android.checkCsProduct(parseInt(prodId))){
              $('#PolicyNumber').show();
              $("#textPolicyNumber").val($Policy[0]["PolicyNumber"]);
         }
