@@ -1723,26 +1723,30 @@ public class ClientAndroidInterface {
 
     @JavascriptInterface
     @SuppressWarnings("unused")
-    public int getIdCsProduct() {
+    public boolean checkCsProduct(int idProduct) {
         String tableName = "tblProduct";
         String[] columns = {"ProdId", "Program"};
         String where = null;
-        int idCSProd = 0;
+        JSONArray idCSProds = new JSONArray();
+
+        Log.e("found",String.valueOf(idProduct));
 
         JSONArray products = sqlHandler.getResult(tableName, columns, null, null);
 
         try{
             for(int i = 0; i< products.length();i++){
-                String prodId = products.getJSONObject(i).getString("Program");
-                if(prodId.equals(String.valueOf(getIdCsProgram()))){
-                    idCSProd = products.getJSONObject(i).getInt("ProdId");
+                if(products.getJSONObject(i).getInt("ProdId") == idProduct){
+                    String prodId = products.getJSONObject(i).getString("Program");
+                    if(prodId.equals(String.valueOf(getIdCsProgram()))){
+                        return true;
+                    }
                 }
             }
         }catch (JSONException e){
             e.printStackTrace();
         }
 
-        return idCSProd;
+        return false;
     }
 
     public String getProductsRD() {

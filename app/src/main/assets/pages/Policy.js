@@ -108,7 +108,7 @@ $(document).ready(function () {
     });
 
     $('#ddlProduct').change(function () {
-        var csProductId = Android.getIdCsProduct();
+        var ProdId = $('#ddlProduct').val();
         if(Android.IsBulkCNUsed()) {
             var productId = $('#ddlProduct').val();
             if(productId == '0') {
@@ -124,7 +124,7 @@ $(document).ready(function () {
             }
         }
 
-        if($('#ddlProduct').val() == csProductId){
+        if( Android.checkCsProduct(parseInt(ProdId))){
             $('#PolicyNumber').show();
             $('#PolicyNumber').attr("required", true);
         }else{
