@@ -1,7 +1,5 @@
 package org.openimis.imispolicies.usecase;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 

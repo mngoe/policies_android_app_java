@@ -122,7 +122,7 @@ public class ToRestApi {
             }
 
             if (object != null) {
-                StringEntity postingString = new StringEntity(object.toString());
+                StringEntity postingString = new StringEntity(object.toString(), "UTF8");
                 httpPost.setEntity(postingString);
             }
             HttpResponse response = httpClient.execute(httpPost);

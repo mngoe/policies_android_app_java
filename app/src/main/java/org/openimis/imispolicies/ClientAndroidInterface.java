@@ -65,13 +65,11 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import org.intellij.lang.annotations.Language;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openimis.imispolicies.domain.entity.Family;
 import org.openimis.imispolicies.domain.entity.FeedbackRequest;
-import org.openimis.imispolicies.domain.entity.Insuree;
 import org.openimis.imispolicies.domain.entity.PendingFeedback;
 import org.openimis.imispolicies.network.exception.HttpException;
 import org.openimis.imispolicies.network.exception.UserNotAuthenticatedException;
@@ -81,7 +79,6 @@ import org.openimis.imispolicies.tools.StorageManager;
 import org.openimis.imispolicies.usecase.CreatePolicy;
 import org.openimis.imispolicies.usecase.DeletePolicyRenewal;
 import org.openimis.imispolicies.usecase.FetchFamily;
-import org.openimis.imispolicies.usecase.FetchInsureeInquire;
 import org.openimis.imispolicies.usecase.FetchMasterData;
 import org.openimis.imispolicies.usecase.Login;
 import org.openimis.imispolicies.usecase.PostFeedback;
@@ -3417,7 +3414,7 @@ public class ClientAndroidInterface {
     @NonNull
     private List<Family.Policy> familyPolicyFromJSONObject(
             @NonNull String familyUUID,
-            @NotNull int familyId,
+            @NonNull int familyId,
             @NonNull JSONArray array
     ) throws JSONException {
         List<Family.Policy> policies = new ArrayList<>();
@@ -3653,8 +3650,6 @@ public class ClientAndroidInterface {
                         if ((Insureeobject.getString("FamilyId").equals(FamilyIDs.get(x)))) {
                             String PhotoPath = (Insureeobject.getString("PhotoPath"));
                             if (PhotoPath.length() > 0 && !PhotoPath.equals("null")) {
-
-
                                 File[] files = GetListOfImages(global.getImageFolder(), PhotoPath);
                                 if (files.length > 0) {
                                     for (int i = 0; i < files.length; i++) {
