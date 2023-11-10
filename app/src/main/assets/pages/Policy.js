@@ -142,7 +142,6 @@ $(document).ready(function () {
 
     $('#btnSave').click(function () {
         var passed = isFormValidated();
-        var csProductId = Android.getIdCsProduct();
 
         if (passed == true) {
             if(Android.IsBulkCNUsed() && !$('#AssignedControlNumber').val()) {
