@@ -126,10 +126,8 @@ $(document).ready(function () {
 
         if( Android.checkCsProduct(parseInt(ProdId))){
             $('#PolicyNumber').show();
-            $('#PolicyNumber').attr("required", true);
         }else{
             $('#PolicyNumber').hide();
-            $('#PolicyNumber').attr("required", false);
         }
     });
 
@@ -142,6 +140,7 @@ $(document).ready(function () {
 
     $('#btnSave').click(function () {
         var passed = isFormValidated();
+        var ProdId = $('#ddlProduct').val();
 
         if (passed == true) {
             if(Android.IsBulkCNUsed() && !$('#AssignedControlNumber').val()) {
@@ -149,6 +148,15 @@ $(document).ready(function () {
                 $('#AssignedControlNumber').val('');
                 return;
             }
+
+            if( Android.checkCsProduct(parseInt(ProdId))){
+                var Pol = $('#txtPolicyNumber').val();
+                var ans = Android.isValidInsuranceNumber(Pol);
+                if (ans != true) {
+                   return;
+                }
+            }
+
 
             if(Android.IsBulkCNUsed() && !Android.isFetchedControlNumber($('#AssignedControlNumber').val())) {
                 $("#msgAlert").text(Android.getStringWithArgument('ConfirmControlNumber', $('#AssignedControlNumber').val()));
@@ -229,7 +237,7 @@ function LoadOfficers(LocationId, EnrolmentDate) {
 
 }
 function LoadProduct(RegionId, DistrictId, EnrolmentDate) {
-    var $Products = Android.getCSUProducts(parseInt(RegionId), parseInt(DistrictId), EnrolmentDate);
+    var $Products = Android.getProducts(parseInt(RegionId), parseInt(DistrictId), EnrolmentDate);
     bindDropdown('ddlProduct', $Products, 'ProdId', 'ProductNameCombined', 0, Android.getString('SelectProduct'));
 }
 

@@ -29,7 +29,7 @@ public class Escape {
     public int CheckInsuranceNumber(String InsuranceNumber){
 
         if (InsuranceNumber.length() == 0){
-            return R.string.MissingInsuranceNumber;
+            return R.string.PolicyNumberRequired;
         }
 
         if (!isValidInsuranceNumber(InsuranceNumber)){
