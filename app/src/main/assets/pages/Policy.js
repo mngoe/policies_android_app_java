@@ -123,12 +123,6 @@ $(document).ready(function () {
                 $('#AssignedControlNumber').val(controlNumber);
             }
         }
-
-        if( Android.checkCsProduct(parseInt(ProdId))){
-            $('#PolicyNumber').show();
-        }else{
-            $('#PolicyNumber').hide();
-        }
     });
 
     function savePolicy() {
@@ -140,21 +134,12 @@ $(document).ready(function () {
 
     $('#btnSave').click(function () {
         var passed = isFormValidated();
-        var ProdId = $('#ddlProduct').val();
 
         if (passed == true) {
             if(Android.IsBulkCNUsed() && !$('#AssignedControlNumber').val()) {
                 Android.ShowDialog(Android.getString('noBulkCNAssigned'));
                 $('#AssignedControlNumber').val('');
                 return;
-            }
-
-            if( Android.checkCsProduct(parseInt(ProdId))){
-                var Pol = $('#txtPolicyNumber').val();
-                var ans = Android.isValidInsuranceNumber(Pol);
-                if (ans != true) {
-                   return;
-                }
             }
 
 
@@ -237,7 +222,7 @@ function LoadOfficers(LocationId, EnrolmentDate) {
 
 }
 function LoadProduct(RegionId, DistrictId, EnrolmentDate) {
-    var $Products = Android.getProducts(parseInt(RegionId), parseInt(DistrictId), EnrolmentDate);
+    var $Products = Android.getVIHProducts(parseInt(RegionId), parseInt(DistrictId), EnrolmentDate);
     bindDropdown('ddlProduct', $Products, 'ProdId', 'ProductNameCombined', 0, Android.getString('SelectProduct'));
 }
 

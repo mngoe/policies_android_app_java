@@ -1652,6 +1652,39 @@ public class ClientAndroidInterface {
 
     @JavascriptInterface
     @SuppressWarnings("unused")
+    public String getVIHProducts(int RegionId, int DistrictId, String EnrolmentDate){
+        JSONArray products = new JSONArray();
+        String idVIH ="";
+
+        try{
+            JSONArray ProductArray = new JSONArray(getProducts(RegionId, DistrictId, EnrolmentDate));
+            JSONArray ProgramsArray = new JSONArray(getProgram());
+
+            for(int j = 0; j < ProgramsArray.length(); j++ ){
+                JSONObject objProgram = ProgramsArray.getJSONObject(j);
+                if(objProgram.get("Name").equals("VIH")){
+                    idVIH = objProgram.getString("idProgram");
+                }
+            }
+
+            if(idVIH != ""){
+                for (int i = 0; i<ProductArray.length(); i++){
+                    JSONObject objProduct = ProductArray.getJSONObject(i);
+                    if(objProduct.getString("Program").equals(idVIH)){
+                        products.put(objProduct);
+                    }
+                }
+            }
+
+        } catch(JSONException e){
+            e.printStackTrace();
+        }
+
+        return products.toString();
+    }
+
+    @JavascriptInterface
+    @SuppressWarnings("unused")
     public int getIdCsProgram(){
         int idCsProgram = 0;
 
