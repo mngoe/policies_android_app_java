@@ -433,6 +433,7 @@ public class Enquire extends ImisActivity {
                         /* value = */ null,
                         /* expiryDate = */ expiryDate != null ? DateUtils.dateFromString(expiryDate) : null,
                         /* status = */ status != null ? Policy.Status.valueOf(status) : null,
+                        /* policyNumber = */ null,
                         /* deductibleType = */ deductibleType != null ? Double.parseDouble(deductibleType) : null,
                         /* deductibleIp = */ deductibleIp != null ? Double.parseDouble(deductibleIp) : null,
                         /* deductibleOp = */ deductibleOp != null ? Double.parseDouble(deductibleOp) : null,

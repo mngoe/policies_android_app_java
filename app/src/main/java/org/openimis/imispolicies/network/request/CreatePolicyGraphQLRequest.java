@@ -26,6 +26,7 @@ public class CreatePolicyGraphQLRequest extends BaseGraphQLRequest {
                         .value(policy.getValue())
                         .productId(policy.getProductId())
                         .officerId(policy.getOfficerId())
+                        .policyNumber(policy.getPolicyNumber())
                         .build()
         ));
         return Objects.requireNonNull(response.getData());

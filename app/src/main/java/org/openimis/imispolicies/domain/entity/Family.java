@@ -620,6 +620,8 @@ public class Family implements Parcelable {
         private final Integer productId;
         private final int officerId;
         @Nullable
+        private final String policyNumber;
+        @Nullable
         private final String policyStage;
         private final boolean isOffline;
         @Nullable
@@ -640,6 +642,7 @@ public class Family implements Parcelable {
                 @Nullable Double value,
                 @Nullable Integer productId,
                 int officerId,
+                @Nullable String policyNumber,
                 @Nullable String policyStage,
                 boolean isOffline,
                 @Nullable String controlNumber,
@@ -657,6 +660,7 @@ public class Family implements Parcelable {
             this.value = value;
             this.productId = productId;
             this.officerId = officerId;
+            this.policyNumber = policyNumber;
             this.policyStage = policyStage;
             this.isOffline = isOffline;
             this.controlNumber = controlNumber;
@@ -685,6 +689,7 @@ public class Family implements Parcelable {
                 productId = in.readInt();
             }
             officerId = in.readInt();
+            policyNumber = in.readString();
             policyStage = in.readString();
             isOffline = in.readByte() != 0;
             controlNumber = in.readString();
@@ -715,6 +720,7 @@ public class Family implements Parcelable {
                 dest.writeInt(productId);
             }
             dest.writeInt(officerId);
+            dest.writeString(policyNumber);
             dest.writeString(policyStage);
             dest.writeByte((byte) (isOffline ? 1 : 0));
             dest.writeString(controlNumber);
@@ -781,6 +787,11 @@ public class Family implements Parcelable {
 
         public int getOfficerId() {
             return officerId;
+        }
+
+        @Nullable
+        public String getPolicyNumber(){
+            return policyNumber;
         }
 
         @Nullable
