@@ -3286,13 +3286,19 @@ public class ClientAndroidInterface {
             @NonNull Pair<String, byte[]>[] insureeImages
     ) throws JSONException {
         JSONObject familyObj = familyArray.getJSONObject(0);
-        Family family = familyFromJSONObject(familyObj, insureesArray, insureeImages);
         JSONObject insureeObj = insureesArray.getJSONObject(0);
+        Family family = familyFromJSONObject(familyObj, insureesArray, insureeImages);
+        try {
+            new UpdateFamily().execute(family, insureeObj.getString("CHFID"));
+        } catch (Exception e) {
+            enrolMessages.add(e.getMessage());
+            return -400;
+        }
 
         //search family in webserver by head insuree CHFID
-        int existingFamilyId = 0;
+        Family existingFamily = null;
         try {
-            existingFamilyId = new FetchFamily().fetchFamilyId(insureeObj.getString("CHFID"));
+            existingFamily = new FetchFamily().execute(insureeObj.getString("CHFID"));
         } catch (HttpException e) {
             if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
                 throw e;
@@ -3301,10 +3307,7 @@ public class ClientAndroidInterface {
             e.printStackTrace();
         }
 
-        if (existingFamilyId == 0){
-            //insuree don't exist
-            return -7;
-        }else{
+        if (existingFamily != null){
             for (int j = 0; j < policiesArray.length(); j++) {
                 JSONArray policyPremiums = new JSONArray();
                 String policyId = policiesArray.getJSONObject(j).getString("PolicyId");
@@ -3317,7 +3320,7 @@ public class ClientAndroidInterface {
                 policiesArray.getJSONObject(j).put("premium", policyPremiums);
             }
 
-            List<Family.Policy> policies = familyPolicyFromJSONObject(family.getUuid(), existingFamilyId, policiesArray);
+            List<Family.Policy> policies = familyPolicyFromJSONObject(existingFamily.getUuid(), existingFamily.getId(), policiesArray);
             try {
                 new CreatePolicy().execute(policies);
             } catch (Exception e) {
@@ -3325,14 +3328,6 @@ public class ClientAndroidInterface {
                 return -400;
             }
         }
-
-        /*Family family = familyFromJSONObject(familyObj, insureesArray, insureeImages);
-        try {
-            new UpdateFamily().execute(family);
-        } catch (Exception e) {
-            enrolMessages.add(e.getMessage());
-            return -400;
-        }*/
 
         return 0;
     }
