@@ -362,7 +362,7 @@ public class ClientAndroidInterface {
     public void updateChequeStatut(String Code){
         try {
             ContentValues cv = new ContentValues();
-            cv.put("chequeImportLineStatus", "Used");
+            cv.put("chequeImportLineStatus", "used");
             sqlHandler.updateData("tblCheque", cv,"chequeImportLineCode=?", new String[]{Code});
         } catch (Exception e) {
             e.printStackTrace();
@@ -3072,7 +3072,7 @@ public class ClientAndroidInterface {
 
             //get Policies
             query = new StringBuilder(
-                    "SELECT p.PolicyId AS PolicyId, FamilyId AS FamilyId, EnrollDate, StartDate, NULLIF(EffectiveDate,'null') EffectiveDate, ExpiryDate, Policystatus, PolicyValue, ProdId, OfficerId, PolicyStage, isOffline, bcn.ControlNumber FROM tblPolicy p LEFT JOIN tblBulkControlNumbers bcn on p.PolicyId=bcn.PolicyId WHERE "
+                    "SELECT p.PolicyId AS PolicyId, FamilyId AS FamilyId, EnrollDate, StartDate, NULLIF(EffectiveDate,'null') EffectiveDate, ExpiryDate, Policystatus, PolicyValue, ProdId, OfficerId, PolicyNumber, PolicyStage, isOffline, bcn.ControlNumber FROM tblPolicy p LEFT JOIN tblBulkControlNumbers bcn on p.PolicyId=bcn.PolicyId WHERE "
             );
             if (CallerId != 2) {
                 query.append(" FamilyId = ").append(FamilyId);
@@ -3391,6 +3391,7 @@ public class ClientAndroidInterface {
                     /* value = */ JsonUtils.getDoubleOrDefault(object, "PolicyValue"),
                     /* productId = */ JsonUtils.getIntegerOrDefault(object, "ProdId"),
                     /* officerId = */ Integer.parseInt(object.getString("OfficerId")),
+                    /* policyNumber = */ JsonUtils.getStringOrDefault(object,"PolicyNumber"),
                     /* stage = */ JsonUtils.getStringOrDefault(object, "PolicyStage"),
                     /* isOffline = */ JsonUtils.getBooleanOrDefault(object, "isOffline", false),
                     /* controlNumber = */ JsonUtils.getStringOrDefault(object, "ControlNumber"),

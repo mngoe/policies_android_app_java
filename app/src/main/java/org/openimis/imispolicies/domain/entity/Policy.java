@@ -53,6 +53,8 @@ public class Policy implements Parcelable {
     private final Integer totalSurgeriesLeft;
     @Nullable
     private final Integer totalVisitsLeft;
+    @Nullable
+    private final String policyNumber;
 
     public Policy(
             @NonNull String code,
@@ -60,6 +62,7 @@ public class Policy implements Parcelable {
             @Nullable Double value,
             @Nullable Date expiryDate,
             @NonNull Status status,
+            @Nullable String policyNumber,
             @Nullable Double deductibleType,
             @Nullable Double deductibleIp,
             @Nullable Double deductibleOp,
@@ -82,6 +85,7 @@ public class Policy implements Parcelable {
         this.value = value;
         this.expiryDate = expiryDate;
         this.status = status;
+        this.policyNumber = policyNumber;
         this.deductibleType = deductibleType;
         this.deductibleIp = deductibleIp;
         this.deductibleOp = deductibleOp;
@@ -114,6 +118,7 @@ public class Policy implements Parcelable {
             expiryDate = new Date(in.readLong());
         }
         status = Status.valueOf(in.readString());
+        policyNumber = Objects.toString(in.readString());
         if (in.readByte() == 0) {
             deductibleType = null;
         } else {
@@ -213,6 +218,7 @@ public class Policy implements Parcelable {
             dest.writeLong(expiryDate.getTime());
         }
         dest.writeString(status.name());
+        dest.writeString(policyNumber);
         if (deductibleType == null) {
             dest.writeByte((byte) 0);
         } else {
@@ -339,6 +345,11 @@ public class Policy implements Parcelable {
     @NonNull
     public Status getStatus() {
         return status;
+    }
+
+    @NonNull
+    public String getPolicyNumber() {
+        return policyNumber;
     }
 
     @Nullable

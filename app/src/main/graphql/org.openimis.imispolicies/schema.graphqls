@@ -6587,6 +6587,7 @@ input CreatePolicyMutationInput {
   productId: Int!
   familyId: Int!
   officerId: Int!
+  policyNumber: String
   clientMutationId: String
 }
 

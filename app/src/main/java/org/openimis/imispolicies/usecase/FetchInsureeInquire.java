@@ -75,6 +75,7 @@ public class FetchInsureeInquire {
                 /* value = */ policy.value(),
                 /* expiryDate = */ policy.expiryDate(),
                 /* status = */ intAsStatus(policy.status()),
+                /* policyNumber = */ null,
                 /* deductibleType = */ product.deductible(),
                 /* deductibleIp = */ product.deductibleIp(),
                 /* deductibleOp = */ product.deductibleOp(),
