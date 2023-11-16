@@ -1,5 +1,7 @@
 package org.openimis.imispolicies.usecase;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
@@ -75,16 +77,26 @@ public class UpdateFamily {
             }
         }
         for (Family.Member member : family.getMembers()) {
-            insertOrUpdateInsuree(member);
+            insertOrUpdateInsuree(member, insureeCHFID );
         }
     }
 
     @WorkerThread
-    private void insertOrUpdateInsuree(@NonNull Family.Member member ) throws Exception {
+    private void insertOrUpdateInsuree(@NonNull Family.Member member, @Nullable String insureeCHFID ) throws Exception {
+        Family existingFamily = null;
         try {
-            createInsureeGraphQLRequest.create(member);
-        } catch (Exception e) {
-            updateInsureeGraphQLRequest.update(member);
+            existingFamily = fetchFamily.execute(insureeCHFID);
+        } catch (HttpException e) {
+            if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
+                throw e;
+            }
+        }
+        if (existingFamily != null) {
+            try {
+                createInsureeGraphQLRequest.create(member,existingFamily.getId());
+            } catch (Exception e) {
+                updateInsureeGraphQLRequest.update(member, existingFamily.getId());
+            }
         }
     }
 

@@ -30,7 +30,6 @@ public class UpdateFamilyGraphQLRequest extends BaseGraphQLRequest {
                         .isOffline(family.isOffline())
                         .headInsuree(
                                 FamilyHeadInsureeInputType.builder()
-                                        .id(head.getId())
                                         .chfId(head.getChfId())
                                         .lastName(head.getLastName())
                                         .otherNames(head.getOtherNames())

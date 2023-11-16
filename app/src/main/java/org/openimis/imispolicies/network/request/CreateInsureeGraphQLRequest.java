@@ -18,11 +18,11 @@ public class CreateInsureeGraphQLRequest extends BaseGraphQLRequest {
 
     @WorkerThread
     @NonNull
-    public CreateInsureeMutation.Data create(@NonNull Family.Member member) throws Exception {
+    public CreateInsureeMutation.Data create(@NonNull Family.Member member, @NonNull int familyId) throws Exception {
         Response<CreateInsureeMutation.Data> response = makeSynchronous(new CreateInsureeMutation(
                 CreateInsureeMutationInput.builder()
                         .chfId(member.getChfId())
-                        .familyId(member.getFamilyId())
+                        .familyId(familyId)
                         .head(member.isHead())
                         .passport(member.getIdentificationNumber())
                         .typeOfIdId(member.getTypeOfId())
