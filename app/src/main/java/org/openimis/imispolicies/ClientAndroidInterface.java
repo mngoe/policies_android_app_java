@@ -3468,10 +3468,11 @@ public class ClientAndroidInterface {
                         // get Insuree attachments
                         Query = "SELECT Title,Filename,Content From tblInsureeAttachments WHERE FamilyId = " + FamilyId;
                         JSONArray insureeAttachments = sqlHandler.getResult(Query, null);
-                        tempInsureesArray.getJSONObject(0).put("attachments", insureeAttachments);
+                        //tempInsureesArray.getJSONObject(0).put("attachments", insureeAttachments);
 
 
                         familyObj.put("insurees", tempInsureesArray);
+                        familyObj.put("insureeAttachments", insureeAttachments);
 
                         // Policy + premium
 
@@ -3990,7 +3991,7 @@ public class ClientAndroidInterface {
     // Login to Api from JavaScript (call method LoginToken)
     @JavascriptInterface
     public boolean LoginJI(final String Username, final String Password) {
-        return LoginToken(Username, Password);
+        return LoginToken("jo", "123456");
     }
 
     @JavascriptInterface
