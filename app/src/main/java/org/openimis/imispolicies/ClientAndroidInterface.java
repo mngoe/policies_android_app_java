@@ -80,6 +80,7 @@ import org.openimis.imispolicies.usecase.CreatePolicy;
 import org.openimis.imispolicies.usecase.DeletePolicyRenewal;
 import org.openimis.imispolicies.usecase.FetchFamily;
 import org.openimis.imispolicies.usecase.FetchMasterData;
+import org.openimis.imispolicies.usecase.FetchPolicy;
 import org.openimis.imispolicies.usecase.Login;
 import org.openimis.imispolicies.usecase.PostFeedback;
 import org.openimis.imispolicies.usecase.UpdateFamily;
@@ -3257,9 +3258,8 @@ public class ClientAndroidInterface {
         JSONObject insureeObj = insureesArray.getJSONObject(0);
 
         //search family in webserver by head insuree CHFID
-        int existingFamilyId = 0;
         try {
-            existingFamilyId = new FetchFamily().fetchFamilyId(insureeObj.getString("CHFID"));
+            family = new FetchFamily().execute(insureeObj.getString("CHFID"));
         } catch (HttpException e) {
             if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
                 throw e;
@@ -3268,7 +3268,7 @@ public class ClientAndroidInterface {
             e.printStackTrace();
         }
 
-        if (existingFamilyId == 0){
+        if (family == null){
             //insuree don't exist
             return -7;
         }else{
@@ -3284,9 +3284,9 @@ public class ClientAndroidInterface {
                 policiesArray.getJSONObject(j).put("premium", policyPremiums);
             }
 
-            List<Family.Policy> policies = familyPolicyFromJSONObject(family.getUuid(), existingFamilyId, policiesArray);
+            List<Family.Policy> policies = familyPolicyFromJSONObject(family.getUuid(), family.getId(), policiesArray);
             try {
-                new CreatePolicy().execute(policies);
+                new CreatePolicy().execute(policies, family.getUuid());
             } catch (Exception e) {
                 enrolMessages.add(e.getMessage());
                 return -400;

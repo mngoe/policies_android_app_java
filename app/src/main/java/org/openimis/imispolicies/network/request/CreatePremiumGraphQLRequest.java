@@ -17,10 +17,10 @@ public class CreatePremiumGraphQLRequest extends BaseGraphQLRequest {
 
     @WorkerThread
     @NonNull
-    public CreatePremiumMutation.Data create(@NonNull Family.Policy.Premium premium) throws Exception {
+    public CreatePremiumMutation.Data create(@NonNull Family.Policy.Premium premium, String policyUuid) throws Exception {
         Response<CreatePremiumMutation.Data> response = makeSynchronous(new CreatePremiumMutation(
                 CreatePremiumMutationInput.builder()
-                        .policyUuid(premium.getPolicyUuid())
+                        .policyUuid(policyUuid)
                         .amount(premium.getAmount())
                         .receipt(premium.getReceipt())
                         .payDate(premium.getPayDate())

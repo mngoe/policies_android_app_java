@@ -1,0 +1,18 @@
+query GetPolicy($familyUuid: String!) {
+    policiesByFamily(orderBy: "enrollDate", familyUuid: $familyUuid, last:1) {
+        edges {
+            node {
+                policyUuid
+                policyId
+                productCode
+                productName
+                officerCode
+                officerName
+                enrollDate
+                effectiveDate
+                startDate
+                expiryDate
+            }
+        }
+    }
+}
