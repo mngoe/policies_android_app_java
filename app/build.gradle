@@ -185,6 +185,7 @@ android {
         }
 
         mauritaniaTrain.java.srcDir 'src/master/java'
+        mauritaniaTrain.res.srcDirs 'src/localeMv/res'
     }
 
     // Apply custom flavours
