@@ -3256,10 +3256,11 @@ public class ClientAndroidInterface {
         JSONObject familyObj = familyArray.getJSONObject(0);
         Family family = familyFromJSONObject(familyObj, insureesArray, insureeImages);
         JSONObject insureeObj = insureesArray.getJSONObject(0);
+        Family checkedFamily = null;
 
         //search family in webserver by head insuree CHFID
         try {
-            family = new FetchFamily().execute(insureeObj.getString("CHFID"));
+            checkedFamily = new FetchFamily().execute(insureeObj.getString("CHFID"));
         } catch (HttpException e) {
             if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
                 throw e;
@@ -3268,7 +3269,7 @@ public class ClientAndroidInterface {
             e.printStackTrace();
         }
 
-        if (family == null){
+        if (checkedFamily == null){
             //insuree don't exist
             return -7;
         }else{
@@ -3284,7 +3285,7 @@ public class ClientAndroidInterface {
                 policiesArray.getJSONObject(j).put("premium", policyPremiums);
             }
 
-            List<Family.Policy> policies = familyPolicyFromJSONObject(family.getUuid(), family.getId(), policiesArray);
+            List<Family.Policy> policies = familyPolicyFromJSONObject(family.getUuid(), checkedFamily.getId(), policiesArray);
             try {
                 new CreatePolicy().execute(policies, family.getUuid());
             } catch (Exception e) {
