@@ -1,0 +1,19 @@
+query GetFamilyPolicies($familyUuid: String!) {
+    policiesByFamily(orderBy: "expiryDate", activeOrLastExpiredOnly: true, familyUuid: $familyUuid, first:5) {
+        edges {
+            node {
+                policyUuid
+                policyId
+                productCode
+                productName
+                officerCode
+                officerName
+                enrollDate
+                effectiveDate
+                startDate
+                expiryDate
+                status
+            }
+        }
+    }
+}

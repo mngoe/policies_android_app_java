@@ -71,6 +71,7 @@ import org.json.JSONObject;
 import org.openimis.imispolicies.domain.entity.Family;
 import org.openimis.imispolicies.domain.entity.FeedbackRequest;
 import org.openimis.imispolicies.domain.entity.PendingFeedback;
+import org.openimis.imispolicies.domain.entity.Policy;
 import org.openimis.imispolicies.network.exception.HttpException;
 import org.openimis.imispolicies.network.exception.UserNotAuthenticatedException;
 import org.openimis.imispolicies.tools.ImageManager;
@@ -79,6 +80,7 @@ import org.openimis.imispolicies.tools.StorageManager;
 import org.openimis.imispolicies.usecase.CreatePolicy;
 import org.openimis.imispolicies.usecase.DeletePolicyRenewal;
 import org.openimis.imispolicies.usecase.FetchFamily;
+import org.openimis.imispolicies.usecase.FetchFamilyPolicies;
 import org.openimis.imispolicies.usecase.FetchMasterData;
 import org.openimis.imispolicies.usecase.FetchPolicy;
 import org.openimis.imispolicies.usecase.Login;
@@ -3221,6 +3223,9 @@ public class ClientAndroidInterface {
                         case -7:
                             ErrMsg = "[" + CHFNumber + "] " + activity.getString(R.string.RecordNotFound);
                             break;
+                        case -8:
+                            ErrMsg = "[" + CHFNumber + "] " + activity.getString(R.string.CanAddFagepPolicy);
+                            break;
                         case -400:
                             ErrMsg = "[" + CHFNumber + "] " + activity.getString(R.string.ServerError);
                             break;
@@ -3286,6 +3291,33 @@ public class ClientAndroidInterface {
             }
 
             List<Family.Policy> policies = familyPolicyFromJSONObject(family.getUuid(), checkedFamily.getId(), policiesArray);
+
+            //fetch family policies
+            try {
+                for(Family.Policy policy: policies){
+                    String programProduct = sqlHandler.getProductProgramById(String.valueOf(policy.getProductId()));
+                    String programCode = sqlHandler.getProgramCode(programProduct);
+                    if(programCode.equals("PAL")){
+                        //check if insuree have cs active policy
+                        List<Policy> familyPolicies = new FetchFamilyPolicies().execute(checkedFamily.getUuid());
+                        for(Policy familyPolicy: familyPolicies){
+                            String program = sqlHandler.getProductProgramByCode(familyPolicy.getCode());
+                            String nameProgram = sqlHandler.getProgramName(program);
+                            if((nameProgram.equals("Cheque Santé") || nameProgram.equals("Chèque Santé")) &&
+                                    familyPolicy.getStatus()==Policy.Status.ACTIVE){
+                                return -8;
+                            }
+                        }
+                    }
+                }
+            } catch (HttpException e) {
+                if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
+                    throw e;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             try {
                 new CreatePolicy().execute(policies, family.getUuid());
             } catch (Exception e) {

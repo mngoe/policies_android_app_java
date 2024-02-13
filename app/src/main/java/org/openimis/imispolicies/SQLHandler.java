@@ -902,6 +902,98 @@ public class SQLHandler extends SQLiteOpenHelper {
         return productCode;
     }
 
+    public String getProductProgramById(String productId) {
+        openDatabase();
+        String program = null;
+        try (Cursor cursor = mDatabase.query(tblProduct,
+                new String[]{"Program"},
+                "ProdId = ?",
+                new String[]{productId},
+                null,
+                null,
+                null,
+                "1")) {
+            cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
+                program = cursor.getString(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeDatabase();
+        }
+        return program;
+    }
+
+    public String getProductProgramByCode(String productCode) {
+        openDatabase();
+        String program = null;
+        try (Cursor cursor = mDatabase.query(tblProduct,
+                new String[]{"Program"},
+                "ProductCode = ?",
+                new String[]{productCode},
+                null,
+                null,
+                null,
+                "1")) {
+            cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
+                program = cursor.getString(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeDatabase();
+        }
+        return program;
+    }
+
+    public String getProgramCode(String programId) {
+        openDatabase();
+        String programCode = null;
+        try (Cursor cursor = mDatabase.query(tblProgram,
+                new String[]{"programCode"},
+                "idProgram = ?",
+                new String[]{programId},
+                null,
+                null,
+                null,
+                "1")) {
+            cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
+                programCode = cursor.getString(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeDatabase();
+        }
+        return programCode;
+    }
+
+    public String getProgramName(String programId) {
+        openDatabase();
+        String programName = null;
+        try (Cursor cursor = mDatabase.query(tblProgram,
+                new String[]{"Name"},
+                "idProgram = ?",
+                new String[]{programId},
+                null,
+                null,
+                null,
+                "1")) {
+            cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
+                programName = cursor.getString(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeDatabase();
+        }
+        return programName;
+    }
+
     public JSONArray getAvailableProducts(String officerCode) {
         SimpleDateFormat format = AppInformation.DateTimeInfo.getDefaultDateFormatter();
         String date = format.format(Calendar.getInstance().getTime());
