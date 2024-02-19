@@ -3319,7 +3319,7 @@ public class ClientAndroidInterface {
             }
 
             try {
-                new CreatePolicy().execute(policies, family.getUuid());
+                new CreatePolicy().execute(policies, checkedFamily.getUuid());
             } catch (Exception e) {
                 enrolMessages.add(e.getMessage());
                 return -400;
