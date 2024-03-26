@@ -22,7 +22,7 @@
             android:ems="10"
             android:inputType="text"
             android:hint="@string/InsuranceNumber"
-            android:maxLength="12"
+            android:maxLength="20"
             android:imeOptions="actionGo" >
 
             <requestFocus />

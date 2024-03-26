@@ -3376,7 +3376,7 @@ public class ClientAndroidInterface {
                 /* identificationNumber = */ JsonUtils.getStringOrDefault(object, "IdentificationNumber"),
                 /* lastName = */ object.getString("LastName"),
                 /* otherNames = */ object.getString("OtherNames"),
-                /* dateOfBirth = */ Calendar.getInstance().getTime(),
+                /* dateOfBirth = */ Objects.requireNonNull(JsonUtils.getDateOrDefault(object, "DOB")),
                 /* gender = */ object.getString("Gender"),
                 /* marital = */ JsonUtils.getStringOrDefault(object, "Marital"),
                 /* phone = */ JsonUtils.getStringOrDefault(object, "Phone"),
