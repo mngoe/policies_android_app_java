@@ -1671,7 +1671,9 @@ public class ClientAndroidInterface {
                 for (int i = 0; i<ProductArray.length(); i++){
                     JSONObject objProduct = ProductArray.getJSONObject(i);
                     if(objProduct.getString("Program").equals(idVIH)){
-                        products.put(objProduct);
+                        if(!objProduct.getString("ProductCode").equals("CSU-UF")){
+                            products.put(objProduct);
+                        }
                     }
                 }
             }
