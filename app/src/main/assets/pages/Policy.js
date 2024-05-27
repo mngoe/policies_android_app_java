@@ -237,7 +237,7 @@ function LoadOfficers(LocationId, EnrolmentDate) {
 
 }
 function LoadProduct(RegionId, DistrictId, EnrolmentDate) {
-    var $Products = Android.getProducts(parseInt(RegionId), parseInt(DistrictId), EnrolmentDate);
+    var $Products = Android.getCSUProducts(parseInt(RegionId), parseInt(DistrictId), EnrolmentDate);
     bindDropdown('ddlProduct', $Products, 'ProdId', 'ProductNameCombined', 0, Android.getString('SelectProduct'));
 }
 
