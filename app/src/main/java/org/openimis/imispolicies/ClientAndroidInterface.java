@@ -332,10 +332,20 @@ public class ClientAndroidInterface {
         }
         if(getChequeStatut(InsuranceNumber).equals("cancel")){
             ShowDialog(activity.getResources().getString(R.string.AbortedChequeNumber));
-            return false;
+            return false; 
         }
         if(getChequeStatut(InsuranceNumber).equals("")){
             ShowDialog(activity.getResources().getString(R.string.NotExistChequeNumber));
+            return false;
+        }
+        return true;
+    }
+
+    @JavascriptInterface
+    @SuppressWarnings("unused")
+    public boolean isValidCsuNumber(String csuNumber){
+        if(csuNumber.length() != 15){
+            ShowDialog(activity.getResources().getString(R.string.InvalidCsuNumber));
             return false;
         }
         return true;
@@ -1721,7 +1731,7 @@ public class ClientAndroidInterface {
         String where = null;
         JSONArray idCSProds = new JSONArray();
 
-        Log.e("found",String.valueOf(idProduct));
+        //Log.e("found",String.valueOf(idProduct));
 
         JSONArray products = sqlHandler.getResult(tableName, columns, null, null);
 

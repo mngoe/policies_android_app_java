@@ -41,13 +41,13 @@ $(document).ready(function () {
         fillFSP(DistrictId, FSPCategory);
     });
 
-    //$('#txtInsuranceNumber').change(function () {
-    //    var Ins = $('#txtInsuranceNumber').val();
-    //    var ans = Android.isValidInsuranceNumber(Ins);
-    //    if (ans != true) {
-    //        $('#txtInsuranceNumber').val("");
-    //        $('#txtInsuranceNumber').focus();
-    //    }
+    $('#txtInsuranceNumber').change(function () {
+        var Ins = $('#txtInsuranceNumber').val();
+        var ans = Android.isValidCsuNumber(Ins);
+        if (ans != true) {
+            $('#txtInsuranceNumber').val("");
+            $('#txtInsuranceNumber').focus();
+        }
     //    var ImagePath = Android.GetListOfImagesContain(Ins);
 
     //    if (ImagePath.length > 0) {
@@ -57,7 +57,7 @@ $(document).ready(function () {
     //    }
 
     //    $("#hfNewPhotoPath").val("");
-    //});
+    });
 
 
     $('#spPleaseWait').text(Android.getString('saving'));
