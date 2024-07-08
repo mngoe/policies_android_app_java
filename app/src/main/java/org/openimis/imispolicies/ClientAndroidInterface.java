@@ -344,7 +344,8 @@ public class ClientAndroidInterface {
     @JavascriptInterface
     @SuppressWarnings("unused")
     public boolean isValidCsuNumber(String csuNumber){
-        if(csuNumber.length() != 15){
+        boolean isNumeric = org.apache.commons.lang3.StringUtils.isNumeric(csuNumber);
+        if(!isNumeric){
             ShowDialog(activity.getResources().getString(R.string.InvalidCsuNumber));
             return false;
         }
@@ -4147,7 +4148,8 @@ public class ClientAndroidInterface {
     @WorkerThread
     public void importMasterData(String data) throws JSONException, UserException {
         try {
-            processOldFormat(new JSONArray(data));
+            //processOldFormat(new JSONArray(data));
+            processNewFormat(new JSONObject(data));
         } catch (JSONException e) {
             try {
                 processNewFormat(new JSONObject(data));
