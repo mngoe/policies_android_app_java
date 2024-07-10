@@ -4097,7 +4097,8 @@ public class ClientAndroidInterface {
     @WorkerThread
     public void importMasterData(String data) throws JSONException, UserException {
         try {
-            processOldFormat(new JSONArray(data));
+            //processOldFormat(new JSONArray(data));
+            processNewFormat(new JSONObject(data));
         } catch (JSONException e) {
             try {
                 processNewFormat(new JSONObject(data));
