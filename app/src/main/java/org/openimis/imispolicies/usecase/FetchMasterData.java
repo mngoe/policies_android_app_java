@@ -7,12 +7,20 @@ import org.apache.commons.io.IOUtils;
 import org.openimis.imispolicies.network.exception.HttpException;
 import org.openimis.imispolicies.network.exception.UserNotAuthenticatedException;
 import org.openimis.imispolicies.network.request.GetMasterDataExportRequest;
+import org.openimis.imispolicies.network.util.OkHttpUtils;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class FetchMasterData {
 
@@ -31,17 +39,33 @@ public class FetchMasterData {
     @NonNull
     @WorkerThread
     public String execute() throws Exception {
-        try (ZipInputStream zipFile = new ZipInputStream(new ByteArrayInputStream(getMasterDataExportRequest.get()))) {
-            ZipEntry entry;
-            while ((entry = zipFile.getNextEntry()) != null) {
-                // Currently, the name of the file is "MasterData.txt" but the code is a little bit
-                // more permissive in case someone wants to "fix" that into 'masterdata.json'.
-                if (entry.getName().toLowerCase(Locale.ENGLISH).startsWith(MASTER_DATA_FILE_NAME)) {
-                    return IOUtils.toString(zipFile, StandardCharsets.UTF_8);
+        String BASE_URL = "https://csureport.minsante.cm/api/tools/extracts/download_master_data";
+        OkHttpClient okHttpClient = OkHttpUtils.getDefaultOkHttpClient();
+        Request.Builder builder = new Request.Builder();
+        HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(BASE_URL)).newBuilder();
+        builder.url(urlBuilder.build())
+                .addHeader("Content-Type", "application/json");
+        try (Response response = okHttpClient.newCall(builder.build()).execute()) {
+            ResponseBody body = response.body();
+            if (response.isSuccessful() && body != null) {
+                ZipInputStream zipFile = new ZipInputStream(new ByteArrayInputStream(body.bytes()));
+                ZipEntry entry;
+                while ((entry = zipFile.getNextEntry()) != null) {
+                    // Currently, the name of the file is "MasterData.txt" but the code is a little bit
+                    // more permissive in case someone wants to "fix" that into 'masterdata.json'.
+                    if (entry.getName().toLowerCase(Locale.ENGLISH).startsWith(MASTER_DATA_FILE_NAME)) {
+                        return IOUtils.toString(zipFile, StandardCharsets.UTF_8);
+                    }
                 }
+                throw new IllegalArgumentException("The file '" + MASTER_DATA_FILE_NAME + "' could not be found in the zip file.");
+            } else {
+                String responseBody = null;
+                if (body != null) {
+                    responseBody = body.string();
+                }
+                throw new HttpException(response.code(), response.message(), responseBody, null);
             }
-            throw new IllegalArgumentException("The file '" + MASTER_DATA_FILE_NAME + "' could not be found in the zip file.");
-        } catch (HttpException e) {
+        }catch (HttpException e) {
             // By default, there is no authentication or permissions needed to download the master
             // data but it's possible to put some restrictions in the configuration.
             // Therefore, it's possible the backend would return a 403 (though it should return a
