@@ -332,7 +332,7 @@ public class ClientAndroidInterface {
         }
         if(getChequeStatut(InsuranceNumber).equals("cancel")){
             ShowDialog(activity.getResources().getString(R.string.AbortedChequeNumber));
-            return false; 
+            return false;
         }
         if(getChequeStatut(InsuranceNumber).equals("")){
             ShowDialog(activity.getResources().getString(R.string.NotExistChequeNumber));
@@ -1731,8 +1731,6 @@ public class ClientAndroidInterface {
         String[] columns = {"ProdId", "Program"};
         String where = null;
         JSONArray idCSProds = new JSONArray();
-
-        //Log.e("found",String.valueOf(idProduct));
 
         JSONArray products = sqlHandler.getResult(tableName, columns, null, null);
 
