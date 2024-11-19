@@ -481,4 +481,5 @@ L\'application utilisera la langue par défaut.</string>
     <string name="PolicyNumber">Numéro de chèque</string>
     <string name="PolicyNumberRequired">Veuillez entrer le numéro de chèque</string>
     <string name="CanAddFagepPolicy">le bénéficiare possède une police Chèque Santé active. Impossible de lui attribuer une police FAGEP</string>
+    <string name="InvalidCsuNumber">le numéro de CSU doit contenir uniquement des caractères numériques</string>
 </resources>
