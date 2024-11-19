@@ -338,6 +338,17 @@ public class ClientAndroidInterface {
         return true;
     }
 
+    @JavascriptInterface
+    @SuppressWarnings("unused")
+    public boolean isValidCsuNumber(String csuNumber){
+        boolean isNumeric = org.apache.commons.lang3.StringUtils.isNumeric(csuNumber);
+        if(!isNumeric){
+            ShowDialog(activity.getResources().getString(R.string.InvalidCsuNumber));
+            return false;
+        }
+        return true;
+    }
+
     //get statut of cheque number
     public String getChequeStatut(String numero) {
         String statut = "";

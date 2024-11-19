@@ -481,4 +481,5 @@
     <string name="csuNumber">CSU Number</string>
     <string name="PolicyNumber">Cheque number</string>
     <string name="PolicyNumberRequired">Please enter cheque number</string>
+    <string name="InvalidCsuNumber">The Csu number must only have numeric characters</string>
 </resources>
