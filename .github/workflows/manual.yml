@@ -43,7 +43,7 @@ jobs:
 
       - name: build
         run: |
-          ./gradlew assembleCsuDevDebug --stacktrace
+          ./gradlew assemblecsuDevDebug --stacktrace
         env:
           API_BASE_URL: "${{ github.event.inputs.api_base_url }}"
 
