@@ -25,6 +25,11 @@ jobs:
         run: |
           gradle --version
 
+      - name: Show Permission
+        run: |
+          git update-index --chmod=+x ./gradlew
+
+
       - name: build
         run: |
           ./gradlew assemblecsuVIHDevDebug --stacktrace
