@@ -42,6 +42,10 @@ jobs:
           echo url ${{ github.event.inputs.api_base_url }}
           echo app name ${{ github.event.inputs.app_name }}
 
+      - name: show gradlew permission
+        run: |
+          chmod +x gradlew
+
       - name: build
         run: |
           ./gradlew assemblecsuVIHDevDebug --stacktrace
