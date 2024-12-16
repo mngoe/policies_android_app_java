@@ -342,10 +342,10 @@ public class ClientAndroidInterface {
     @SuppressWarnings("unused")
     public boolean isValidCsuNumber(String csuNumber){
         boolean isNumeric = org.apache.commons.lang3.StringUtils.isNumeric(csuNumber);
-        if(!isNumeric){
-            ShowDialog(activity.getResources().getString(R.string.InvalidCsuNumber));
-            return false;
-        }
+//        if(!isNumeric){
+//            ShowDialog(activity.getResources().getString(R.string.InvalidCsuNumber));
+//            return false;
+//        }
         return true;
     }
 
