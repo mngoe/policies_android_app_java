@@ -1017,8 +1017,8 @@ public class ClientAndroidInterface {
 
             values.put("FamilyId", FamilyId);
             values.put("CHFID", data.get("txtInsuranceNumber"));
-            values.put("LastName", data.get("txtLastName"));
-            values.put("OtherNames", data.get("txtOtherNames"));
+            values.put("LastName", " ");
+            values.put("OtherNames", " ");
             values.put("DOB", data.get("txtBirthDate"));
             values.put("Gender", data.get("ddlGender"));
             values.put("Marital", Marital);
