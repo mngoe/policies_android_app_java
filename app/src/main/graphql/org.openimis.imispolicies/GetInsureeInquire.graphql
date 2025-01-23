@@ -8,6 +8,9 @@ query GetInsureeInquire($chfId: String) {
                 lastName
                 otherNames
                 dob
+                family{
+                    uuid
+                }
                 gender {
                     gender
                 }
