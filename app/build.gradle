@@ -22,7 +22,7 @@ static def getDate() {
 
 android {
     signingConfigs {
-        csuVIHDevRelease {
+        csuVIHDev {
             storeFile file('../csuvihkeystore.jks')
             storePassword 'ynote2025'
             keyAlias 'csuVihKey'
@@ -117,9 +117,10 @@ android {
         csuVIHDev {
             applicationId "org.openimis.imispolicies.csuVIHDev"
             buildConfigField "String", "API_BASE_URL", '"https://csuapps.minsante.cm/"'
+            buildConfigField "String", "RAR_PASSWORD", '"xc3-ed@/dfr;nJ3R"'
             resValue "string", "app_name_policies", "CSU VIH"
             dimension = 'std'
-            signingConfig signingConfigs.csuVIHDevRelease
+            signingConfig signingConfigs.csuVIHDev
         }
         mvDev {
             applicationId "org.openimis.imispolicies.mv"
