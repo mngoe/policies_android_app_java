@@ -480,4 +480,5 @@
     <string name="PolicyNumber">Numéro de chèque</string>
     <string name="PolicyNumberRequired">Veuillez entrer le numéro de chèque</string>
     <string name="InvalidCsuNumber">le numéro de CSU doit contenir uniquement des caractères numériques</string>
+    <string name="InvalidTarvCode">Le TarvCode ne peut pas contenir uniquement des caractères numériques</string>
 </resources>
