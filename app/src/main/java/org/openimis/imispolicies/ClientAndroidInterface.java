@@ -427,13 +427,10 @@ public class ClientAndroidInterface {
     @SuppressWarnings("unused")
     public String getRegions() {
         Integer officerLocationId = getOfficerLocationId();
-        @Language("SQL")
-        String Query = "SELECT LocationId, LocationName FROM tblLocations WHERE LocationId = (SELECT L.ParentLocationId LocationId FROM tblLocations L ";
-        if (officerLocationId != null) {
-            Query += "WHERE L.LocationId = " + officerLocationId;
+        if (officerLocationId == null) {
+            return getRegionsWO();
         }
-        Query += ")";
-        return sqlHandler.getResult(Query, null).toString();
+        return sqlHandler.getResult("SELECT LocationId, LocationName FROM tblLocations WHERE LocationId = (SELECT L.ParentLocationId LocationId FROM tblLocations L WHERE L.LocationId = " + officerLocationId + ")", null).toString();
     }
 
     @JavascriptInterface
@@ -3306,23 +3303,39 @@ public class ClientAndroidInterface {
         JSONObject familyObj = familyArray.getJSONObject(0);
         Family family = familyFromJSONObject(familyObj, insureesArray, insureeImages);
         JSONObject insureeObj = insureesArray.getJSONObject(0);
-        Family checkedFamily = null;
+        Family checkedFamily;
+
+        //fetch family policies
+//        try {
+//            for(Family.Policy policy: policies){
+//                String programProduct = sqlHandler.getProductProgramById(String.valueOf(policy.getProductId()));
+//                String programCode = sqlHandler.getProgramCode(programProduct);
+//                if(programCode.equals("PAL")){
+//                    //check if insuree have cs active policy
+//                    List<Policy> familyPolicies = new FetchFamilyPolicies().execute(checkedFamily.getUuid());
+//                    for(Policy familyPolicy: familyPolicies){
+//                        String program = sqlHandler.getProductProgramByCode(familyPolicy.getCode());
+//                        String nameProgram = sqlHandler.getProgramName(program);
+//                        if((nameProgram.equals("Cheque Santé") || nameProgram.equals("Chèque Santé")) &&
+//                                familyPolicy.getStatus()==Policy.Status.ACTIVE){
+//                            return -8;
+//                        }
+//                    }
+//                }
+//            }
+//        } catch (HttpException e) {
+//            if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
+//                throw e;
+//            }
+//            return -400;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         //search family in webserver by head insuree CHFID
         try {
             checkedFamily = new FetchFamily().execute(insureeObj.getString("CHFID"));
-        } catch (HttpException e) {
-            if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
-                throw e;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        if (checkedFamily == null){
-            //insuree don't exist
-            return -7;
-        }else{
             for (int j = 0; j < policiesArray.length(); j++) {
                 JSONArray policyPremiums = new JSONArray();
                 String policyId = policiesArray.getJSONObject(j).getString("PolicyId");
@@ -3336,48 +3349,26 @@ public class ClientAndroidInterface {
             }
 
             List<Family.Policy> policies = familyPolicyFromJSONObject(family.getUuid(), checkedFamily.getId(), policiesArray);
-
-            //fetch family policies
-            try {
-                for(Family.Policy policy: policies){
-                    String programProduct = sqlHandler.getProductProgramById(String.valueOf(policy.getProductId()));
-                    String programCode = sqlHandler.getProgramCode(programProduct);
-                    if(programCode.equals("PAL")){
-                        //check if insuree have cs active policy
-                        List<Policy> familyPolicies = new FetchFamilyPolicies().execute(checkedFamily.getUuid());
-                        for(Policy familyPolicy: familyPolicies){
-                            String program = sqlHandler.getProductProgramByCode(familyPolicy.getCode());
-                            String nameProgram = sqlHandler.getProgramName(program);
-                            if((nameProgram.equals("Cheque Santé") || nameProgram.equals("Chèque Santé")) &&
-                                    familyPolicy.getStatus()==Policy.Status.ACTIVE){
-                                return -8;
-                            }
-                        }
-                    }
-                }
-            } catch (HttpException e) {
-                if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
-                    throw e;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            for(Family.Policy policy : policies){
+                new CreatePolicy().execute(family.getHead().getChfId(), policy, checkedFamily.getUuid());
             }
-
-            try {
-                new CreatePolicy().execute(policies, checkedFamily.getUuid());
-            } catch (Exception e) {
-                enrolMessages.add(e.getMessage());
+        } catch (HttpException e){
+            if (e.getCode() == HttpURLConnection.HTTP_NOT_FOUND) {
+                return -7;
+            }else {
                 return -400;
             }
+        } catch (Exception e){
+            e.printStackTrace();
         }
 
-        /*Family family = familyFromJSONObject(familyObj, insureesArray, insureeImages);
-        try {
-            new UpdateFamily().execute(family);
-        } catch (Exception e) {
-            enrolMessages.add(e.getMessage());
-            return -400;
-        }*/
+//        Family family = familyFromJSONObject(familyObj, insureesArray, insureeImages);
+//        try {
+//            new UpdateFamily().execute(family);
+//        } catch (Exception e) {
+//            enrolMessages.add(e.getMessage());
+//            return -400;
+//        }
 
         return 0;
     }

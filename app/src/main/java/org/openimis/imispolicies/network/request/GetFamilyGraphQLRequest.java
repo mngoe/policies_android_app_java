@@ -23,7 +23,7 @@ public class GetFamilyGraphQLRequest extends BaseGraphQLRequest {
         if (edges.isEmpty()) {
             throw new HttpException(
                     /* code = */ HttpURLConnection.HTTP_NOT_FOUND,
-                    /* message = */ "No family found with head chfId: '" + headChfId + "'",
+                    /* message = */ "No beneficiary found with MPI: '" + headChfId + "'",
                     /* body = */ null,
                     /* cause = */ null
             );
