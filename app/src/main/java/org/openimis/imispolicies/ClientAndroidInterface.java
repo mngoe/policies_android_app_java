@@ -126,6 +126,18 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.net.ssl.HttpsURLConnection;
 
 import cz.msebera.android.httpclient.HttpResponse;
+import android.app.DownloadManager;
+import android.content.Context;
+import android.net.Uri;
+import android.os.Environment;
+import android.webkit.JavascriptInterface;
+import android.widget.Toast;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 public class ClientAndroidInterface {
     private static final String LOG_TAG_RENEWAL = "RENEWAL";
@@ -5931,5 +5943,102 @@ public class ClientAndroidInterface {
         }
         return PaymentDay.toString();
     }
+    @JavascriptInterface
+    public void CheckAppUpdate() {
+        ProgressDialog pd = ProgressDialog.show(activity, "Mise à jour", "Vérification en cours...");
+
+        new Thread(() -> {
+            try {
+                // Télécharger le fichier versions.txt depuis Google Drive
+                URL url = new URL("https://drive.google.com/uc?export=download&id=164kJNN3ZokKetA6QfDJTfCNLHQPgJ37N");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String line;
+                String latestVersion = null;
+
+                // Cherche la ligne contenant "policies-csu" et extrait la version
+                while ((line = reader.readLine()) != null) {
+                    if (line.toLowerCase().contains("policies-csu")) {
+                        latestVersion = line.split(":")[1].trim();
+                        break;
+                    }
+                }
+
+                reader.close();
+                connection.disconnect();
+
+                // Version actuelle dans BuildConfig.VERSION_NAME : "v2.0.1-485-g9f55d83"
+                String currentVersionFull = BuildConfig.VERSION_NAME;
+                String currentVersion = currentVersionFull.replaceAll("^v", "").split("-")[0];
+
+                boolean updateAvailable = false;
+
+                if (latestVersion != null) {
+                    // Comparaison robuste
+                    String[] latestParts = latestVersion.split("\\.");
+                    String[] currentParts = currentVersion.split("\\.");
+                    int length = Math.max(latestParts.length, currentParts.length);
+
+                    for (int i = 0; i < length; i++) {
+                        int latestNum = 0;
+                        int currentNum = 0;
+
+                        try {
+                            latestNum = i < latestParts.length ? Integer.parseInt(latestParts[i]) : 0;
+                            currentNum = i < currentParts.length ? Integer.parseInt(currentParts[i]) : 0;
+                        } catch (NumberFormatException e) {
+                            Log.e("CheckUpdate", "Erreur de parsing version : ", e);
+                            break;
+                        }
+
+                        if (latestNum > currentNum) {
+                            updateAvailable = true;
+                            break;
+                        } else if (latestNum < currentNum) {
+                            updateAvailable = false;
+                            break;
+                        }
+                    }
+                }
+
+                final boolean finalUpdateAvailable = updateAvailable;
+                activity.runOnUiThread(() -> {
+                    if (finalUpdateAvailable) {
+                        new AlertDialog.Builder(activity)
+                                .setTitle("Mise à jour disponible")
+                                .setMessage("Nouvelle version disponible. Voulez-vous la télécharger ?")
+                                .setPositiveButton("Oui", (dialog, which) -> downloadAndInstallLatestApk())
+                                .setNegativeButton("Non", null)
+                                .show();
+                    } else {
+                        Toast.makeText(activity, "Vous avez déjà la dernière version (" + currentVersion + ").", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            } catch (Exception e) {
+                Log.e("CheckUpdate", "Erreur : ", e);
+                activity.runOnUiThread(() -> {
+                    Toast.makeText(activity, "Erreur lors de la vérification de la mise à jour", Toast.LENGTH_LONG).show();
+                });
+            } finally {
+                pd.dismiss();
+            }
+        }).start();
     }
 
+    @JavascriptInterface
+    public void downloadAndInstallLatestApk() {
+        String apkUrl = "https://drive.google.com/uc?export=download&id=1tGG5JHa7FeaD4Bp7WJwv3V_ahEIEsMMa";
+        String fileName = "policies-csu.apk";
+
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(apkUrl));
+        request.setTitle("Téléchargement de la mise à jour");
+        request.setDescription("Téléchargement en cours...");
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+        request.setMimeType("application/vnd.android.package-archive");
+
+        DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
+        manager.enqueue(request);
+    }
+}
