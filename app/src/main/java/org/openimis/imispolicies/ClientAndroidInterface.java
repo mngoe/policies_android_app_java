@@ -5967,7 +5967,7 @@ public class ClientAndroidInterface {
                 reader.close();
                 connection.disconnect();
 
-                // Version actuelle dans BuildConfig.VERSION_NAME : "v2.0.1-485-g9f55d83"
+                // Version actuelle dans BuildConfig.VERSION_NAME
                 String currentVersionFull = BuildConfig.VERSION_NAME;
                 String currentVersion = currentVersionFull.replaceAll("^v", "").split("-")[0];
 
@@ -6028,8 +6028,8 @@ public class ClientAndroidInterface {
 
     @JavascriptInterface
     public void downloadAndInstallLatestApk() {
-        String apkUrl = "https://drive.google.com/uc?export=download&id=1tGG5JHa7FeaD4Bp7WJwv3V_ahEIEsMMa";
-        String fileName = "policies-csu.apk";
+        String apkUrl = "https://github.com/mngoe/policies_android_app_java/releases/download/v2.2.6/policies-csu-test-2.2.6.apk";
+        String fileName = "app-comoresDev-debug.apk";
 
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(apkUrl));
         request.setTitle("Téléchargement de la mise à jour");
