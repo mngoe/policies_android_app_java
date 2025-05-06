@@ -5949,96 +5949,86 @@ public class ClientAndroidInterface {
 
         new Thread(() -> {
             try {
-                // Télécharger le fichier versions.txt depuis Google Drive
-                URL url = new URL("https://drive.google.com/uc?export=download&id=164kJNN3ZokKetA6QfDJTfCNLHQPgJ37N");
+                // 1. Récupérer la version actuelle (depuis build.gradle)
+                String currentVersion = BuildConfig.VERSION_NAME; //
+
+                // 2. Récupérer la dernière release depuis GitHub
+                URL url = new URL("https://api.github.com/repos/mngoe/policies_android_app_java/releases/latest");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestProperty("Accept", "application/vnd.github.v3+json");
+
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
                 String line;
-                String latestVersion = null;
-
-                // Cherche la ligne contenant "policies-csu" et extrait la version
                 while ((line = reader.readLine()) != null) {
-                    if (line.toLowerCase().contains("policies-csu")) {
-                        latestVersion = line.split(":")[1].trim();
-                        break;
-                    }
+                    response.append(line);
                 }
-
                 reader.close();
                 connection.disconnect();
 
-                // Version actuelle dans BuildConfig.VERSION_NAME
-                String currentVersionFull = BuildConfig.VERSION_NAME;
-                String currentVersion = currentVersionFull.replaceAll("^v", "").split("-")[0];
+                // 3. Extraire le tag_name de la release GitHub
+                JSONObject jsonResponse = new JSONObject(response.toString());
+                String latestVersion = jsonResponse.getString("tag_name"); // Format: "comores-2"
 
+                // 4. Comparaison simple des versions (format: "comores-N")
                 boolean updateAvailable = false;
-
-                if (latestVersion != null) {
-                    // Comparaison robuste
-                    String[] latestParts = latestVersion.split("\\.");
-                    String[] currentParts = currentVersion.split("\\.");
-                    int length = Math.max(latestParts.length, currentParts.length);
-
-                    for (int i = 0; i < length; i++) {
-                        int latestNum = 0;
-                        int currentNum = 0;
-
-                        try {
-                            latestNum = i < latestParts.length ? Integer.parseInt(latestParts[i]) : 0;
-                            currentNum = i < currentParts.length ? Integer.parseInt(currentParts[i]) : 0;
-                        } catch (NumberFormatException e) {
-                            Log.e("CheckUpdate", "Erreur de parsing version : ", e);
-                            break;
-                        }
-
-                        if (latestNum > currentNum) {
-                            updateAvailable = true;
-                            break;
-                        } else if (latestNum < currentNum) {
-                            updateAvailable = false;
-                            break;
-                        }
-                    }
+                try {
+                    int currentNum = Integer.parseInt(currentVersion.split("-")[1]);
+                    int latestNum = Integer.parseInt(latestVersion.split("-")[1]);
+                    updateAvailable = latestNum > currentNum;
+                } catch (Exception e) {
+                    Log.e("VersionCompare", "Format de version invalide", e);
                 }
 
-                final boolean finalUpdateAvailable = updateAvailable;
+                // 5. Afficher le résultat
+                boolean finalUpdateAvailable = updateAvailable;
                 activity.runOnUiThread(() -> {
+                    pd.dismiss();
                     if (finalUpdateAvailable) {
                         new AlertDialog.Builder(activity)
                                 .setTitle("Mise à jour disponible")
-                                .setMessage("Nouvelle version disponible. Voulez-vous la télécharger ?")
-                                .setPositiveButton("Oui", (dialog, which) -> downloadAndInstallLatestApk())
-                                .setNegativeButton("Non", null)
+                                .setMessage("Version " + latestVersion + " disponible (vous avez " + currentVersion + ")")
+                                .setPositiveButton("Télécharger", (dialog, which) -> downloadUpdate(latestVersion))
+                                .setNegativeButton("Plus tard", null)
                                 .show();
                     } else {
-                        Toast.makeText(activity, "Vous avez déjà la dernière version (" + currentVersion + ").", Toast.LENGTH_LONG).show();
+                        Toast.makeText(activity,
+                                "Vous avez déjà la dernière version (" + currentVersion + ")",
+                                Toast.LENGTH_LONG).show();
                     }
                 });
 
             } catch (Exception e) {
-                Log.e("CheckUpdate", "Erreur : ", e);
                 activity.runOnUiThread(() -> {
-                    Toast.makeText(activity, "Erreur lors de la vérification de la mise à jour", Toast.LENGTH_LONG).show();
+                    pd.dismiss();
+                    Toast.makeText(activity,
+                            "Erreur de vérification: " + e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
                 });
-            } finally {
-                pd.dismiss();
+                Log.e("CheckUpdate", "Erreur: ", e);
             }
         }).start();
     }
 
     @JavascriptInterface
-    public void downloadAndInstallLatestApk() {
-        String apkUrl = "https://github.com/mngoe/policies_android_app_java/releases/download/v2.2.6/policies-csu-test-2.2.6.apk";
-        String fileName = "app-comoresDev-debug.apk";
+    public void downloadUpdate(String versionTag) {
+        try {
+            String apkUrl = "https://github.com/mngoe/policies_android_app_java/releases/download/comores-1/app-comoresDev-debug.apk";
 
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(apkUrl));
-        request.setTitle("Téléchargement de la mise à jour");
-        request.setDescription("Téléchargement en cours...");
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-        request.setMimeType("application/vnd.android.package-archive");
+            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(apkUrl))
+                    .setTitle("Mise à jour OpenIMIS")
+                    .setDescription("Téléchargement version " + versionTag)
+                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "policies_" + versionTag + ".apk")
+                    .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
-        DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
-        manager.enqueue(request);
+            DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
+            manager.enqueue(request);
+
+            Toast.makeText(activity, "Téléchargement démarré", Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            Toast.makeText(activity, "Échec du téléchargement", Toast.LENGTH_SHORT).show();
+            Log.e("DownloadUpdate", "Erreur: ", e);
+        }
     }
 }
