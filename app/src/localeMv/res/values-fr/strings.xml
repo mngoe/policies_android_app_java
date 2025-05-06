@@ -510,5 +510,5 @@
     <string name="AttachmentNotFound">Aucune pièce jointe trouvée. Veuillez ajouter une pièce jointe</string>
     <string name="FamilyPolygamy">Famille polygame</string>
     <string name="PaymentDay">Jour de paiement</string>
-    <string name="CheckUpdate">Verifier mise a jour</string>
+    <string name="CheckUpdate">Verifier mises à jour</string>
 </resources>
