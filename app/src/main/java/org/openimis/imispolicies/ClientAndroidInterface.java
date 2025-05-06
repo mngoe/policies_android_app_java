@@ -6013,7 +6013,7 @@ public class ClientAndroidInterface {
     @JavascriptInterface
     public void downloadUpdate(String versionTag) {
         try {
-            String apkUrl = "https://github.com/mngoe/policies_android_app_java/releases/download/comores-1/app-comoresDev-debug.apk";
+            String apkUrl = "https://github.com/mngoe/policies_android_app_java/releases/download/"+ versionTag +"/app-comoresDev-debug.apk";
 
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(apkUrl))
                     .setTitle("Mise à jour OpenIMIS")
