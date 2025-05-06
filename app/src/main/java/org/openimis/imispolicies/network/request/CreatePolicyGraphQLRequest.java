@@ -11,14 +11,17 @@ import org.openimis.imispolicies.domain.entity.Family;
 import org.openimis.imispolicies.type.CreatePolicyMutationInput;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class CreatePolicyGraphQLRequest extends BaseGraphQLRequest {
 
     @WorkerThread
     @NonNull
-    public CreatePolicyMutation.Data create(@NonNull Family.Policy policy) throws Exception {
+    public String create(@NonNull Family.Policy policy) throws Exception {
         Response<CreatePolicyMutation.Data> response = makeSynchronous(new CreatePolicyMutation(
                 CreatePolicyMutationInput.builder()
+                        .clientMutationId(UUID.randomUUID().toString())
+                        .clientMutationLabel("Create Policy")
                         .familyId(policy.getFamilyId())
                         .enrollDate(policy.getEnrollDate())
                         .startDate(policy.getStartDate())
@@ -28,6 +31,10 @@ public class CreatePolicyGraphQLRequest extends BaseGraphQLRequest {
                         .officerId(policy.getOfficerId())
                         .build()
         ));
-        return Objects.requireNonNull(response.getData());
+        return Objects.requireNonNull(
+                Objects.requireNonNull(
+                                Objects.requireNonNull(response.getData(), "data is null")
+                                        .createPolicy(), "mobileEnrollment is null")
+                        .clientMutationId(), "clientMutationId is null");
     }
 }

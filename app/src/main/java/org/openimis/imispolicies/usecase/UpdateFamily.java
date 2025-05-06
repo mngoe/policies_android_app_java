@@ -27,6 +27,8 @@ public class UpdateFamily {
     private final CreateInsureeGraphQLRequest createInsureeGraphQLRequest;
     @NonNull
     private final UpdateInsureeGraphQLRequest updateInsureeGraphQLRequest;
+    @NonNull
+    private final CheckMutation checkMutation;
 
     public UpdateFamily() {
         this(
@@ -34,7 +36,8 @@ public class UpdateFamily {
                 new CreateFamilyGraphQLRequest(),
                 new UpdateFamilyGraphQLRequest(),
                 new CreateInsureeGraphQLRequest(),
-                new UpdateInsureeGraphQLRequest()
+                new UpdateInsureeGraphQLRequest(),
+                new CheckMutation()
         );
     }
 
@@ -43,29 +46,23 @@ public class UpdateFamily {
             @NonNull CreateFamilyGraphQLRequest createFamilyGraphQLRequest,
             @NonNull UpdateFamilyGraphQLRequest updateFamilyGraphQLRequest,
             @NonNull CreateInsureeGraphQLRequest createInsureeGraphQLRequest,
-            @NonNull UpdateInsureeGraphQLRequest updateInsureeGraphQLRequest
+            @NonNull UpdateInsureeGraphQLRequest updateInsureeGraphQLRequest,
+            @NonNull CheckMutation checkMutation
     ) {
         this.fetchFamily = fetchFamily;
         this.createFamilyGraphQLRequest = createFamilyGraphQLRequest;
         this.updateFamilyGraphQLRequest = updateFamilyGraphQLRequest;
         this.createInsureeGraphQLRequest = createInsureeGraphQLRequest;
         this.updateInsureeGraphQLRequest = updateInsureeGraphQLRequest;
+        this.checkMutation = checkMutation;
     }
 
     @WorkerThread
     public void execute(@NonNull Family family,@NonNull String insureeCHFID ) throws Exception {
-        Family existingFamily = null;
         try {
-            existingFamily = fetchFamily.execute(insureeCHFID);
-        } catch (HttpException e) {
-            if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
-                throw e;
-            }
-        }
-        if (existingFamily == null) {
-            createFamilyGraphQLRequest.create(family);
-        } else {
-            updateFamilyGraphQLRequest.update(family);
+            Family existingFamily = fetchFamily.execute(insureeCHFID);
+
+            checkMutation.execute(updateFamilyGraphQLRequest.update(family),"Error while updating beneficiary '" + insureeCHFID + "'");
             outer:
             for (Family.Member existingMember : existingFamily.getMembers()) {
                 for (Family.Member member: family.getMembers()) {
@@ -75,6 +72,12 @@ public class UpdateFamily {
                 }
                 removeMemberFromFamily(existingMember);
             }
+        } catch (HttpException e) {
+            if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
+                throw e;
+            }else {
+                checkMutation.execute(createFamilyGraphQLRequest.create(family),"Error while create beneficiary '" + insureeCHFID + "'");
+            }
         }
         for (Family.Member member : family.getMembers()) {
             insertOrUpdateInsuree(member, insureeCHFID );
@@ -83,19 +86,16 @@ public class UpdateFamily {
 
     @WorkerThread
     private void insertOrUpdateInsuree(@NonNull Family.Member member, @Nullable String insureeCHFID ) throws Exception {
-        Family existingFamily = null;
         try {
-            existingFamily = fetchFamily.execute(insureeCHFID);
+            Family existingFamily = fetchFamily.execute(insureeCHFID);
+            try {
+                checkMutation.execute(createInsureeGraphQLRequest.create(member,existingFamily.getId()),"Error while creating insuree '" + insureeCHFID + "'");
+            } catch (Exception e) {
+                checkMutation.execute(updateInsureeGraphQLRequest.update(member, existingFamily.getId()), "Error while updating insuree '" + insureeCHFID + "'");
+            }
         } catch (HttpException e) {
             if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
                 throw e;
-            }
-        }
-        if (existingFamily != null) {
-            try {
-                createInsureeGraphQLRequest.create(member,existingFamily.getId());
-            } catch (Exception e) {
-                updateInsureeGraphQLRequest.update(member, existingFamily.getId());
             }
         }
     }
