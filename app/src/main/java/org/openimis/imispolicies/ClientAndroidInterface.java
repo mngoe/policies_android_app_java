@@ -31,9 +31,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.SQLException;
@@ -58,6 +60,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.WorkerThread;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -5949,11 +5952,22 @@ public class ClientAndroidInterface {
 
         new Thread(() -> {
             try {
-                // 1. Récupérer la version actuelle (depuis build.gradle)
-                String currentVersion = BuildConfig.VERSION_NAME; //
+                // 1. Récupérer la version actuelle et extraire le préfixe et le numéro
+                String currentVersion = BuildConfig.VERSION_NAME; // ex: "comores-0"
+                Log.d("CheckUpdate", "Version actuelle: " + currentVersion);
 
-                // 2. Récupérer la dernière release depuis GitHub
-                URL url = new URL("https://api.github.com/repos/mngoe/policies_android_app_java/releases/latest");
+                String[] versionParts = currentVersion.split("-");
+                if (versionParts.length < 2) {
+                    throw new Exception("Format de version invalide: " + currentVersion);
+                }
+
+                String prefix = versionParts[0]; // ex: "comores"
+                int currentNum = Integer.parseInt(versionParts[1]); // ex: 0
+
+                Log.d("CheckUpdate", "Préfixe: " + prefix + ", Numéro actuel: " + currentNum);
+
+                // 2. Récupérer toutes les releases depuis GitHub
+                URL url = new URL("https://api.github.com/repos/mngoe/policies_android_app_java/releases");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestProperty("Accept", "application/vnd.github.v3+json");
 
@@ -5966,31 +5980,80 @@ public class ClientAndroidInterface {
                 reader.close();
                 connection.disconnect();
 
-                // 3. Extraire le tag_name de la release GitHub
-                JSONObject jsonResponse = new JSONObject(response.toString());
-                String latestVersion = jsonResponse.getString("tag_name"); // Format: "comores-2"
+                // 3. Parcourir toutes les releases pour trouver celles qui correspondent au préfixe
+                JSONArray releases = new JSONArray(response.toString());
+                Log.d("CheckUpdate", "Nombre de releases trouvées: " + releases.length());
 
-                // 4. Comparaison simple des versions (format: "comores-N")
-                boolean updateAvailable = false;
-                try {
-                    int currentNum = Integer.parseInt(currentVersion.split("-")[1]);
-                    int latestNum = Integer.parseInt(latestVersion.split("-")[1]);
-                    updateAvailable = latestNum > currentNum;
-                } catch (Exception e) {
-                    Log.e("VersionCompare", "Format de version invalide", e);
+                JSONObject latestRelease = null;
+                int latestNum = currentNum; // Initialiser avec la version actuelle
+                String latestTag = "";
+
+                for (int i = 0; i < releases.length(); i++) {
+                    JSONObject release = releases.getJSONObject(i);
+                    String tagName = release.getString("tag_name");
+                    Log.d("CheckUpdate", "Analyse du tag: " + tagName);
+
+                    // Vérifier si cette release correspond à notre préfixe
+                    if (tagName.equals(prefix) || tagName.startsWith(prefix + "-")) {
+                        // Si le tag est exactement le préfixe (ex: "comores"), on considère que c'est une release spéciale
+                        if (tagName.equals(prefix)) {
+                            Log.d("CheckUpdate", "Release spéciale trouvée: " + tagName);
+                            // On considère cette release comme plus récente que la version actuelle
+                            latestRelease = release;
+                            latestTag = tagName;
+                            latestNum = currentNum ;
+                            break;
+                        }
+
+                        // Si le tag est au format "prefix-N", extraire N
+                        if (tagName.contains("-")) {
+                            try {
+                                String[] tagParts = tagName.split("-");
+                                if (tagParts.length >= 2 && tagParts[0].equals(prefix)) {
+                                    int releaseNum = Integer.parseInt(tagParts[1]);
+                                    Log.d("CheckUpdate", "Numéro de version trouvé: " + releaseNum);
+
+                                    // Si cette version est plus récente que la dernière trouvée
+                                    if (releaseNum > latestNum) {
+                                        latestNum = releaseNum;
+                                        latestRelease = release;
+                                        latestTag = tagName;
+                                        Log.d("CheckUpdate", "Nouvelle version plus récente trouvée: " + tagName);
+                                    }
+                                }
+                            } catch (NumberFormatException e) {
+                                Log.e("CheckUpdate", "Format de numéro de version invalide: " + tagName, e);
+                            }
+                        }
+                    }
                 }
 
+                // 4. Vérifier si une mise à jour est disponible
+                boolean updateAvailable = latestRelease != null && latestNum > currentNum;
+                Log.d("CheckUpdate", "Mise à jour disponible: " + updateAvailable +
+                        ", Version la plus récente: " + latestTag + " (" + latestNum + ")");
+
                 // 5. Afficher le résultat
-                boolean finalUpdateAvailable = updateAvailable;
+                final JSONObject finalRelease = latestRelease;
+                final String finalLatestTag = latestTag;
+                final boolean finalUpdateAvailable = updateAvailable;
+
                 activity.runOnUiThread(() -> {
                     pd.dismiss();
-                    if (finalUpdateAvailable) {
-                        new AlertDialog.Builder(activity)
-                                .setTitle("Mise à jour disponible")
-                                .setMessage("Version " + latestVersion + " disponible (vous avez " + currentVersion + ")")
-                                .setPositiveButton("Télécharger", (dialog, which) -> downloadUpdate(latestVersion))
-                                .setNegativeButton("Plus tard", null)
-                                .show();
+                    if (finalUpdateAvailable && finalRelease != null) {
+                        try {
+                            new AlertDialog.Builder(activity)
+                                    .setTitle("Mise à jour disponible")
+                                    .setMessage("Version " + finalLatestTag + " disponible (vous avez " + currentVersion + ")")
+                                    .setPositiveButton("Télécharger", (dialog, which) -> downloadUpdate(finalRelease, prefix))
+                                    .setNegativeButton("Plus tard", null)
+                                    .show();
+                        } catch (Exception e) {
+                            Log.e("CheckUpdate", "Erreur lors de l'affichage de la boîte de dialogue", e);
+                            Toast.makeText(activity,
+                                    "Erreur: " + e.getMessage(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         Toast.makeText(activity,
                                 "Vous avez déjà la dernière version (" + currentVersion + ")",
@@ -5999,36 +6062,82 @@ public class ClientAndroidInterface {
                 });
 
             } catch (Exception e) {
+                Log.e("CheckUpdate", "Erreur générale: ", e);
                 activity.runOnUiThread(() -> {
                     pd.dismiss();
                     Toast.makeText(activity,
                             "Erreur de vérification: " + e.getMessage(),
                             Toast.LENGTH_SHORT).show();
                 });
-                Log.e("CheckUpdate", "Erreur: ", e);
             }
         }).start();
     }
 
     @JavascriptInterface
-    public void downloadUpdate(String versionTag) {
+    public void downloadUpdate(JSONObject release, String prefix) {
         try {
-            String apkUrl = "https://github.com/mngoe/policies_android_app_java/releases/download/"+ versionTag +"/app-comoresDev-debug.apk";
+            String tagName = release.getString("tag_name");
+            Log.d("DownloadUpdate", "Téléchargement de la release: " + tagName + " pour le préfixe: " + prefix);
 
+            String apkUrl = "";
+            String fileName = "";
+
+            // Vérifier d'abord si la release a des assets
+            if (release.has("assets") && !release.isNull("assets")) {
+                JSONArray assets = release.getJSONArray("assets");
+                Log.d("DownloadUpdate", "Nombre d'assets trouvés: " + assets.length());
+
+                // Parcourir les assets pour trouver le bon fichier APK
+                for (int i = 0; i < assets.length(); i++) {
+                    JSONObject asset = assets.getJSONObject(i);
+                    String assetName = asset.getString("name");
+                    Log.d("DownloadUpdate", "Asset trouvé: " + assetName);
+
+                    if (assetName.endsWith(".apk") && (assetName.contains(prefix) || assetName.contains("policies"))) {
+                        apkUrl = asset.getString("browser_download_url");
+                        fileName = assetName;
+                        Log.d("DownloadUpdate", "APK trouvé dans les assets: " + fileName + " à " + apkUrl);
+                        break;
+                    }
+                }
+            }
+                // Déterminer l'URL de téléchargement en fonction du préfixe
+                if (prefix.equals("comores")) {
+
+                    if (tagName.contains("-")) {
+
+                        String version = tagName.split("-")[1];
+                        apkUrl = "https://github.com/mngoe/policies_android_app_java/releases/download/" +
+                                tagName + "/comores-" + version + ".apk";
+                        fileName = "comores-" + version + ".apk";
+                    }
+                 if (prefix.equals("csu")) {
+                    // Format pour csu: .../download/csu/policies-csu-test.apk
+                    apkUrl = "https://github.com/mngoe/policies_android_app_java/releases/download/" +
+                            tagName + "/policies-csu-test.apk";
+                    fileName = "policies-csu-test.apk";
+                }
+
+                Log.d("DownloadUpdate", "URL construite manuellement: " + apkUrl);
+            }
+
+
+            // Télécharger l'APK
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(apkUrl))
                     .setTitle("Mise à jour OpenIMIS")
-                    .setDescription("Téléchargement version " + versionTag)
-                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "policies_" + versionTag + ".apk")
+                    .setDescription("Téléchargement version " + tagName)
+                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
                     .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
             DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
-            manager.enqueue(request);
+            long downloadId = manager.enqueue(request);
 
+            Log.d("DownloadUpdate", "Téléchargement démarré avec l'ID: " + downloadId);
             Toast.makeText(activity, "Téléchargement démarré", Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
-            Toast.makeText(activity, "Échec du téléchargement", Toast.LENGTH_SHORT).show();
-            Log.e("DownloadUpdate", "Erreur: ", e);
+            Log.e("DownloadUpdate", "Erreur lors du téléchargement: ", e);
+            Toast.makeText(activity, "Échec du téléchargement: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
-}
+   }
