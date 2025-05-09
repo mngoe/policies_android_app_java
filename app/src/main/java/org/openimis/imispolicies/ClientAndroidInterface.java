@@ -48,6 +48,7 @@ import android.util.Base64;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -2707,6 +2708,7 @@ public class ClientAndroidInterface {
     @SuppressWarnings("unused")
     public void uploadEnrolment() throws Exception {
         final ProgressDialog finalPd = ProgressDialog.show(activity, activity.getResources().getString(R.string.Sync), activity.getResources().getString(R.string.SyncProcessing));
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         try {
             new Thread(() -> {
                 try {
@@ -3192,7 +3194,7 @@ public class ClientAndroidInterface {
 
                 if (CallerId != 2) {
                     Pair<String, byte[]>[] InsureeImages = FamilyPictures(insureesArray, 1);
-                    if (myList.size() == 0) {
+                    if (myList.isEmpty()) {
                         EnrolResult = uploadEnrols(familyArray, insureesArray, policiesArray, premiumsArray, InsureeImages);
                     } else {
                         ShowErrorMessages();
@@ -3303,7 +3305,6 @@ public class ClientAndroidInterface {
         JSONObject familyObj = familyArray.getJSONObject(0);
         Family family = familyFromJSONObject(familyObj, insureesArray, insureeImages);
         JSONObject insureeObj = insureesArray.getJSONObject(0);
-        Family checkedFamily;
 
         //fetch family policies
 //        try {
@@ -3334,7 +3335,7 @@ public class ClientAndroidInterface {
 
         //search family in webserver by head insuree CHFID
         try {
-            checkedFamily = new FetchFamily().execute(insureeObj.getString("CHFID"));
+            Family checkedFamily = new FetchFamily().execute(insureeObj.getString("CHFID"));
 
             for (int j = 0; j < policiesArray.length(); j++) {
                 JSONArray policyPremiums = new JSONArray();
@@ -3359,7 +3360,7 @@ public class ClientAndroidInterface {
                 return -400;
             }
         } catch (Exception e){
-            e.printStackTrace();
+            return -400;
         }
 
 //        Family family = familyFromJSONObject(familyObj, insureesArray, insureeImages);
