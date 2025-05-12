@@ -11,15 +11,18 @@ import org.openimis.imispolicies.type.CreateFamilyMutationInput;
 import org.openimis.imispolicies.type.FamilyHeadInsureeInputType;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class CreateFamilyGraphQLRequest extends BaseGraphQLRequest {
 
     @WorkerThread
     @NonNull
-    public CreateFamilyMutation.Data create(@NonNull Family family) throws Exception {
+    public String create(@NonNull Family family) throws Exception {
         Family.Member head = family.getHead();
         Response<CreateFamilyMutation.Data> response = makeSynchronous(new CreateFamilyMutation(
                 CreateFamilyMutationInput.builder()
+                        .clientMutationId(UUID.randomUUID().toString())
+                        .clientMutationLabel("Create beneficiary")
                         .locationId(family.getLocationId())
                         .poverty(family.isPoor())
                         .familyTypeId(family.getType())
@@ -41,6 +44,10 @@ public class CreateFamilyGraphQLRequest extends BaseGraphQLRequest {
                         )
                         .build()
         ));
-        return Objects.requireNonNull(response.getData());
+        return Objects.requireNonNull(
+                Objects.requireNonNull(
+                                Objects.requireNonNull(response.getData(), "data is null")
+                                        .createFamily(), "mobileEnrollment is null")
+                        .clientMutationId(), "clientMutationId is null");
     }
 }

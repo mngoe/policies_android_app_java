@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
 import org.openimis.imispolicies.domain.entity.Family;
+import org.openimis.imispolicies.network.request.CheckMutationGraphQLRequest;
 import org.openimis.imispolicies.network.request.CreatePolicyGraphQLRequest;
 import org.openimis.imispolicies.network.request.CreatePremiumGraphQLRequest;
 
@@ -15,25 +16,29 @@ public class CreatePolicy {
     private final CreatePolicyGraphQLRequest createPolicyGraphQLRequest;
     @NonNull
     private final CreatePremiumGraphQLRequest createPremiumGraphQLRequest;
+    @NonNull
+    private final CheckMutation checkMutation;
 
     public CreatePolicy() {
-        this(new CreatePolicyGraphQLRequest(), new CreatePremiumGraphQLRequest());
+        this(new CreatePolicyGraphQLRequest(), new CreatePremiumGraphQLRequest(), new CheckMutation());
     }
 
     public CreatePolicy(
             @NonNull CreatePolicyGraphQLRequest createPolicyGraphQLRequest,
-            @NonNull CreatePremiumGraphQLRequest createPremiumGraphQLRequest
+            @NonNull CreatePremiumGraphQLRequest createPremiumGraphQLRequest,
+            @NonNull CheckMutation checkMutation
     ) {
         this.createPolicyGraphQLRequest = createPolicyGraphQLRequest;
         this.createPremiumGraphQLRequest = createPremiumGraphQLRequest;
+        this.checkMutation = checkMutation;
     }
 
     @WorkerThread
     public void execute(List<Family.Policy> policies) throws Exception {
         for (Family.Policy policy : policies) {
-            createPolicyGraphQLRequest.create(policy);
+            checkMutation.execute(createPolicyGraphQLRequest.create(policy),"Error while creating policy");
             for (Family.Policy.Premium premium : policy.getPremiums()) {
-                createPremiumGraphQLRequest.create(premium);
+                checkMutation.execute(createPremiumGraphQLRequest.create(premium),"Error while creating premium");
             }
         }
     }

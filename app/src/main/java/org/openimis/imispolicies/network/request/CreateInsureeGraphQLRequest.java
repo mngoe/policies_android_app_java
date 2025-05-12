@@ -13,14 +13,17 @@ import org.openimis.imispolicies.type.CreateInsureeMutationInput;
 import org.openimis.imispolicies.type.PhotoInputType;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class CreateInsureeGraphQLRequest extends BaseGraphQLRequest {
 
     @WorkerThread
     @NonNull
-    public CreateInsureeMutation.Data create(@NonNull Family.Member member, @NonNull int familyId) throws Exception {
+    public String create(@NonNull Family.Member member, @NonNull int familyId) throws Exception {
         Response<CreateInsureeMutation.Data> response = makeSynchronous(new CreateInsureeMutation(
                 CreateInsureeMutationInput.builder()
+                        .clientMutationId(UUID.randomUUID().toString())
+                        .clientMutationLabel("Create Insuree")
                         .chfId(member.getChfId())
                         .familyId(familyId)
                         .head(member.isHead())
@@ -52,6 +55,10 @@ public class CreateInsureeGraphQLRequest extends BaseGraphQLRequest {
                         )
                         .build()
         ));
-        return Objects.requireNonNull(response.getData());
+        return Objects.requireNonNull(
+                Objects.requireNonNull(
+                                Objects.requireNonNull(response.getData(), "data is null")
+                                        .createInsuree(), "mobileEnrollment is null")
+                        .clientMutationId(), "clientMutationId is null");
     }
 }

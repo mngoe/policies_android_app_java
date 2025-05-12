@@ -425,13 +425,10 @@ public class ClientAndroidInterface {
     @SuppressWarnings("unused")
     public String getRegions() {
         Integer officerLocationId = getOfficerLocationId();
-        @Language("SQL")
-        String Query = "SELECT LocationId, LocationName FROM tblLocations WHERE LocationId = (SELECT L.ParentLocationId LocationId FROM tblLocations L ";
-        if (officerLocationId != null) {
-            Query += "WHERE L.LocationId = " + officerLocationId;
+        if (officerLocationId == null) {
+            return getRegionsWO();
         }
-        Query += ")";
-        return sqlHandler.getResult(Query, null).toString();
+        return sqlHandler.getResult("SELECT LocationId, LocationName FROM tblLocations WHERE LocationId = (SELECT L.ParentLocationId LocationId FROM tblLocations L WHERE L.LocationId = " + officerLocationId + ")", null).toString();
     }
 
     @JavascriptInterface
@@ -3305,24 +3302,19 @@ public class ClientAndroidInterface {
         Family family = familyFromJSONObject(familyObj, insureesArray, insureeImages);
         try {
             new UpdateFamily().execute(family, insureeObj.getString("CHFID"));
+        } catch (HttpException e) {
+            if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
+                return -400;
+            }
         } catch (Exception e) {
             enrolMessages.add(e.getMessage());
             return -400;
         }
 
         //search family in webserver by head insuree CHFID
-        Family existingFamily = null;
         try {
-            existingFamily = new FetchFamily().execute(insureeObj.getString("CHFID"));
-        } catch (HttpException e) {
-            if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
-                throw e;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            Family existingFamily = new FetchFamily().execute(insureeObj.getString("CHFID"));
 
-        if (existingFamily != null){
             for (int j = 0; j < policiesArray.length(); j++) {
                 JSONArray policyPremiums = new JSONArray();
                 String policyId = policiesArray.getJSONObject(j).getString("PolicyId");
@@ -3342,6 +3334,13 @@ public class ClientAndroidInterface {
                 enrolMessages.add(e.getMessage());
                 return -400;
             }
+        } catch (HttpException e) {
+            if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
+                return -400;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -400;
         }
 
         return 0;
