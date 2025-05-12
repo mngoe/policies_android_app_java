@@ -45,6 +45,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -350,6 +351,16 @@ public class MainActivity extends AppCompatActivity
             } else {
                 activity.Login.setText(R.string.Login);
             }
+        });
+    }
+
+    public static void SetKeepScreen() {
+        MainActivity activity = instance;
+        if (activity == null || activity.isFinishing()) {
+            return;
+        }
+        activity.runOnUiThread(() -> {
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         });
     }
 
