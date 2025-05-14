@@ -431,7 +431,7 @@ public class ClientAndroidInterface {
         if (officerLocationId == null) {
             return getRegionsWO();
         }
-        return sqlHandler.getResult("SELECT LocationId, LocationName FROM tblLocations WHERE LocationId = " + officerLocationId , null).toString();
+        return sqlHandler.getResult("SELECT LocationId, LocationName FROM tblLocations WHERE LocationId = (SELECT L.ParentLocationId LocationId FROM tblLocations L WHERE L.LocationId = " + officerLocationId + ")", null).toString();
     }
 
     @JavascriptInterface
