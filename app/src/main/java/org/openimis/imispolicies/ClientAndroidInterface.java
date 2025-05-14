@@ -132,6 +132,7 @@ public class ClientAndroidInterface {
     public static int RESULT_LOAD_IMG = 1;
     public static int RESULT_SCAN = 100;
     public static boolean inProgress = true;
+    private static final int STATUS_ERROR = 1;
 
     @NonNull
     private final Activity activity;
@@ -428,7 +429,7 @@ public class ClientAndroidInterface {
         if (officerLocationId == null) {
             return getRegionsWO();
         }
-        return sqlHandler.getResult("SELECT LocationId, LocationName FROM tblLocations WHERE LocationId = " + officerLocationId , null).toString();
+        return sqlHandler.getResult("SELECT LocationId, LocationName FROM tblLocations WHERE LocationId = (SELECT L.ParentLocationId LocationId FROM tblLocations L WHERE L.LocationId = " + officerLocationId + ")", null).toString();
     }
 
     @JavascriptInterface
@@ -3265,6 +3266,9 @@ public class ClientAndroidInterface {
                         case -7:
                             ErrMsg = "[" + CHFNumber + "] " + activity.getString(R.string.RecordNotFound);
                             break;
+                        case -8:
+                            ErrMsg = "[" + CHFNumber + "] " + activity.getString(R.string.EnrolmentFailed);
+                            break;
                         case -400:
                             ErrMsg = "[" + CHFNumber + "] " + activity.getString(R.string.ServerError);
                             break;
@@ -3300,47 +3304,36 @@ public class ClientAndroidInterface {
         JSONObject familyObj = familyArray.getJSONObject(0);
         JSONObject insureeObj = insureesArray.getJSONObject(0);
         Family family = familyFromJSONObject(familyObj, insureesArray, insureeImages);
-        try {
-            new UpdateFamily().execute(family, insureeObj.getString("CHFID"));
-        } catch (HttpException e) {
-            if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
-                return -400;
-            }
-        } catch (Exception e) {
-            enrolMessages.add(e.getMessage());
-            return -400;
-        }
 
-        //search family in webserver by head insuree CHFID
-        try {
-            Family existingFamily = new FetchFamily().execute(insureeObj.getString("CHFID"));
-
-            for (int j = 0; j < policiesArray.length(); j++) {
-                JSONArray policyPremiums = new JSONArray();
-                String policyId = policiesArray.getJSONObject(j).getString("PolicyId");
-                for (int k = 0; k < premiumsArray.length(); k++) {
-                    JSONObject premiumObject = premiumsArray.getJSONObject(k);
-                    if (StringUtils.equals(policyId, premiumObject.getString("PolicyId"))) {
-                        policyPremiums.put(premiumObject);
-                    }
+        for (int j = 0; j < policiesArray.length(); j++) {
+            JSONArray policyPremiums = new JSONArray();
+            String policyId = policiesArray.getJSONObject(j).getString("PolicyId");
+            for (int k = 0; k < premiumsArray.length(); k++) {
+                JSONObject premiumObject = premiumsArray.getJSONObject(k);
+                if (StringUtils.equals(policyId, premiumObject.getString("PolicyId"))) {
+                    policyPremiums.put(premiumObject);
                 }
-                policiesArray.getJSONObject(j).put("premium", policyPremiums);
             }
-
-            List<Family.Policy> policies = familyPolicyFromJSONObject(existingFamily.getUuid(), existingFamily.getId(), policiesArray);
-            try {
-                new CreatePolicy().execute(policies);
-            } catch (Exception e) {
-                enrolMessages.add(e.getMessage());
-                return -400;
+            policiesArray.getJSONObject(j).put("premium", policyPremiums);
+        }
+        List<Family.Policy> policies = familyPolicyFromJSONObject(policiesArray);
+        try {
+            Integer status = new UpdateFamily().execute(family, insureeObj.getString("CHFID"), policies);
+            if(status == STATUS_ERROR){
+                //search family in webserver by head insuree CHFID
+                return -8;
             }
         } catch (HttpException e) {
             if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
                 return -400;
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            return -400;
+            if(Objects.requireNonNull(e.getMessage()).contains("Failed to execute http")){
+                return -6;
+            } else {
+                //enrolMessages.add(e.getMessage());
+                return -400;
+            }
         }
 
         return 0;
@@ -3412,8 +3405,6 @@ public class ClientAndroidInterface {
 
     @NonNull
     private List<Family.Policy> familyPolicyFromJSONObject(
-            @NonNull String familyUUID,
-            @NonNull int familyId,
             @NonNull JSONArray array
     ) throws JSONException {
         List<Family.Policy> policies = new ArrayList<>();
@@ -3423,8 +3414,8 @@ public class ClientAndroidInterface {
             policies.add(new Family.Policy(
                     /* id = */ Integer.parseInt(object.getString("PolicyId")),
                     /* uuid = */ policyUuid,
-                    /* familyId = */ familyId,
-                    /* familyUuid = */ familyUUID,
+                    /* familyId = */ Integer.parseInt(object.getString("FamilyId")),
+                    /* familyUuid = */ UUID.randomUUID().toString(),
                     /* enrollDate = */ Objects.requireNonNull(JsonUtils.getDateOrDefault(object, "EnrollDate")),
                     /* startDate = */ Objects.requireNonNull(JsonUtils.getDateOrDefault(object, "StartDate")),
                     /* effectiveDate = */ JsonUtils.getDateOrDefault(object, "EffectiveDate"),

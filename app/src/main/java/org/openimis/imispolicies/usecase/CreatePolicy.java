@@ -18,6 +18,7 @@ public class CreatePolicy {
     private final CreatePremiumGraphQLRequest createPremiumGraphQLRequest;
     @NonNull
     private final CheckMutation checkMutation;
+    private static final int STATUS_ERROR = 1;
 
     public CreatePolicy() {
         this(new CreatePolicyGraphQLRequest(), new CreatePremiumGraphQLRequest(), new CheckMutation());
@@ -34,12 +35,14 @@ public class CreatePolicy {
     }
 
     @WorkerThread
-    public void execute(List<Family.Policy> policies) throws Exception {
+    public Integer execute(List<Family.Policy> policies, int familyId, String familyUuid) throws Exception {
+        Integer status = STATUS_ERROR;
         for (Family.Policy policy : policies) {
-            checkMutation.execute(createPolicyGraphQLRequest.create(policy),"Error while creating policy");
+            status = checkMutation.execute(createPolicyGraphQLRequest.create(policy, familyId),"Error while creating policy");
             for (Family.Policy.Premium premium : policy.getPremiums()) {
-                checkMutation.execute(createPremiumGraphQLRequest.create(premium),"Error while creating premium");
+                status = checkMutation.execute(createPremiumGraphQLRequest.create(premium),"Error while creating premium");
             }
         }
+        return status;
     }
 }

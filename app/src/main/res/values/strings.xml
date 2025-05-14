@@ -483,4 +483,5 @@
     <string name="PolicyNumberRequired">Please enter cheque number</string>
     <string name="InvalidCsuNumber">The Csu number must only have numeric characters</string>
     <string name="InvalidTarvCode">The TarvCode can\'t only have numeric characters</string>
+    <string name="EnrolmentFailed">Failed to create insuree</string>
 </resources>

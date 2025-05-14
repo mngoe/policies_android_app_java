@@ -14,6 +14,7 @@ import org.openimis.imispolicies.network.request.UpdateFamilyGraphQLRequest;
 import org.openimis.imispolicies.network.request.UpdateInsureeGraphQLRequest;
 
 import java.net.HttpURLConnection;
+import java.util.List;
 
 public class UpdateFamily {
 
@@ -29,6 +30,7 @@ public class UpdateFamily {
     private final UpdateInsureeGraphQLRequest updateInsureeGraphQLRequest;
     @NonNull
     private final CheckMutation checkMutation;
+    private static final int STATUS_ERROR = 1;
 
     public UpdateFamily() {
         this(
@@ -58,29 +60,50 @@ public class UpdateFamily {
     }
 
     @WorkerThread
-    public void execute(@NonNull Family family,@NonNull String insureeCHFID ) throws Exception {
+    public Integer execute(
+            @NonNull Family family,
+            @NonNull String insureeCHFID,
+            @NonNull List<Family.Policy> policies
+            ) throws Exception {
+        Integer status;
         try {
-            Family existingFamily = fetchFamily.execute(insureeCHFID);
+            final Family existingFamily = fetchFamily.execute(insureeCHFID);
 
-            checkMutation.execute(updateFamilyGraphQLRequest.update(family),"Error while updating beneficiary '" + insureeCHFID + "'");
-            outer:
-            for (Family.Member existingMember : existingFamily.getMembers()) {
-                for (Family.Member member: family.getMembers()) {
-                    if (member.getChfId().equals(existingMember.getChfId())) {
-                        continue outer;
-                    }
-                }
-                removeMemberFromFamily(existingMember);
+            status = new CreatePolicy().execute(policies, existingFamily.getId(), existingFamily.getUuid());
+            if(status == STATUS_ERROR){
+                return status;
             }
+
+//            status = checkMutation.execute(updateFamilyGraphQLRequest.update(family),"Error while updating beneficiary '" + insureeCHFID + "'");
+//            outer:
+//            for (Family.Member existingMember : existingFamily.getMembers()) {
+//                for (Family.Member member: family.getMembers()) {
+//                    if (member.getChfId().equals(existingMember.getChfId())) {
+//                        continue outer;
+//                    }
+//                }
+//                removeMemberFromFamily(existingMember);
+//            }
+            return status;
         } catch (HttpException e) {
             if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
                 throw e;
-            }else {
-                checkMutation.execute(createFamilyGraphQLRequest.create(family),"Error while create beneficiary '" + insureeCHFID + "'");
+            } else {
+                status = checkMutation.execute(createFamilyGraphQLRequest.create(family),"Error while create beneficiary '" + insureeCHFID + "'");
+
+                if(status != STATUS_ERROR){
+                    final Family existingFamily = fetchFamily.execute(insureeCHFID);
+                    //upload success
+                    for (Family.Member member : family.getMembers()) {
+                        insertOrUpdateInsuree(member, insureeCHFID );
+                    }
+                    status = new CreatePolicy().execute(policies, existingFamily.getId(), existingFamily.getUuid());
+                    if(status == STATUS_ERROR){
+                        return status;
+                    }
+                }
+                return status;
             }
-        }
-        for (Family.Member member : family.getMembers()) {
-            insertOrUpdateInsuree(member, insureeCHFID );
         }
     }
 

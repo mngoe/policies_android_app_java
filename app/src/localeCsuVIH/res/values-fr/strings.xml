@@ -480,4 +480,5 @@ L\'application utilisera la langue par défaut.</string>
     <string name="SupportedLanguages">Supported languages:\n%1$s</string>
     <string name="PolicyNumber">Numéro de chèque</string>
     <string name="PolicyNumberRequired">Veuillez entrer le numéro de chèque</string>
+    <string name="EnrolmentFailed">Échec lors de la création de l\'assuré</string>
 </resources>
