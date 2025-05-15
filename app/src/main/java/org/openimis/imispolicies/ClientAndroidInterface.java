@@ -6015,7 +6015,7 @@ public class ClientAndroidInterface {
                 }
 
                 boolean updateAvailable = (highestReleaseNum > currentNum);
-                Log.d("CheckUpdate", "Version la plus récente trouvée: " + highestReleaseNum + ", Update disponible: " + updateAvailable);
+                Log.d("CheckUpdate", "Version récente trouvée: " + highestReleaseNum + ", Update disponible: " + updateAvailable);
 
                 final JSONObject finalRelease = latestRelease;
                 final String finalLatestTag = latestTag;
