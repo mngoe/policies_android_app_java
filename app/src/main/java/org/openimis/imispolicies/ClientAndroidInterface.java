@@ -3330,6 +3330,8 @@ public class ClientAndroidInterface {
         } catch (Exception e) {
             if(Objects.requireNonNull(e.getMessage()).contains("Failed to execute http")){
                 return -6;
+            } else if(!global.isNetworkAvailable()){
+                return -6;
             } else {
                 //enrolMessages.add(e.getMessage());
                 return -400;

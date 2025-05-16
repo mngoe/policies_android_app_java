@@ -220,7 +220,10 @@ public class Global extends Application {
         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getActiveNetworkInfo();
 
-        return (ni != null && ni.isConnected());
+        if(ni == null){
+            return false;
+        }
+        return ni.isConnectedOrConnecting();
     }
 
     public int isSDCardAvailable() {
