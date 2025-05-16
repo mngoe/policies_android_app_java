@@ -6026,7 +6026,7 @@ public class ClientAndroidInterface {
                     if (finalUpdateAvailable && finalRelease != null) {
                         new AlertDialog.Builder(activity)
                                 .setTitle("Mise à jour disponible")
-                                .setMessage("Version " + finalLatestTag + " disponible (vous avez " + currentVersion + ")")
+                                .setMessage("Version " + finalLatestTag + " disponible (Vous avez " + currentVersion + ")")
                                 .setPositiveButton("Télécharger", (dialog, which) -> downloadUpdate(finalRelease, prefix))
                                 .setNegativeButton("Plus tard", null)
                                 .show();
