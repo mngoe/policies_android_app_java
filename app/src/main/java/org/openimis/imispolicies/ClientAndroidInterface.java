@@ -3360,7 +3360,11 @@ public class ClientAndroidInterface {
                 return -400;
             }
         } catch (Exception e){
-            return -400;
+            if(!global.isNetworkAvailable()){
+                return - 6;
+            }else {
+                return -400;
+            }
         }
 
 //        Family family = familyFromJSONObject(familyObj, insureesArray, insureeImages);
