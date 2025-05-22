@@ -354,16 +354,6 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    public static void SetKeepScreen() {
-        MainActivity activity = instance;
-        if (activity == null || activity.isFinishing()) {
-            return;
-        }
-        activity.runOnUiThread(() -> {
-            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        });
-    }
-
     private void loadLanguages() {
         ClientAndroidInterface ca = new ClientAndroidInterface(this);
         JSONArray Languages = ca.getLanguage();

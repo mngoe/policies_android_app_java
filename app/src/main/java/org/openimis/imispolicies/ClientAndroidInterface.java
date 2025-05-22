@@ -2707,7 +2707,9 @@ public class ClientAndroidInterface {
     @SuppressWarnings("unused")
     public void uploadEnrolment() throws Exception {
         final ProgressDialog finalPd = ProgressDialog.show(activity, activity.getResources().getString(R.string.Sync), activity.getResources().getString(R.string.SyncProcessing));
-        MainActivity.SetKeepScreen();
+        activity.runOnUiThread(() -> {
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        });
         try {
             new Thread(() -> {
                 try {
