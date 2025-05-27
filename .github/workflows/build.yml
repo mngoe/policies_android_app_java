@@ -48,7 +48,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: comores-2
-          release_name: comores-2
+          name: Release comores-2
           draft: false
           prerelease: false
         env:
@@ -57,7 +57,8 @@ jobs:
       - name: Upload APK to release
         uses: softprops/action-gh-release@v1
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: policies-comores-test.apk
-          asset_name: policies-comores-test.apk
-          asset_content_type: application/vnd.android.package-archive
+          files: policies-comores-test.apk
+          tag_name: comores-2
+          name: Release comores-2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
