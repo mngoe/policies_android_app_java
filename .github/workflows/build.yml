@@ -47,8 +47,8 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: comores-2
-          name:  comores-2
+          tag_name: comores-1
+          name:  comores-1
           draft: false
           prerelease: false
         env:
@@ -58,7 +58,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: policies-comores-test.apk
-          tag_name: comores-2
-          name: comores-2
+          tag_name: comores-1
+          name: comores-1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
