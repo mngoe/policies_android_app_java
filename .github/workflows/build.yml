@@ -2,9 +2,9 @@ name: develop-comores
 
 on:
   push:
-    branches: [ "develop-comores" ]
+    branches: [ "feature-31770" ]
   pull_request:
-    branches: [ "develop-comores" ]
+    branches: [ "feature-31770" ]
 
 jobs:
   build:
@@ -43,8 +43,21 @@ jobs:
       - name: List APK files
         run: ls -l policies-comores-test.apk
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      - name: Create a new release
+        id: create_release
+        uses: softprops/action-gh-release@v1
         with:
-          name: policies-comores-test.apk
-          path: policies-comores-test.apk
+          tag_name: comores-2
+          release_name: comores-2
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload APK to release
+        uses: softprops/action-gh-release@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: policies-comores-test.apk
+          asset_name: policies-comores-test.apk
+          asset_content_type: application/vnd.android.package-archive
