@@ -5952,18 +5952,8 @@ public class ClientAndroidInterface {
 
         new Thread(() -> {
             try {
-                String currentVersion = BuildConfig.VERSION_NAME;
+                String currentVersion = BuildConfig.VERSION_NAME; // ex: comores-0
                 Log.d("CheckUpdate", "Version actuelle: " + currentVersion);
-
-                // Extraction du numéro de version actuel
-                String[] versionParts = currentVersion.split("-");
-                if (versionParts.length < 2) {
-                    versionParts = new String[]{currentVersion, "0"};
-                }
-
-                String prefix = versionParts[0];
-                int currentNum = Integer.parseInt(versionParts[1]);
-                Log.d("CheckUpdate", "Préfixe: " + prefix + ", Numéro actuel: " + currentNum);
 
                 URL url = new URL("https://api.github.com/repos/mngoe/policies_android_app_java/releases");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -5979,56 +5969,41 @@ public class ClientAndroidInterface {
                 connection.disconnect();
 
                 JSONArray releases = new JSONArray(response.toString());
-                JSONObject latestRelease = null;
-                int highestReleaseNum = -1;
-                String latestTag = "";
 
-                // Parcours des releases pour trouver la plus récente
+                String latestVersion = "";
+                String latestTagName = "";
+                boolean updateAvailable = false;
+
                 for (int i = 0; i < releases.length(); i++) {
                     JSONObject release = releases.getJSONObject(i);
                     String tagName = release.optString("tag_name", "");
                     String releaseName = release.optString("name", "");
 
-                    Log.d("CheckUpdate", "Tag analysé : " + tagName);
-                    Log.d("CheckUpdate", "Nom analysé : " + releaseName);
+                    if (tagName.startsWith("comores-")) {
+                        int releaseNum = Integer.parseInt(tagName.split("-")[1]);
+                        int currentNum = Integer.parseInt(currentVersion.split("-")[1]);
 
-                    String[] versionData = tagName.split("-");
-                    if (versionData.length < 2) {
-                        versionData = releaseName.split("-");
-                    }
-
-                    if (versionData.length == 2 && versionData[0].equals(prefix)) {
-                        try {
-                            int releaseNum = Integer.parseInt(versionData[1]);
-                            Log.d("CheckUpdate", "Version trouvée: " + releaseNum);
-
-                            // On garde la release avec le numéro le plus élevé
-                            if (releaseNum > highestReleaseNum) {
-                                highestReleaseNum = releaseNum;
-                                latestRelease = release;
-                                latestTag = tagName.isEmpty() ? releaseName : tagName;
-                            }
-                        } catch (NumberFormatException e) {
-                            Log.e("CheckUpdate", "Format de version invalide: " + versionData[1]);
+                        if (releaseNum > currentNum) {
+                            latestVersion = releaseName;
+                            latestTagName = tagName;
+                            updateAvailable = true;
+                            break; // prend uniquement le premier plus récent
                         }
                     }
                 }
 
-                boolean updateAvailable = (highestReleaseNum > currentNum);
-                Log.d("CheckUpdate", "Version récente trouvée: " + highestReleaseNum + ", Update disponible: " + updateAvailable);
-
-                final JSONObject finalRelease = latestRelease;
-                final String finalLatestTag = latestTag;
-                final boolean finalUpdateAvailable = updateAvailable;
+                boolean finalUpdateAvailable = updateAvailable;
+                String finalTag = latestTagName;
+                String finalVersion = latestVersion;
 
                 activity.runOnUiThread(() -> {
                     pd.dismiss();
-                    if (finalUpdateAvailable && finalRelease != null) {
+                    if (finalUpdateAvailable) {
                         new AlertDialog.Builder(activity)
                                 .setTitle("Mise à jour disponible")
-                                .setMessage("Version " + finalLatestTag + " disponible (Vous avez " + currentVersion + ")")
-                                .setPositiveButton("Télécharger", (dialog, which) -> downloadUpdate(finalRelease, prefix))
-                                .setNegativeButton("Plus tard", null)
+                                .setMessage("Nouvelle version : " + finalVersion + "\nVersion actuelle : " + currentVersion)
+                                .setPositiveButton("Télécharger", (dialog, which) -> downloadUpdate(finalTag))
+                                .setNegativeButton("Annuler", null)
                                 .show();
                     } else {
                         Toast.makeText(activity, "Vous avez déjà la dernière version (" + currentVersion + ")", Toast.LENGTH_LONG).show();
@@ -6036,56 +6011,34 @@ public class ClientAndroidInterface {
                 });
 
             } catch (Exception e) {
-                Log.e("CheckUpdate", "Erreur générale: ", e);
+                Log.e("CheckUpdate", "Erreur lors de la vérification: ", e);
                 activity.runOnUiThread(() -> {
                     pd.dismiss();
-                    Toast.makeText(activity, "Erreur de vérification: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
             }
         }).start();
     }
-
     @JavascriptInterface
-    public void downloadUpdate(JSONObject release, String prefix) {
+    public void downloadUpdate(String tagName) {
         try {
-            String tagName = release.getString("tag_name");
-            String releaseName = release.optString("name", "");
-            String versionSource = tagName.isEmpty() ? releaseName : tagName;
+            String fileName = "app-" + BuildConfig.FLAVOR + "-debug.apk";
+            String apkUrl = "https://github.com/mngoe/policies_android_app_java/releases/download/" + tagName + "/" + fileName;
 
-            String apkUrl = "";
-            String fileName = "";
+            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(apkUrl))
+                    .setTitle("Mise à jour OpenIMIS")
+                    .setDescription("Téléchargement de la version " + tagName)
+                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
+                    .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
-            if (release.has("assets") && !release.isNull("assets")) {
-                JSONArray assets = release.getJSONArray("assets");
-                for (int i = 0; i < assets.length(); i++) {
-                    JSONObject asset = assets.getJSONObject(i);
-                    String assetName = asset.getString("name");
-                    if (assetName.endsWith(".apk") && assetName.contains(prefix)) {
-                        apkUrl = asset.getString("browser_download_url");
-                        fileName = assetName;
-                        break;
-                    }
-                }
-            }
+            DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
+            manager.enqueue(request);
 
-            if (!apkUrl.isEmpty()) {
-                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(apkUrl))
-                        .setTitle("Mise à jour OpenIMIS")
-                        .setDescription("Téléchargement version " + versionSource)
-                        .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
-                        .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-
-                DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
-                manager.enqueue(request);
-                Toast.makeText(activity, "Téléchargement démarré", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(activity, "Aucun fichier APK trouvé pour le téléchargement", Toast.LENGTH_SHORT).show();
-            }
+            Toast.makeText(activity, "Téléchargement démarré", Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
             Log.e("DownloadUpdate", "Erreur lors du téléchargement: ", e);
             Toast.makeText(activity, "Échec du téléchargement: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
-
-   }
+}
