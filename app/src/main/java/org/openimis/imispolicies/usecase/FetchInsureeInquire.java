@@ -69,9 +69,10 @@ public class FetchInsureeInquire {
     private Policy toPolicy(@NonNull GetInsureeInquireQuery.Edge1 edge) {
         GetInsureeInquireQuery.Policy policy = Objects.requireNonNull(edge.node()).policy();
         GetInsureeInquireQuery.Product product = policy.product();
+        GetInsureeInquireQuery.ContributionPlan contributionPlan = policy.contributionPlan();
         return new Policy(
-                /* code = */ product.code(),
-                /* name = */ product.name(),
+                /* code = */ contributionPlan.code(),
+                /* name = */ contributionPlan.name(),
                 /* value = */ policy.value(),
                 /* expiryDate = */ policy.expiryDate(),
                 /* status = */ intAsStatus(policy.status()),

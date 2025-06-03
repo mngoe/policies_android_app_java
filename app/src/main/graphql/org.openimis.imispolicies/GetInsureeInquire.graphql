@@ -54,6 +54,10 @@ query GetInsureeInquire($chfId: String) {
                                 expiryDate
                                 status
                                 value
+                                contributionPlan{
+                                    name
+                                    code
+                                }
                             }
                         }
                     }
