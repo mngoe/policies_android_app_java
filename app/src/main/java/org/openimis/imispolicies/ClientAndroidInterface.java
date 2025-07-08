@@ -474,6 +474,132 @@ public class ClientAndroidInterface {
 
     @JavascriptInterface
     @SuppressWarnings("unused")
+    public String getBoolYesNo() {
+        JSONArray YesNo = new JSONArray();
+        try {
+            JSONObject object = new JSONObject();
+            object.put("key", activity.getResources().getString(R.string.Yes));
+            object.put("value", 1);
+            YesNo.put(object);
+
+            object = new JSONObject();
+            object.put("key", activity.getResources().getString(R.string.No));
+            object.put("value", 0);
+            YesNo.put(object);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return YesNo.toString();
+    }
+
+    @JavascriptInterface
+    public String getRuralUrbain() {
+        JSONArray options = new JSONArray();
+        try {
+            JSONObject urbain = new JSONObject();
+            urbain.put("key", activity.getResources().getString(R.string.Urbain));
+            urbain.put("value", 1);
+            options.put(urbain);
+
+            JSONObject rural = new JSONObject();
+            rural.put("key", activity.getResources().getString(R.string.Rural));
+            rural.put("value", 2);
+            options.put(rural);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return options.toString();
+    }
+
+    @JavascriptInterface
+    public String getHouseType() {
+        JSONArray options = new JSONArray();
+        try {
+            // Villa
+            JSONObject villa = new JSONObject();
+            villa.put("key", activity.getResources().getString(R.string.Villa));
+            villa.put("value", 1);
+            options.put(villa);
+
+            // En dur et à étage
+            JSONObject enDur = new JSONObject();
+            enDur.put("key", activity.getResources().getString(R.string.EnDurEtAEtage));
+            enDur.put("value", 2);
+            options.put(enDur);
+
+            // En dur (ciment, brique cuite, ...)
+            JSONObject enDurMateriaux = new JSONObject();
+            enDurMateriaux.put("key", activity.getResources().getString(R.string.EnDurMateriaux));
+            enDurMateriaux.put("value", 3);
+            options.put(enDurMateriaux);
+
+            // Maison en tôle
+            JSONObject maisonToleCarrelageTole = new JSONObject();
+            maisonToleCarrelageTole.put("key", activity.getResources().getString(R.string.MaisonEnToleSolCarrelageToitTole));
+            maisonToleCarrelageTole.put("value", 4);
+            options.put(maisonToleCarrelageTole);
+
+            JSONObject maisonToleCarrelagePaille = new JSONObject();
+            maisonToleCarrelagePaille.put("key", activity.getResources().getString(R.string.MaisonEnToleSolCarrelageToitPaille));
+            maisonToleCarrelagePaille.put("value", 5);
+            options.put(maisonToleCarrelagePaille);
+
+            JSONObject maisonToleCimentTole = new JSONObject();
+            maisonToleCimentTole.put("key", activity.getResources().getString(R.string.MaisonEnToleSolCimentToitTole));
+            maisonToleCimentTole.put("value", 6);
+            options.put(maisonToleCimentTole);
+
+            JSONObject maisonToleCimentPaille = new JSONObject();
+            maisonToleCimentPaille.put("key", activity.getResources().getString(R.string.MaisonEnToleSolCimentToitPaille));
+            maisonToleCimentPaille.put("value", 7);
+            options.put(maisonToleCimentPaille);
+
+            JSONObject maisonToleTerreTole = new JSONObject();
+            maisonToleTerreTole.put("key", activity.getResources().getString(R.string.MaisonEnToleSolTerreToitTole));
+            maisonToleTerreTole.put("value", 8);
+            options.put(maisonToleTerreTole);
+
+            JSONObject maisonToleTerrePaille = new JSONObject();
+            maisonToleTerrePaille.put("key", activity.getResources().getString(R.string.MaisonEnToleSolTerreToitPaille));
+            maisonToleTerrePaille.put("value", 16);
+            options.put(maisonToleTerrePaille);
+
+            // Maison en terre battue
+            JSONObject maisonTerreCarrelage = new JSONObject();
+            maisonTerreCarrelage.put("key", activity.getResources().getString(R.string.MaisonEnTerreBattueSolCarrelage));
+            maisonTerreCarrelage.put("value", 11);
+            options.put(maisonTerreCarrelage);
+
+            JSONObject maisonTerreCimentTole = new JSONObject();
+            maisonTerreCimentTole.put("key", activity.getResources().getString(R.string.MaisonEnTerreBattueSolCimentToitTole));
+            maisonTerreCimentTole.put("value", 12);
+            options.put(maisonTerreCimentTole);
+
+            JSONObject maisonTerreCimentPaille = new JSONObject();
+            maisonTerreCimentPaille.put("key", activity.getResources().getString(R.string.MaisonEnTerreBattueSolCimentToitPaille));
+            maisonTerreCimentPaille.put("value", 13);
+            options.put(maisonTerreCimentPaille);
+
+            JSONObject maisonTerreTerrePaille = new JSONObject();
+            maisonTerreTerrePaille.put("key", activity.getResources().getString(R.string.MaisonEnTerreBattueSolTerreToitPaille));
+            maisonTerreTerrePaille.put("value", 15);
+            options.put(maisonTerreTerrePaille);
+
+            // Maison en paille
+            JSONObject maisonPailleCarrelageTole = new JSONObject();
+            maisonPailleCarrelageTole.put("key", activity.getResources().getString(R.string.MaisonEnPailleSolCarrelageToitTole));
+            maisonPailleCarrelageTole.put("value", 9);
+            options.put(maisonPailleCarrelageTole);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return options.toString();
+    }
+
+    @JavascriptInterface
+    @SuppressWarnings("unused")
     public String getConfirmationTypes() {
         String tableName = "tblConfirmationTypes";
         String[] columns = {"ConfirmationTypeCode", "ConfirmationType", "AltLanguage"};
@@ -1125,6 +1251,32 @@ public class ClientAndroidInterface {
                 PhotoPath = copyImageFromGalleryToApplication(newPhotoPath, data.get("txtInsuranceNumber"));
             }
 
+            // INPUT
+            Integer disability = null;
+            if (!TextUtils.isEmpty(data.get("ddlDisability"))) {
+                disability = Integer.valueOf(data.get("ddlDisability"));
+            }
+
+            Integer disablingDisease = null;
+            if (!TextUtils.isEmpty(data.get("ddlDisablingDisease"))) {
+                disablingDisease = Integer.valueOf(data.get("ddlDisablingDisease"));
+            }
+
+            Integer coverageInsurance = null;
+            if (!TextUtils.isEmpty(data.get("ddlCoverageInsurance"))) {
+                coverageInsurance = Integer.valueOf(data.get("ddlCoverageInsurance"));
+            }
+
+            Integer houseType = null;
+            if (!TextUtils.isEmpty(data.get("ddlHouseType"))) {
+                houseType = Integer.valueOf(data.get("ddlHouseType"));
+            }
+
+            Integer residencePlace = null;
+            if (!TextUtils.isEmpty(data.get("ddlResidencePlace"))) {
+                residencePlace = Integer.valueOf(data.get("ddlResidencePlace"));
+            }
+
             values.put("FamilyId", FamilyId);
             values.put("CHFID", data.get("txtInsuranceNumber"));
             values.put("LastName", data.get("txtLastName"));
@@ -1160,6 +1312,13 @@ public class ClientAndroidInterface {
             values.put("PaymentMethod", PaymentMethod);
             values.put("OtherHousehold", data.get("txtOtherHousehold"));
             values.put("AccountDetails", data.get("txtAccountDetails"));
+
+            //INPUT
+            values.put("Disability", disability);
+            values.put("DisablingDisease", disablingDisease);
+            values.put("CoverageInsurance", coverageInsurance);
+            values.put("HouseType", houseType);
+            values.put("ResidencePlace", residencePlace);
 
             if (data.get("ddlVulnerability") != null && !data.get("ddlVulnerability").equals("")) {
                 values.put("Vulnerability", data.get("ddlVulnerability"));
@@ -1359,7 +1518,7 @@ public class ClientAndroidInterface {
     @SuppressWarnings("unused")
     public String getInsuree(int InsureeId) {
         @Language("SQL")
-        String Query = "SELECT InsureeId, FamilyId, CHFID, LastName, OtherNames, DOB, Gender, Marital, isHead, IdentificationNumber, Phone, isOffline , PhotoPath, CardIssued, Relationship, Profession, Education, Email, TypeOfId, I.HFID, CurrentAddress,R.LocationId CurRegion, D.LocationId CurDistrict, W.LocationId CurWard,  I.CurVillage, HFR.LocationId FSPRegion, HFD.LocationId FSPDistrict, HF.HFLevel FSPCategory, I.Vulnerability, ProfessionalSituation, IncomeLevel, PaymentMethod, OtherHousehold, AccountDetails\n" +
+        String Query = "SELECT InsureeId, FamilyId, CHFID, LastName, OtherNames, DOB, Gender, Marital, isHead, IdentificationNumber, Phone, isOffline , PhotoPath, CardIssued, Relationship, Profession, Education, Email, Disability, DisablingDisease, CoverageInsurance, HouseType, ResidencePlace, TypeOfId, I.HFID, CurrentAddress,R.LocationId CurRegion, D.LocationId CurDistrict, W.LocationId CurWard,  I.CurVillage, HFR.LocationId FSPRegion, HFD.LocationId FSPDistrict, HF.HFLevel FSPCategory, I.Vulnerability, ProfessionalSituation, IncomeLevel, PaymentMethod, OtherHousehold, AccountDetails\n" +
                 "FROM tblInsuree I\n" +
                 "LEFT OUTER JOIN tblLocations V ON V.LocationId = I.CurVillage\n" +
                 "LEFT OUTER JOIN tblLocations W ON W.LocationId = V.ParentLocationId\n" +

@@ -81,6 +81,9 @@ public class Enquire extends ImisActivity {
     private TextView tvCHFID;
     private TextView tvName;
     private TextView tvGender;
+//    private TextView tvDisability;
+//    private TextView tvDisablingDisease;
+//    private TextView tvCoverageInsurance;
     private TextView tvDOB;
     private TextView tvPolicyStatus;
     private ListView lv;
@@ -114,6 +117,9 @@ public class Enquire extends ImisActivity {
         tvDOB = findViewById(R.id.tvDOB);
         tvPolicyStatus = findViewById(R.id.tvPolicyStatus);
         tvGender = findViewById(R.id.tvGender);
+//        tvDisablingDisease = findViewById(R.id.tvDisablingDisease);
+//        tvDisability = findViewById(R.id.tvDisability);
+//        tvCoverageInsurance = findViewById(R.id.tvCoverageInsurance);
         iv = findViewById(R.id.imageView);
         ImageButton btnGo = findViewById(R.id.btnGo);
         ImageButton btnScan = findViewById(R.id.btnScan);
@@ -197,6 +203,9 @@ public class Enquire extends ImisActivity {
         tvDOB.setText(getResources().getString(R.string.BirthDate));
         tvPolicyStatus.setText(getResources().getString(R.string.EnquirePolicyLabel));
         tvGender.setText(getResources().getString(R.string.Gender));
+//        tvDisablingDisease.setText(getResources().getString(R.string.DisablingDisease));
+//        tvDisability.setText(getResources().getString(R.string.Disability));
+//        tvCoverageInsurance.setText(getResources().getString(R.string.CoverageInsurance));
         iv.setImageResource(R.drawable.person);
         ll.setVisibility(View.INVISIBLE);
         PolicyList.clear();
@@ -241,6 +250,9 @@ public class Enquire extends ImisActivity {
                 TextViewUtils.setDate(tvDOB, insuree.getDateOfBirth());
                 tvPolicyStatus.setText(R.string.EnquirePolicyLabel);
                 tvGender.setText(insuree.getGender());
+//                tvDisablingDisease.setText(insuree.getDisablingDisease());
+//                tvDisability.setText(insuree.getDisability());
+//                tvCoverageInsurance.setText(insuree.getCoverageInsurance());
                 try {
                     if (insuree.getPhoto() != null) {
                         try {

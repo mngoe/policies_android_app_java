@@ -522,4 +522,33 @@
     <string name="ConnectionReset">Échec de connexion. Veuillez réessayer</string>
     <string name="FamilyAndAttachment">Pièces jointes famille</string>
     <string name="invalidPeriodicity">Pour ce régime de cotisation la périodicité doit être supérieure ou égale à</string>
+    <string name="Disability">Handicap</string>
+    <string name="DisablingDisease">Disabling Disease</string>
+    <string name="CoverageInsurance">Couverture Assurance</string>
+    <string name="ResidencePlace">Milieu de Residence</string>
+    <string name="Urbain">Urbain</string>
+    <string name="Rural">Rurale</string>
+    <string name="HouseType">Type habitation</string>
+    <string name="SelectDisability">Sélectionner Handicap</string>
+    <string name="SelectHouseType">Sélectionner Type habitation</string>
+
+    <string name="SelectDisablingDisease">Sélectionner une maladie invalidante</string>
+    <string name="SelectCoverageInsurance">Sélectionner une assurance de couverture</string>
+    <string name="SelectResidencePlace">Sélectionner le lieu de résidence</string>
+    <string name="HomeTE">Accueil TE</string>
+
+    <string name="Villa">Villa</string>
+    <string name="EnDurEtAEtage">En dur et à étage</string>
+    <string name="EnDurMateriaux">En dur (ciment, brique cuite, ...)</string>
+    <string name="MaisonEnToleSolCarrelageToitTole">En tôle, sol en carrelage, toit en tôle</string>
+    <string name="MaisonEnToleSolCarrelageToitPaille">En tôle, sol en carrelage, toit en paille</string>
+    <string name="MaisonEnToleSolCimentToitTole">En tôle, sol en ciment, toit en tôle</string>
+    <string name="MaisonEnToleSolCimentToitPaille">En tôle, sol en ciment, toit en paille</string>
+    <string name="MaisonEnToleSolTerreToitTole">En tôle, sol en terre, toit en tôle</string>
+    <string name="MaisonEnToleSolTerreToitPaille">En tôle, sol en terre, toit en paille</string>
+    <string name="MaisonEnTerreBattueSolCarrelage">En terre battue, sol en carrelage, toit en paille</string>
+    <string name="MaisonEnTerreBattueSolCimentToitTole">En terre battue, sol en ciment, toit en tôle</string>
+    <string name="MaisonEnTerreBattueSolCimentToitPaille">En terre battue, sol en ciment, toit en paille</string>
+    <string name="MaisonEnTerreBattueSolTerreToitPaille">En terre battue, sol en terre, toit en paille</string>
+    <string name="MaisonEnPailleSolCarrelageToitTole">En paille, sol en carrelage, toit en tôle</string>
 </resources>

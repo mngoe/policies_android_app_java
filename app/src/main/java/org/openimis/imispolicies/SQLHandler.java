@@ -59,7 +59,22 @@ public class SQLHandler extends SQLiteOpenHelper {
     private final Context context;
     private final Global global;
     private SQLiteDatabase mDatabase;
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 6;
+
+    private boolean doesColumnExist(SQLiteDatabase db, String tableName, String columnName) {
+        Cursor cursor = db.rawQuery("PRAGMA table_info('" + tableName + "')", null);
+        boolean exists = false;
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                if (cursor.getString(cursor.getColumnIndex("name")).equals(columnName)) {
+                    exists = true;
+                    break;
+                }
+            }
+            cursor.close();
+        }
+        return exists;
+    }
 
     //table names
     private static final String android_metadata = "android_metadata";
@@ -102,8 +117,405 @@ public class SQLHandler extends SQLiteOpenHelper {
 
 
     @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.d("SQLHandler", "Starting database upgrade from version " + oldVersion + " to " + newVersion);
+        
+        // Gérer les différentes versions
+        if (oldVersion < 2) {
+            Log.d("SQLHandler", "Upgrading from version " + oldVersion + " to 2");
+            
+            // Vérifier et ajouter les colonnes une par une
+            String[] newColumns = {"Disability", "DisablingDisease", "CoverageInsurance", "HouseType", "ResidencePlace"};
+            for (String column : newColumns) {
+                boolean exists = doesColumnExist(db, tblInsuree, column);
+                Log.d("SQLHandler", "Checking column " + column + " exists: " + exists);
+                
+                if (!exists) {
+                    String alterSQL = "ALTER TABLE " + tblInsuree + " ADD COLUMN " + column + " INTEGER;";
+                    Log.d("SQLHandler", "Adding column: " + alterSQL);
+                    try {
+                        db.execSQL(alterSQL);
+                        Log.d("SQLHandler", "Column " + column + " added successfully");
+                    } catch (Exception e) {
+                        Log.e("SQLHandler", "Error adding column " + column + ": " + e.getMessage(), e);
+                        throw e; // Rethrow to ensure the upgrade fails if a column addition fails
+                    }
+                }
+            }
+        }
+
+        // Ajouter d'autres modifications de schéma si nécessaire
+        if (oldVersion < 3) {
+            Log.d("SQLHandler", "Upgrading from version " + oldVersion + " to 3");
+            // Ajouter d'autres colonnes ou modifications ici
+        }
+
+        Log.d("SQLHandler", "Database upgrade completed successfully from version " + oldVersion + " to " + newVersion);
+    }
+
+    @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         try {
+            Log.d("SQLHandler", "Starting database creation");
+
+            // Créer les tables système
+            Log.d("SQLHandler", "Creating system tables");
+            sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + android_metadata + " (locale TEXT)");
+            sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + sqlite_sequence + " (name TEXT, seq INTEGER)");
+
+            // Créer la table tblInsuree
+            Log.d("SQLHandler", "Creating tblInsuree table with new columns");
+            String createInsureeTable = "CREATE TABLE IF NOT EXISTS " + tblInsuree + " (" +
+                    "Id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "CHFID TEXT," +
+                    "OtherNames TEXT," +
+                    "LastName TEXT," +
+                    "OtherNames1 TEXT," +
+                    "LastName1 TEXT," +
+                    "OtherNames2 TEXT," +
+                    "LastName2 TEXT," +
+                    "OtherNames3 TEXT," +
+                    "LastName3 TEXT," +
+                    "OtherNames4 TEXT," +
+                    "LastName4 TEXT," +
+                    "OtherNames5 TEXT," +
+                    "LastName5 TEXT," +
+                    "OtherNames6 TEXT," +
+                    "LastName6 TEXT," +
+                    "OtherNames7 TEXT," +
+                    "LastName7 TEXT," +
+                    "OtherNames8 TEXT," +
+                    "LastName8 TEXT," +
+                    "OtherNames9 TEXT," +
+                    "LastName9 TEXT," +
+                    "OtherNames10 TEXT," +
+                    "LastName10 TEXT," +
+                    "GenderId INTEGER," +
+                    "GenderId1 INTEGER," +
+                    "GenderId2 INTEGER," +
+                    "GenderId3 INTEGER," +
+                    "GenderId4 INTEGER," +
+                    "GenderId5 INTEGER," +
+                    "GenderId6 INTEGER," +
+                    "GenderId7 INTEGER," +
+                    "GenderId8 INTEGER," +
+                    "GenderId9 INTEGER," +
+                    "GenderId10 INTEGER," +
+                    "DateOfBirth TEXT," +
+                    "DateOfBirth1 TEXT," +
+                    "DateOfBirth2 TEXT," +
+                    "DateOfBirth3 TEXT," +
+                    "DateOfBirth4 TEXT," +
+                    "DateOfBirth5 TEXT," +
+                    "DateOfBirth6 TEXT," +
+                    "DateOfBirth7 TEXT," +
+                    "DateOfBirth8 TEXT," +
+                    "DateOfBirth9 TEXT," +
+                    "DateOfBirth10 TEXT," +
+                    "Photo TEXT," +
+                    "Photo1 TEXT," +
+                    "Photo2 TEXT," +
+                    "Photo3 TEXT," +
+                    "Photo4 TEXT," +
+                    "Photo5 TEXT," +
+                    "Photo6 TEXT," +
+                    "Photo7 TEXT," +
+                    "Photo8 TEXT," +
+                    "Photo9 TEXT," +
+                    "Photo10 TEXT," +
+                    "MaritalStatusId INTEGER," +
+                    "MaritalStatusId1 INTEGER," +
+                    "MaritalStatusId2 INTEGER," +
+                    "MaritalStatusId3 INTEGER," +
+                    "MaritalStatusId4 INTEGER," +
+                    "MaritalStatusId5 INTEGER," +
+                    "MaritalStatusId6 INTEGER," +
+                    "MaritalStatusId7 INTEGER," +
+                    "MaritalStatusId8 INTEGER," +
+                    "MaritalStatusId9 INTEGER," +
+                    "MaritalStatusId10 INTEGER," +
+                    "EducationId INTEGER," +
+                    "EducationId1 INTEGER," +
+                    "EducationId2 INTEGER," +
+                    "EducationId3 INTEGER," +
+                    "EducationId4 INTEGER," +
+                    "EducationId5 INTEGER," +
+                    "EducationId6 INTEGER," +
+                    "EducationId7 INTEGER," +
+                    "EducationId8 INTEGER," +
+                    "EducationId9 INTEGER," +
+                    "EducationId10 INTEGER," +
+                    "ProfessionId INTEGER," +
+                    "ProfessionId1 INTEGER," +
+                    "ProfessionId2 INTEGER," +
+                    "ProfessionId3 INTEGER," +
+                    "ProfessionId4 INTEGER," +
+                    "ProfessionId5 INTEGER," +
+                    "ProfessionId6 INTEGER," +
+                    "ProfessionId7 INTEGER," +
+                    "ProfessionId8 INTEGER," +
+                    "ProfessionId9 INTEGER," +
+                    "ProfessionId10 INTEGER," +
+                    "IdentificationTypeId INTEGER," +
+                    "IdentificationTypeId1 INTEGER," +
+                    "IdentificationTypeId2 INTEGER," +
+                    "IdentificationTypeId3 INTEGER," +
+                    "IdentificationTypeId4 INTEGER," +
+                    "IdentificationTypeId5 INTEGER," +
+                    "IdentificationTypeId6 INTEGER," +
+                    "IdentificationTypeId7 INTEGER," +
+                    "IdentificationTypeId8 INTEGER," +
+                    "IdentificationTypeId9 INTEGER," +
+                    "IdentificationTypeId10 INTEGER," +
+                    "IdentificationNumber TEXT," +
+                    "IdentificationNumber1 TEXT," +
+                    "IdentificationNumber2 TEXT," +
+                    "IdentificationNumber3 TEXT," +
+                    "IdentificationNumber4 TEXT," +
+                    "IdentificationNumber5 TEXT," +
+                    "IdentificationNumber6 TEXT," +
+                    "IdentificationNumber7 TEXT," +
+                    "IdentificationNumber8 TEXT," +
+                    "IdentificationNumber9 TEXT," +
+                    "IdentificationNumber10 TEXT," +
+                    "FamilyId INTEGER," +
+                    "FamilyId1 INTEGER," +
+                    "FamilyId2 INTEGER," +
+                    "FamilyId3 INTEGER," +
+                    "FamilyId4 INTEGER," +
+                    "FamilyId5 INTEGER," +
+                    "FamilyId6 INTEGER," +
+                    "FamilyId7 INTEGER," +
+                    "FamilyId8 INTEGER," +
+                    "FamilyId9 INTEGER," +
+                    "FamilyId10 INTEGER," +
+                    "LocationId INTEGER," +
+                    "LocationId1 INTEGER," +
+                    "LocationId2 INTEGER," +
+                    "LocationId3 INTEGER," +
+                    "LocationId4 INTEGER," +
+                    "LocationId5 INTEGER," +
+                    "LocationId6 INTEGER," +
+                    "LocationId7 INTEGER," +
+                    "LocationId8 INTEGER," +
+                    "LocationId9 INTEGER," +
+                    "LocationId10 INTEGER," +
+                    "Poverty BOOLEAN," +
+                    "Poverty1 BOOLEAN," +
+                    "Poverty2 BOOLEAN," +
+                    "Poverty3 BOOLEAN," +
+                    "Poverty4 BOOLEAN," +
+                    "Poverty5 BOOLEAN," +
+                    "Poverty6 BOOLEAN," +
+                    "Poverty7 BOOLEAN," +
+                    "Poverty8 BOOLEAN," +
+                    "Poverty9 BOOLEAN," +
+                    "Poverty10 BOOLEAN," +
+                    "RelationshipId INTEGER," +
+                    "RelationshipId1 INTEGER," +
+                    "RelationshipId2 INTEGER," +
+                    "RelationshipId3 INTEGER," +
+                    "RelationshipId4 INTEGER," +
+                    "RelationshipId5 INTEGER," +
+                    "RelationshipId6 INTEGER," +
+                    "RelationshipId7 INTEGER," +
+                    "RelationshipId8 INTEGER," +
+                    "RelationshipId9 INTEGER," +
+                    "RelationshipId10 INTEGER," +
+                    "AuditUserId INTEGER," +
+                    "AuditDate TEXT," +
+                    "AuditAction TEXT," +
+                    "AuditUserName TEXT," +
+                    "AuditMachine TEXT," +
+                    "Disability INTEGER," +
+                    "DisablingDisease INTEGER," +
+                    "CoverageInsurance INTEGER," +
+                    "HouseType INTEGER," +
+                    "ResidencePlace INTEGER" +
+                    ")";
+
+            Log.d("SQLHandler", "SQL statement for tblInsuree: " + createInsureeTable);
+            sqLiteDatabase.execSQL(createInsureeTable);
+            Log.d("SQLHandler", "tblInsuree table created successfully");
+
+            // Créer les autres tables
+            sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + tblConfirmationTypes + " (" +
+                    "Id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "Code TEXT," +
+                    "Name TEXT," +
+                    "Name1 TEXT," +
+                    "Name2 TEXT," +
+                    "Name3 TEXT," +
+                    "Name4 TEXT," +
+                    "Name5 TEXT," +
+                    "Name6 TEXT," +
+                    "Name7 TEXT," +
+                    "Name8 TEXT," +
+                    "Name9 TEXT," +
+                    "Name10 TEXT," +
+                    "SortOrder INTEGER," +
+                    "LastName1 TEXT," +
+                    "OtherNames2 TEXT," +
+                    "LastName2 TEXT," +
+                    "OtherNames3 TEXT," +
+                    "LastName3 TEXT," +
+                    "OtherNames4 TEXT," +
+                    "LastName4 TEXT," +
+                    "OtherNames5 TEXT," +
+                    "LastName5 TEXT," +
+                    "OtherNames6 TEXT," +
+                    "LastName6 TEXT," +
+                    "OtherNames7 TEXT," +
+                    "LastName7 TEXT," +
+                    "OtherNames8 TEXT," +
+                    "LastName8 TEXT," +
+                    "OtherNames9 TEXT," +
+                    "LastName9 TEXT," +
+                    "OtherNames10 TEXT," +
+                    "LastName10 TEXT," +
+                    "GenderId INTEGER," +
+                    "GenderId1 INTEGER," +
+                    "GenderId2 INTEGER," +
+                    "GenderId3 INTEGER," +
+                    "GenderId4 INTEGER," +
+                    "GenderId5 INTEGER," +
+                    "GenderId6 INTEGER," +
+                    "GenderId7 INTEGER," +
+                    "GenderId8 INTEGER," +
+                    "GenderId9 INTEGER," +
+                    "GenderId10 INTEGER," +
+                    "DateOfBirth TEXT," +
+                    "DateOfBirth1 TEXT," +
+                    "DateOfBirth2 TEXT," +
+                    "DateOfBirth3 TEXT," +
+                    "DateOfBirth4 TEXT," +
+                    "DateOfBirth5 TEXT," +
+                    "DateOfBirth6 TEXT," +
+                    "DateOfBirth7 TEXT," +
+                    "DateOfBirth8 TEXT," +
+                    "DateOfBirth9 TEXT," +
+                    "DateOfBirth10 TEXT," +
+                    "Photo TEXT," +
+                    "Photo1 TEXT," +
+                    "Photo2 TEXT," +
+                    "Photo3 TEXT," +
+                    "Photo4 TEXT," +
+                    "Photo5 TEXT," +
+                    "Photo6 TEXT," +
+                    "Photo7 TEXT," +
+                    "Photo8 TEXT," +
+                    "Photo9 TEXT," +
+                    "Photo10 TEXT," +
+                    "MaritalStatusId INTEGER," +
+                    "MaritalStatusId1 INTEGER," +
+                    "MaritalStatusId2 INTEGER," +
+                    "MaritalStatusId3 INTEGER," +
+                    "MaritalStatusId4 INTEGER," +
+                    "MaritalStatusId5 INTEGER," +
+                    "MaritalStatusId6 INTEGER," +
+                    "MaritalStatusId7 INTEGER," +
+                    "MaritalStatusId8 INTEGER," +
+                    "MaritalStatusId9 INTEGER," +
+                    "MaritalStatusId10 INTEGER," +
+                    "EducationId INTEGER," +
+                    "EducationId1 INTEGER," +
+                    "EducationId2 INTEGER," +
+                    "EducationId3 INTEGER," +
+                    "EducationId4 INTEGER," +
+                    "EducationId5 INTEGER," +
+                    "EducationId6 INTEGER," +
+                    "EducationId7 INTEGER," +
+                    "EducationId8 INTEGER," +
+                    "EducationId9 INTEGER," +
+                    "EducationId10 INTEGER," +
+                    "ProfessionId INTEGER," +
+                    "ProfessionId1 INTEGER," +
+                    "ProfessionId2 INTEGER," +
+                    "ProfessionId3 INTEGER," +
+                    "ProfessionId4 INTEGER," +
+                    "ProfessionId5 INTEGER," +
+                    "ProfessionId6 INTEGER," +
+                    "ProfessionId7 INTEGER," +
+                    "ProfessionId8 INTEGER," +
+                    "ProfessionId9 INTEGER," +
+                    "ProfessionId10 INTEGER," +
+                    "IdentificationTypeId INTEGER," +
+                    "IdentificationTypeId1 INTEGER," +
+                    "IdentificationTypeId2 INTEGER," +
+                    "IdentificationTypeId3 INTEGER," +
+                    "IdentificationTypeId4 INTEGER," +
+                    "IdentificationTypeId5 INTEGER," +
+                    "IdentificationTypeId6 INTEGER," +
+                    "IdentificationTypeId7 INTEGER," +
+                    "IdentificationTypeId8 INTEGER," +
+                    "IdentificationTypeId9 INTEGER," +
+                    "IdentificationTypeId10 INTEGER," +
+                    "IdentificationNumber TEXT," +
+                    "IdentificationNumber1 TEXT," +
+                    "IdentificationNumber2 TEXT," +
+                    "IdentificationNumber3 TEXT," +
+                    "IdentificationNumber4 TEXT," +
+                    "IdentificationNumber5 TEXT," +
+                    "IdentificationNumber6 TEXT," +
+                    "IdentificationNumber7 TEXT," +
+                    "IdentificationNumber8 TEXT," +
+                    "IdentificationNumber9 TEXT," +
+                    "IdentificationNumber10 TEXT," +
+                    "FamilyId INTEGER," +
+                    "FamilyId1 INTEGER," +
+                    "FamilyId2 INTEGER," +
+                    "FamilyId3 INTEGER," +
+                    "FamilyId4 INTEGER," +
+                    "FamilyId5 INTEGER," +
+                    "FamilyId6 INTEGER," +
+                    "FamilyId7 INTEGER," +
+                    "FamilyId8 INTEGER," +
+                    "FamilyId9 INTEGER," +
+                    "FamilyId10 INTEGER," +
+                    "LocationId INTEGER," +
+                    "LocationId1 INTEGER," +
+                    "LocationId2 INTEGER," +
+                    "LocationId3 INTEGER," +
+                    "LocationId4 INTEGER," +
+                    "LocationId5 INTEGER," +
+                    "LocationId6 INTEGER," +
+                    "LocationId7 INTEGER," +
+                    "LocationId8 INTEGER," +
+                    "LocationId9 INTEGER," +
+                    "LocationId10 INTEGER," +
+                    "Poverty BOOLEAN," +
+                    "Poverty1 BOOLEAN," +
+                    "Poverty2 BOOLEAN," +
+                    "Poverty3 BOOLEAN," +
+                    "Poverty4 BOOLEAN," +
+                    "Poverty5 BOOLEAN," +
+                    "Poverty6 BOOLEAN," +
+                    "Poverty7 BOOLEAN," +
+                    "Poverty8 BOOLEAN," +
+                    "Poverty9 BOOLEAN," +
+                    "Poverty10 BOOLEAN," +
+                    "RelationshipId INTEGER," +
+                    "RelationshipId1 INTEGER," +
+                    "RelationshipId2 INTEGER," +
+                    "RelationshipId3 INTEGER," +
+                    "RelationshipId4 INTEGER," +
+                    "RelationshipId5 INTEGER," +
+                    "RelationshipId6 INTEGER," +
+                    "RelationshipId7 INTEGER," +
+                    "RelationshipId8 INTEGER," +
+                    "RelationshipId9 INTEGER," +
+                    "RelationshipId10 INTEGER," +
+                    "AuditUserId INTEGER," +
+                    "AuditDate TEXT," +
+                    "AuditAction TEXT," +
+                    "AuditUserName TEXT," +
+                    "AuditMachine TEXT," +
+                    "Disability INTEGER," +
+                    "DisablingDisease INTEGER," +
+                    "CoverageInsurance INTEGER," +
+                    "HouseType INTEGER," +
+                    "ResidencePlace INTEGER" +
+                    ")");
             sqLiteDatabase.execSQL(
                     "CREATE TABLE " + tblConfirmationTypes + "("
                             + "ConfirmationTypeCode TEXT,"
@@ -235,6 +647,7 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "OtherHousehold TEXT," +
                             "AccountDetails TEXT" + ")"
             );
+
             sqLiteDatabase.execSQL(
                     "CREATE TABLE 'tblInsureePolicy' (" +
                             "InsureePolicyId INTEGER," +
@@ -466,43 +879,6 @@ public class SQLHandler extends SQLiteOpenHelper {
         //super.onDowngrade(db, oldVersion, newVersion);
     }
 
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + android_metadata);
-        db.execSQL("DROP TABLE IF EXISTS " + sqlite_sequence);
-        db.execSQL("DROP TABLE IF EXISTS " + tblConfirmationTypes);
-        db.execSQL("DROP TABLE IF EXISTS " + tblControlNumber);
-        db.execSQL("DROP TABLE IF EXISTS " + tblControls);
-        db.execSQL("DROP TABLE IF EXISTS " + tblEducations);
-        db.execSQL("DROP TABLE IF EXISTS " + tblFamilies);
-        db.execSQL("DROP TABLE IF EXISTS " + tblFamilyTypes);
-        db.execSQL("DROP TABLE IF EXISTS " + tblFeedbacks);
-        db.execSQL("DROP TABLE IF EXISTS " + tblGender);
-        db.execSQL("DROP TABLE IF EXISTS " + tblHF);
-        db.execSQL("DROP TABLE IF EXISTS " + tblIMISDefaultsPhone);
-        db.execSQL("DROP TABLE IF EXISTS " + tblIdentificationTypes);
-        db.execSQL("DROP TABLE IF EXISTS " + tblInsuree);
-        db.execSQL("DROP TABLE IF EXISTS " + tblInsureePolicy);
-        db.execSQL("DROP TABLE IF EXISTS " + tblLanguages);
-        db.execSQL("DROP TABLE IF EXISTS " + tblLocations);
-        db.execSQL("DROP TABLE IF EXISTS " + tblOfficer);
-        db.execSQL("DROP TABLE IF EXISTS " + tblPayer);
-        db.execSQL("DROP TABLE IF EXISTS " + tblPolicy);
-        db.execSQL("DROP TABLE IF EXISTS " + tblPremium);
-        db.execSQL("DROP TABLE IF EXISTS " + tblProduct);
-        db.execSQL("DROP TABLE IF EXISTS " + tblProfessions);
-        db.execSQL("DROP TABLE IF EXISTS " + tblRecordedPolicies);
-        db.execSQL("DROP TABLE IF EXISTS " + tblRelations);
-        db.execSQL("DROP TABLE IF EXISTS " + tblRenewals);
-        db.execSQL("DROP TABLE IF EXISTS " + tblIncomeLevel);
-        db.execSQL("DROP TABLE IF EXISTS " + tblInsureeAttachments);
-        if (oldVersion < 2) {
-            String sql = "ALTER TABLE tblRenewals ADD COLUMN LocationId INTEGER;";
-            db.execSQL(sql);
-            Log.d("Upgrade", "DB Version upgraded from 1 to 2");
-        }
-    }
 
     @Override
     public void onOpen(SQLiteDatabase db) {

@@ -267,8 +267,8 @@ public class MainActivity extends AppCompatActivity
     @SuppressLint({"AddJavascriptInterface", "SetJavaScriptEnabled"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        global = (Global) getApplicationContext();
         super.onCreate(savedInstanceState);
+        global = (Global) getApplicationContext();
         instance = this;
         setContentView(R.layout.activity_main);
         SQLHandler sqlHandler = new SQLHandler(this);

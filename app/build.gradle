@@ -67,7 +67,8 @@ android {
             // Refer to https://developer.android.com/reference/android/util/Log for the log level values
             // Irrelevant if LOGGING_ENABLED = false
             buildConfigField "int", "CONSOLE_LOG_LEVEL", '8' //Assert
-            buildConfigField "int", "FILE_LOG_LEVEL", '8' //Assert
+            buildConfigField "int", "FILE_LOG_LEVEL", '8'
+            signingConfig signingConfigs.debug//Assert
         }
         debug {
             debuggable = true

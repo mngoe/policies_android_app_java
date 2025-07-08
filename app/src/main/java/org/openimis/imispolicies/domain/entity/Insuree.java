@@ -22,6 +22,16 @@ public class Insuree implements Parcelable {
     @Nullable
     private final String photoPath;
     @Nullable
+    private final Integer disablingDisease;
+    @Nullable
+    private final Integer disability;
+    @Nullable
+    private final Integer coverageInsurance;
+    @Nullable
+    private final Integer houseType;
+    @Nullable
+    private final Integer residencePlace;
+    @Nullable
     private final byte[] photo;
     @NonNull
     private final List<Policy> policies;
@@ -33,8 +43,13 @@ public class Insuree implements Parcelable {
             @Nullable String gender,
             @Nullable String photoPath,
             @Nullable byte[] photo,
-            @NonNull List<Policy> policies
-            ) {
+            @NonNull List<Policy> policies,
+            @Nullable Integer disablingDisease,
+            @Nullable Integer disability,
+            @Nullable Integer coverageInsurance,
+            @Nullable Integer houseType,
+            @Nullable Integer residencePlace
+    ) {
         this.chfId = chfId.trim();
         this.name = name;
         this.dateOfBirth = dateOfBirth;
@@ -42,6 +57,23 @@ public class Insuree implements Parcelable {
         this.photoPath = photoPath;
         this.photo = photo;
         this.policies = policies;
+        this.disablingDisease = disablingDisease;
+        this.disability = disability;
+        this.coverageInsurance = coverageInsurance;
+        this.houseType = houseType;
+        this.residencePlace = residencePlace;
+    }
+
+    public Insuree(
+            @NonNull String chfId,
+            @NonNull String name,
+            @NonNull Date dateOfBirth,
+            @Nullable String gender,
+            @Nullable String photoPath,
+            @Nullable byte[] photo,
+            @NonNull List<Policy> policies
+    ) {
+        this(chfId, name, dateOfBirth, gender, photoPath, photo, policies, 0, 0, 0, 0, 0);
     }
 
     protected Insuree(Parcel in) {
@@ -50,6 +82,11 @@ public class Insuree implements Parcelable {
         dateOfBirth = new Date(in.readLong());
         gender = in.readString();
         photoPath = in.readString();
+        disablingDisease = in.readInt();
+        disability = in.readInt();
+        coverageInsurance = in.readInt();
+        houseType = in.readInt();
+        residencePlace = in.readInt();
         photo = in.createByteArray();
         policies = in.createTypedArrayList(Policy.CREATOR);
     }
@@ -61,6 +98,11 @@ public class Insuree implements Parcelable {
         dest.writeLong(dateOfBirth.getTime());
         dest.writeString(gender);
         dest.writeString(photoPath);
+        dest.writeInt(disablingDisease);
+        dest.writeInt(disability);
+        dest.writeInt(coverageInsurance);
+        dest.writeInt(houseType);
+        dest.writeInt(residencePlace);
         dest.writeByteArray(photo);
         dest.writeTypedList(policies);
     }
@@ -93,6 +135,31 @@ public class Insuree implements Parcelable {
     @Nullable
     public String getPhotoPath() {
         return photoPath;
+    }
+
+    @Nullable
+    public Integer getDisablingDisease() {
+        return disablingDisease;
+    }
+
+    @Nullable
+    public Integer getDisability() {
+        return disability;
+    }
+
+    @Nullable
+    public Integer getCoverageInsurance() {
+        return coverageInsurance;
+    }
+
+    @Nullable
+    public Integer getHouseType() {
+        return houseType;
+    }
+
+    @Nullable
+    public Integer getResidencePlace() {
+        return residencePlace;
     }
 
     @Nullable

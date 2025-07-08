@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    document.title = Android.getString('Home');
+    document.title = Android.getString('HomeTE');
 
     var Families = Android.getTotalFamily();
     var Insuree = Android.getTotalInsuree();
