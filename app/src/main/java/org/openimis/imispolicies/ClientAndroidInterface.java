@@ -516,81 +516,30 @@ public class ClientAndroidInterface {
     public String getHouseType() {
         JSONArray options = new JSONArray();
         try {
-            // Villa
-            JSONObject villa = new JSONObject();
-            villa.put("key", activity.getResources().getString(R.string.Villa));
-            villa.put("value", 1);
-            options.put(villa);
 
-            // En dur et à étage
-            JSONObject enDur = new JSONObject();
-            enDur.put("key", activity.getResources().getString(R.string.EnDurEtAEtage));
-            enDur.put("value", 2);
-            options.put(enDur);
+            List<Pair<Integer, Integer>> houseTypes = Arrays.asList(
+                    new Pair<>(1, R.string.Villa),
+                    new Pair<>(2, R.string.EnDurEtAEtage),
+                    new Pair<>(3, R.string.EnDurMateriaux),
+                    new Pair<>(4, R.string.MaisonEnToleSolCarrelageToitTole),
+                    new Pair<>(5, R.string.MaisonEnToleSolCarrelageToitPaille),
+                    new Pair<>(6, R.string.MaisonEnToleSolCimentToitTole),
+                    new Pair<>(7, R.string.MaisonEnToleSolCimentToitPaille),
+                    new Pair<>(8, R.string.MaisonEnToleSolTerreToitTole),
+                    new Pair<>(16, R.string.MaisonEnToleSolTerreToitPaille),
+                    new Pair<>(11, R.string.MaisonEnTerreBattueSolCarrelage),
+                    new Pair<>(12, R.string.MaisonEnTerreBattueSolCimentToitTole),
+                    new Pair<>(13, R.string.MaisonEnTerreBattueSolCimentToitPaille),
+                    new Pair<>(15, R.string.MaisonEnTerreBattueSolTerreToitPaille),
+                    new Pair<>(9, R.string.MaisonEnPailleSolCarrelageToitTole)
+            );
 
-            // En dur (ciment, brique cuite, ...)
-            JSONObject enDurMateriaux = new JSONObject();
-            enDurMateriaux.put("key", activity.getResources().getString(R.string.EnDurMateriaux));
-            enDurMateriaux.put("value", 3);
-            options.put(enDurMateriaux);
-
-            // Maison en tôle
-            JSONObject maisonToleCarrelageTole = new JSONObject();
-            maisonToleCarrelageTole.put("key", activity.getResources().getString(R.string.MaisonEnToleSolCarrelageToitTole));
-            maisonToleCarrelageTole.put("value", 4);
-            options.put(maisonToleCarrelageTole);
-
-            JSONObject maisonToleCarrelagePaille = new JSONObject();
-            maisonToleCarrelagePaille.put("key", activity.getResources().getString(R.string.MaisonEnToleSolCarrelageToitPaille));
-            maisonToleCarrelagePaille.put("value", 5);
-            options.put(maisonToleCarrelagePaille);
-
-            JSONObject maisonToleCimentTole = new JSONObject();
-            maisonToleCimentTole.put("key", activity.getResources().getString(R.string.MaisonEnToleSolCimentToitTole));
-            maisonToleCimentTole.put("value", 6);
-            options.put(maisonToleCimentTole);
-
-            JSONObject maisonToleCimentPaille = new JSONObject();
-            maisonToleCimentPaille.put("key", activity.getResources().getString(R.string.MaisonEnToleSolCimentToitPaille));
-            maisonToleCimentPaille.put("value", 7);
-            options.put(maisonToleCimentPaille);
-
-            JSONObject maisonToleTerreTole = new JSONObject();
-            maisonToleTerreTole.put("key", activity.getResources().getString(R.string.MaisonEnToleSolTerreToitTole));
-            maisonToleTerreTole.put("value", 8);
-            options.put(maisonToleTerreTole);
-
-            JSONObject maisonToleTerrePaille = new JSONObject();
-            maisonToleTerrePaille.put("key", activity.getResources().getString(R.string.MaisonEnToleSolTerreToitPaille));
-            maisonToleTerrePaille.put("value", 16);
-            options.put(maisonToleTerrePaille);
-
-            // Maison en terre battue
-            JSONObject maisonTerreCarrelage = new JSONObject();
-            maisonTerreCarrelage.put("key", activity.getResources().getString(R.string.MaisonEnTerreBattueSolCarrelage));
-            maisonTerreCarrelage.put("value", 11);
-            options.put(maisonTerreCarrelage);
-
-            JSONObject maisonTerreCimentTole = new JSONObject();
-            maisonTerreCimentTole.put("key", activity.getResources().getString(R.string.MaisonEnTerreBattueSolCimentToitTole));
-            maisonTerreCimentTole.put("value", 12);
-            options.put(maisonTerreCimentTole);
-
-            JSONObject maisonTerreCimentPaille = new JSONObject();
-            maisonTerreCimentPaille.put("key", activity.getResources().getString(R.string.MaisonEnTerreBattueSolCimentToitPaille));
-            maisonTerreCimentPaille.put("value", 13);
-            options.put(maisonTerreCimentPaille);
-
-            JSONObject maisonTerreTerrePaille = new JSONObject();
-            maisonTerreTerrePaille.put("key", activity.getResources().getString(R.string.MaisonEnTerreBattueSolTerreToitPaille));
-            maisonTerreTerrePaille.put("value", 15);
-            options.put(maisonTerreTerrePaille);
-
-            // Maison en paille
-            JSONObject maisonPailleCarrelageTole = new JSONObject();
-            maisonPailleCarrelageTole.put("key", activity.getResources().getString(R.string.MaisonEnPailleSolCarrelageToitTole));
-            maisonPailleCarrelageTole.put("value", 9);
-            options.put(maisonPailleCarrelageTole);
+            for (Pair<Integer, Integer> type : houseTypes) {
+                JSONObject obj = new JSONObject();
+                obj.put("key", activity.getResources().getString(type.second));
+                obj.put("value", type.first);
+                options.put(obj);
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
