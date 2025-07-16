@@ -64,6 +64,11 @@ public class CreateFamilyGraphQLRequest extends BaseGraphQLRequest {
                                         .preferredPaymentMethod(head.getPaymentMethod())
                                         .coordinates(head.getOtherHousehold())
                                         .bankCoordinates(head.getAccountDetails())
+                                        .disability(head.getDisability())
+                                        .disablingDisease(head.getDisablingDisease())
+                                        .coverageInsurance(head.getCoverageInsurance())
+                                        .houseType(head.getHouseType())
+                                        .residencePlace(head.getResidencePlace())
                                         .photo(
                                                 PhotoInputType.builder()
                                                         .filename(head.getPhotoPath())

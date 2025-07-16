@@ -400,6 +400,11 @@ type InsureeGQLType implements Node {
   residentialAlley: String
   isLocal: String
   usualResidence: String
+  disability: Int
+  disablingDisease: Int
+  coverageInsurance: Int
+  houseType: Int
+  residencePlace: Int
   occupation: String
   fatherName: String
   motherName: String
@@ -426,6 +431,11 @@ type InsureeGQLType implements Node {
   typeOfId: IdentificationTypeGQLType
   healthFacility: HealthFacilityGQLType
   offline: Boolean
+  disability: Int
+  disablingDisease: Int
+  coverageInsurance: Int
+  houseType: Int
+  residencePlace: Int
   auditUserId: Int!
   photos: [PhotoGQLType!]!
   headOf: FamilyGQLType
@@ -6813,6 +6823,11 @@ input FamilyHeadInsureeInputType {
   residentialAlley: String
   isLocal: String
   usualResidence: String
+  disability: Int
+  disablingDisease: Int
+  coverageInsurance: Int
+  houseType: Int
+  residencePlace: Int
   occupation: String
   fatherName: String
   motherName: String
@@ -6943,6 +6958,11 @@ input CreateInsureeMutationInput {
   residentialAlley: String
   isLocal: String
   usualResidence: String
+  disability: Int
+  disablingDisease: Int
+  coverageInsurance: Int
+  houseType: Int
+  residencePlace: Int
   occupation: String
   fatherName: String
   motherName: String
@@ -7022,6 +7042,11 @@ input UpdateInsureeMutationInput {
   residentialProvince: String
   houseNumber: String
   bankCoordinates: String
+  disability: Int
+  disablingDisease: Int
+  coverageInsurance: Int
+  houseType: Int
+  residencePlace: Int
   clientMutationId: String
 }
 
