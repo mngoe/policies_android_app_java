@@ -3602,11 +3602,12 @@ public class ClientAndroidInterface {
             Family family = familyFromJSONObject(familyObj, insureesArray, insureeImages, attachmentsArray, policiesArray, premiumsArray);
             new UpdateFamily().execute(family, insureeObj.getString("CHFID"), global.getOfficerId());
         } catch (Exception e) {
-            if(e.getMessage().contains("Failed to execute http call")){
+            String errorMessage = e.getMessage();
+            if(errorMessage != null && errorMessage.contains("Failed to execute http call")){
                 enrolMessages.add(activity.getResources().getString(R.string.ConnectionReset));
             } else {
                 e.printStackTrace();
-                enrolMessages.add(e.getMessage());
+                enrolMessages.add(errorMessage != null ? errorMessage : activity.getResources().getString(R.string.UnknownError));
             }
             return -400;
         }
@@ -3675,7 +3676,7 @@ public class ClientAndroidInterface {
                 /* identificationNumber = */ JsonUtils.getStringOrDefault(object, "IdentificationNumber"),
                 /* lastName = */ object.getString("LastName"),
                 /* otherNames = */ object.getString("OtherNames"),
-                /* dateOfBirth = */ Objects.requireNonNull(JsonUtils.getDateOrDefault(object, "DOB")),
+                /* dateOfBirth = */ JsonUtils.getDateOrDefault(object, "DOB") != null ? JsonUtils.getDateOrDefault(object, "DOB") : new Date(),
                 /* gender = */ object.getString("Gender"),
                 /* marital = */ JsonUtils.getStringOrDefault(object, "Marital"),
                 /* phone = */ JsonUtils.getStringOrDefault(object, "Phone"),
@@ -3689,14 +3690,19 @@ public class ClientAndroidInterface {
                 /* currentAddress = */ JsonUtils.getStringOrDefault(object, "CurrentAddress"),
                 /* currentVillage = */ JsonUtils.getIntegerOrDefault(object, "CurVillage"),
                 /* geolocation = */ JsonUtils.getStringOrDefault(object, "GeoLocation"),
-                /* professionnal situation  = */ JsonUtils.getStringOrDefault(object, "ProfessionalSituation"),
-                /* income level = */ JsonUtils.getIntegerOrDefault(object, "IncomeLevel"),
-                /* payment method */ JsonUtils.getStringOrDefault(object, "PaymentMethod"),
-                /* otherhousehold */ JsonUtils.getStringOrDefault(object, "OtherHousehold"),
-                /* account details */ JsonUtils.getStringOrDefault(object, "AccountDetails"),
-                /* photoPath = */ image != null ? image.first : null,
+                /* professionalSituation = */ JsonUtils.getStringOrDefault(object, "ProfessionalSituation"),
+                /* incomeLevel = */ JsonUtils.getIntegerOrDefault(object, "IncomeLevel"),
+                /* paymentMethod = */ JsonUtils.getStringOrDefault(object, "PaymentMethod"),
+                /* otherHousehold = */ JsonUtils.getStringOrDefault(object, "OtherHousehold"),
+                /* accountDetails = */ JsonUtils.getStringOrDefault(object, "AccountDetails"),
+                /* photoPath = */ JsonUtils.getStringOrDefault(object, "PhotoPath"),
                 /* photoBytes = */ image != null ? image.second : null,
-                /* isOffline = */ JsonUtils.getBooleanOrDefault(object, "isOffline", false)
+                /* isOffline = */ JsonUtils.getBooleanOrDefault(object, "isOffline", false),
+                /* disability = */ JsonUtils.getIntegerOrDefault(object, "Disability"),
+                /* disablingDisease = */ JsonUtils.getIntegerOrDefault(object, "DisablingDisease"),
+                /* coverageInsurance = */ JsonUtils.getIntegerOrDefault(object, "CoverageInsurance"),
+                /* houseType = */ JsonUtils.getIntegerOrDefault(object, "HouseType"),
+                /* residencePlace = */ JsonUtils.getIntegerOrDefault(object, "ResidencePlace")
         );
     }
 

@@ -100,7 +100,12 @@ public class FetchSubFamilies {
                 /* account details = */ member.bankCoordinates() != null ? member.bankCoordinates() : "",
                 /* photoPath = */ downloadPhoto(member.photo()),
                 /* photoBytes = */ null, // We already saved them on disk, no need to pass them here.
-                /* isOffline = */ member.offline() != null ? Objects.requireNonNull(member.offline()) : false
+                /* isOffline = */ member.offline() != null ? Objects.requireNonNull(member.offline()) : false,
+                /* disability = */ member.disability(),
+                /* disablingDisease = */ member.disablingDisease(),
+                /* coverageInsurance = */ member.coverageInsurance(),
+                /* houseType = */ member.houseType(),
+                /* residencePlace = */ member.residencePlace()
         );
     }
 

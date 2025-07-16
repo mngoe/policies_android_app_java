@@ -367,6 +367,17 @@ public class Family implements Parcelable {
         private final byte[] photoBytes;
         private final boolean isOffline;
 
+        @Nullable
+        private final Integer disability;
+        @Nullable
+        private final Integer disablingDisease;
+        @Nullable
+        private final Integer coverageInsurance;
+        @Nullable
+        private final Integer houseType;
+        @Nullable
+        private final Integer residencePlace;
+
         public Member(
                 @NonNull String chfId,
                 boolean isHead,
@@ -398,7 +409,12 @@ public class Family implements Parcelable {
                 @Nullable String accountDetails,
                 @Nullable String photoPath,
                 @Nullable byte[] photoBytes,
-                boolean isOffline
+                boolean isOffline,
+                @Nullable Integer disability,
+                @Nullable Integer disablingDisease,
+                @Nullable Integer coverageInsurance,
+                @Nullable Integer houseType,
+                @Nullable Integer residencePlace
         ) {
             this.chfId = chfId;
             this.isHead = isHead;
@@ -431,6 +447,11 @@ public class Family implements Parcelable {
             this.photoPath = photoPath;
             this.photoBytes = photoBytes;
             this.isOffline = isOffline;
+            this.disability = disability;
+            this.disablingDisease = disablingDisease;
+            this.coverageInsurance = coverageInsurance;
+            this.houseType = houseType;
+            this.residencePlace = residencePlace;
         }
 
         protected Member(Parcel in) {
@@ -485,6 +506,11 @@ public class Family implements Parcelable {
                 photoBytes = null;
             }
             isOffline = in.readByte() != 0;
+            disability = in.readInt();
+            disablingDisease = in.readInt();
+            coverageInsurance = in.readInt();
+            houseType = in.readInt();
+            residencePlace = in.readInt();
         }
 
         @Override
@@ -540,6 +566,11 @@ public class Family implements Parcelable {
                 dest.writeInt(-1);
             }
             dest.writeByte((byte) (isOffline ? 1 : 0));
+            dest.writeInt(disability);
+            dest.writeInt(disablingDisease);
+            dest.writeInt(coverageInsurance);
+            dest.writeInt(houseType);
+            dest.writeInt(residencePlace);
         }
 
         @Override
@@ -686,6 +717,17 @@ public class Family implements Parcelable {
         public boolean isOffline() {
             return isOffline;
         }
+
+        @Nullable
+        public Integer getDisability() { return disability; }
+        @Nullable
+        public Integer getDisablingDisease() { return disablingDisease; }
+        @Nullable
+        public Integer getCoverageInsurance() { return coverageInsurance; }
+        @Nullable
+        public Integer getHouseType() { return houseType; }
+        @Nullable
+        public Integer getResidencePlace() { return residencePlace; }
 
         public static final Creator<Member> CREATOR = new Creator<>() {
             @Override
