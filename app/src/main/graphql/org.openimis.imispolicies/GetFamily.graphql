@@ -52,8 +52,12 @@ query GetFamily($headChfId: String, $parentUuid: String) {
                             }
                             education {
                                 id
-                                altLanguage
                             }
+                            disability
+                            disablingDisease
+                            coverageInsurance
+                            houseType
+                            residencePlace
                             email
                             typeOfId {
                                 code

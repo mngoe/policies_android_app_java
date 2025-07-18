@@ -481,4 +481,34 @@
     <string name="PaymentDay">Payment day</string>
     <string name="Periodicity">Periodicity</string>
     <string name="CheckUpdate">Check for updates</string>
+    <string name="Disability">Disability</string>
+    <string name="DisablingDisease">Disabling Disease</string>
+    <string name="CoverageInsurance">Coverage Insurance</string>
+    <string name="ResidencePlace">Residence Place</string>
+    <string name="Urbain">Urban</string>
+    <string name="Rural">Rural</string>
+    <string name="HouseType">House Type</string>
+    <string name="SelectDisability">Select Disability</string>
+    <string name="SelectHouseType">Select House Type</string>
+
+    <string name="SelectDisablingDisease">Select Disabling Disease</string>
+    <string name="SelectCoverageInsurance">Select Coverage Insurance</string>
+    <string name="SelectResidencePlace">Select Residence Place</string>
+    <string name="HomeTE">Home TE</string>
+
+    <string name="Villa">Villa</string>
+    <string name="EnDurEtAEtage">Hard construction with floor</string>
+    <string name="EnDurMateriaux">Hard construction (cement, fired brick, ...)</string>
+    <string name="MaisonEnToleSolCarrelageToitTole">Sheet metal house with tile floor and sheet metal roof</string>
+    <string name="MaisonEnToleSolCarrelageToitPaille">Sheet metal house with tile floor and straw roof</string>
+    <string name="MaisonEnToleSolCimentToitTole">Sheet metal house with concrete floor and sheet metal roof</string>
+    <string name="MaisonEnToleSolCimentToitPaille">Sheet metal house with concrete floor and straw roof</string>
+    <string name="MaisonEnToleSolTerreToitTole">Sheet metal house with earth floor and sheet metal roof</string>
+    <string name="MaisonEnToleSolTerreToitPaille">Sheet metal house with earth floor and straw roof</string>
+    <string name="MaisonEnTerreBattueSolCarrelage">Rammed earth house with tile floor</string>
+    <string name="MaisonEnTerreBattueSolCimentToitTole">Rammed earth house with concrete floor and sheet metal roof</string>
+    <string name="MaisonEnTerreBattueSolCimentToitPaille">Rammed earth house with concrete floor and straw roof</string>
+    <string name="MaisonEnTerreBattueSolTerreToitPaille">Rammed earth house with earth floor and straw roof</string>
+    <string name="MaisonEnPailleSolCarrelageToitTole">Straw house with tile floor and sheet metal roof</string>
+
 </resources>

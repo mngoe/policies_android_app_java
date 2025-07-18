@@ -475,6 +475,81 @@ public class ClientAndroidInterface {
 
     @JavascriptInterface
     @SuppressWarnings("unused")
+    public String getBoolYesNo() {
+        JSONArray YesNo = new JSONArray();
+        try {
+            JSONObject object = new JSONObject();
+            object.put("key", activity.getResources().getString(R.string.Yes));
+            object.put("value", 1);
+            YesNo.put(object);
+
+            object = new JSONObject();
+            object.put("key", activity.getResources().getString(R.string.No));
+            object.put("value", 0);
+            YesNo.put(object);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return YesNo.toString();
+    }
+
+    @JavascriptInterface
+    public String getRuralUrbain() {
+        JSONArray options = new JSONArray();
+        try {
+            JSONObject urbain = new JSONObject();
+            urbain.put("key", activity.getResources().getString(R.string.Urbain));
+            urbain.put("value", 1);
+            options.put(urbain);
+
+            JSONObject rural = new JSONObject();
+            rural.put("key", activity.getResources().getString(R.string.Rural));
+            rural.put("value", 2);
+            options.put(rural);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return options.toString();
+    }
+
+    @JavascriptInterface
+    public String getHouseType() {
+        JSONArray options = new JSONArray();
+        try {
+
+            List<Pair<Integer, Integer>> houseTypes = Arrays.asList(
+                    new Pair<>(1, R.string.Villa),
+                    new Pair<>(2, R.string.EnDurEtAEtage),
+                    new Pair<>(3, R.string.EnDurMateriaux),
+                    new Pair<>(4, R.string.MaisonEnToleSolCarrelageToitTole),
+                    new Pair<>(5, R.string.MaisonEnToleSolCarrelageToitPaille),
+                    new Pair<>(6, R.string.MaisonEnToleSolCimentToitTole),
+                    new Pair<>(7, R.string.MaisonEnToleSolCimentToitPaille),
+                    new Pair<>(8, R.string.MaisonEnToleSolTerreToitTole),
+                    new Pair<>(16, R.string.MaisonEnToleSolTerreToitPaille),
+                    new Pair<>(11, R.string.MaisonEnTerreBattueSolCarrelage),
+                    new Pair<>(12, R.string.MaisonEnTerreBattueSolCimentToitTole),
+                    new Pair<>(13, R.string.MaisonEnTerreBattueSolCimentToitPaille),
+                    new Pair<>(15, R.string.MaisonEnTerreBattueSolTerreToitPaille),
+                    new Pair<>(9, R.string.MaisonEnPailleSolCarrelageToitTole)
+            );
+
+            for (Pair<Integer, Integer> type : houseTypes) {
+                JSONObject obj = new JSONObject();
+                obj.put("key", activity.getResources().getString(type.second));
+                obj.put("value", type.first);
+                options.put(obj);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return options.toString();
+    }
+
+    @JavascriptInterface
+    @SuppressWarnings("unused")
     public String getConfirmationTypes() {
         String tableName = "tblConfirmationTypes";
         String[] columns = {"ConfirmationTypeCode", "ConfirmationType", "AltLanguage"};
@@ -1126,6 +1201,32 @@ public class ClientAndroidInterface {
                 PhotoPath = copyImageFromGalleryToApplication(newPhotoPath, data.get("txtInsuranceNumber"));
             }
 
+            // INPUT
+            Integer disability = null;
+            if (!TextUtils.isEmpty(data.get("ddlDisability"))) {
+                disability = Integer.valueOf(data.get("ddlDisability"));
+            }
+
+            Integer disablingDisease = null;
+            if (!TextUtils.isEmpty(data.get("ddlDisablingDisease"))) {
+                disablingDisease = Integer.valueOf(data.get("ddlDisablingDisease"));
+            }
+
+            Integer coverageInsurance = null;
+            if (!TextUtils.isEmpty(data.get("ddlCoverageInsurance"))) {
+                coverageInsurance = Integer.valueOf(data.get("ddlCoverageInsurance"));
+            }
+
+            Integer houseType = null;
+            if (!TextUtils.isEmpty(data.get("ddlHouseType"))) {
+                houseType = Integer.valueOf(data.get("ddlHouseType"));
+            }
+
+            Integer residencePlace = null;
+            if (!TextUtils.isEmpty(data.get("ddlResidencePlace"))) {
+                residencePlace = Integer.valueOf(data.get("ddlResidencePlace"));
+            }
+
             values.put("FamilyId", FamilyId);
             values.put("CHFID", data.get("txtInsuranceNumber"));
             values.put("LastName", data.get("txtLastName"));
@@ -1161,6 +1262,13 @@ public class ClientAndroidInterface {
             values.put("PaymentMethod", PaymentMethod);
             values.put("OtherHousehold", data.get("txtOtherHousehold"));
             values.put("AccountDetails", data.get("txtAccountDetails"));
+
+            //INPUT
+            values.put("Disability", disability);
+            values.put("DisablingDisease", disablingDisease);
+            values.put("CoverageInsurance", coverageInsurance);
+            values.put("HouseType", houseType);
+            values.put("ResidencePlace", residencePlace);
 
             if (data.get("ddlVulnerability") != null && !data.get("ddlVulnerability").equals("")) {
                 values.put("Vulnerability", data.get("ddlVulnerability"));
@@ -1360,7 +1468,7 @@ public class ClientAndroidInterface {
     @SuppressWarnings("unused")
     public String getInsuree(int InsureeId) {
         @Language("SQL")
-        String Query = "SELECT InsureeId, FamilyId, CHFID, LastName, OtherNames, DOB, Gender, Marital, isHead, IdentificationNumber, Phone, isOffline , PhotoPath, CardIssued, Relationship, Profession, Education, Email, TypeOfId, I.HFID, CurrentAddress,R.LocationId CurRegion, D.LocationId CurDistrict, W.LocationId CurWard,  I.CurVillage, HFR.LocationId FSPRegion, HFD.LocationId FSPDistrict, HF.HFLevel FSPCategory, I.Vulnerability, ProfessionalSituation, IncomeLevel, PaymentMethod, OtherHousehold, AccountDetails\n" +
+        String Query = "SELECT InsureeId, FamilyId, CHFID, LastName, OtherNames, DOB, Gender, Marital, isHead, IdentificationNumber, Phone, isOffline , PhotoPath, CardIssued, Relationship, Profession, Education, Email, Disability, DisablingDisease, CoverageInsurance, HouseType, ResidencePlace, TypeOfId, I.HFID, CurrentAddress,R.LocationId CurRegion, D.LocationId CurDistrict, W.LocationId CurWard,  I.CurVillage, HFR.LocationId FSPRegion, HFD.LocationId FSPDistrict, HF.HFLevel FSPCategory, I.Vulnerability, ProfessionalSituation, IncomeLevel, PaymentMethod, OtherHousehold, AccountDetails\n" +
                 "FROM tblInsuree I\n" +
                 "LEFT OUTER JOIN tblLocations V ON V.LocationId = I.CurVillage\n" +
                 "LEFT OUTER JOIN tblLocations W ON W.LocationId = V.ParentLocationId\n" +
@@ -3498,11 +3606,12 @@ public class ClientAndroidInterface {
             Family family = familyFromJSONObject(familyObj, insureesArray, insureeImages, attachmentsArray, policiesArray, premiumsArray);
             new UpdateFamily().execute(family, insureeObj.getString("CHFID"), global.getOfficerId());
         } catch (Exception e) {
-            if(e.getMessage().contains("Failed to execute http call")){
+            String errorMessage = e.getMessage();
+            if(errorMessage != null && errorMessage.contains("Failed to execute http call")){
                 enrolMessages.add(activity.getResources().getString(R.string.ConnectionReset));
             } else {
                 e.printStackTrace();
-                enrolMessages.add(e.getMessage());
+                enrolMessages.add(errorMessage != null ? errorMessage : activity.getResources().getString(R.string.UnknownError));
             }
             return -400;
         }
@@ -3571,7 +3680,7 @@ public class ClientAndroidInterface {
                 /* identificationNumber = */ JsonUtils.getStringOrDefault(object, "IdentificationNumber"),
                 /* lastName = */ object.getString("LastName"),
                 /* otherNames = */ object.getString("OtherNames"),
-                /* dateOfBirth = */ Objects.requireNonNull(JsonUtils.getDateOrDefault(object, "DOB")),
+                /* dateOfBirth = */ JsonUtils.getDateOrDefault(object, "DOB") != null ? JsonUtils.getDateOrDefault(object, "DOB") : new Date(),
                 /* gender = */ object.getString("Gender"),
                 /* marital = */ JsonUtils.getStringOrDefault(object, "Marital"),
                 /* phone = */ JsonUtils.getStringOrDefault(object, "Phone"),
@@ -3585,14 +3694,19 @@ public class ClientAndroidInterface {
                 /* currentAddress = */ JsonUtils.getStringOrDefault(object, "CurrentAddress"),
                 /* currentVillage = */ JsonUtils.getIntegerOrDefault(object, "CurVillage"),
                 /* geolocation = */ JsonUtils.getStringOrDefault(object, "GeoLocation"),
-                /* professionnal situation  = */ JsonUtils.getStringOrDefault(object, "ProfessionalSituation"),
-                /* income level = */ JsonUtils.getIntegerOrDefault(object, "IncomeLevel"),
-                /* payment method */ JsonUtils.getStringOrDefault(object, "PaymentMethod"),
-                /* otherhousehold */ JsonUtils.getStringOrDefault(object, "OtherHousehold"),
-                /* account details */ JsonUtils.getStringOrDefault(object, "AccountDetails"),
-                /* photoPath = */ image != null ? image.first : null,
+                /* professionalSituation = */ JsonUtils.getStringOrDefault(object, "ProfessionalSituation"),
+                /* incomeLevel = */ JsonUtils.getIntegerOrDefault(object, "IncomeLevel"),
+                /* paymentMethod = */ JsonUtils.getStringOrDefault(object, "PaymentMethod"),
+                /* otherHousehold = */ JsonUtils.getStringOrDefault(object, "OtherHousehold"),
+                /* accountDetails = */ JsonUtils.getStringOrDefault(object, "AccountDetails"),
+                /* photoPath = */ JsonUtils.getStringOrDefault(object, "PhotoPath"),
                 /* photoBytes = */ image != null ? image.second : null,
-                /* isOffline = */ JsonUtils.getBooleanOrDefault(object, "isOffline", false)
+                /* isOffline = */ JsonUtils.getBooleanOrDefault(object, "isOffline", false),
+                /* disability = */ JsonUtils.getIntegerOrDefault(object, "Disability"),
+                /* disablingDisease = */ JsonUtils.getIntegerOrDefault(object, "DisablingDisease"),
+                /* coverageInsurance = */ JsonUtils.getIntegerOrDefault(object, "CoverageInsurance"),
+                /* houseType = */ JsonUtils.getIntegerOrDefault(object, "HouseType"),
+                /* residencePlace = */ JsonUtils.getIntegerOrDefault(object, "ResidencePlace")
         );
     }
 

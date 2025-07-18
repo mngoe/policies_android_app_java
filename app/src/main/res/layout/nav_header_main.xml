@@ -19,7 +19,7 @@
         android:adjustViewBounds="true"
         android:contentDescription="@string/app_name_policies"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        app:srcCompat="@mipmap/policies_amg" />
+        android:src="@mipmap/policies_amg_foreground" />
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content">

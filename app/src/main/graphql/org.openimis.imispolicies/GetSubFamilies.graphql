@@ -52,8 +52,12 @@ query GetSubFamilies($familyUuid: String) {
                             }
                             education {
                                 id
-                                altLanguage
                             }
+                            disability
+                            disablingDisease
+                            coverageInsurance
+                            houseType
+                            residencePlace
                             email
                             typeOfId {
                                 code

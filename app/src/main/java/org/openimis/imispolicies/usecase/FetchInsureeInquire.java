@@ -10,6 +10,7 @@ import org.openimis.imispolicies.domain.entity.Policy;
 import org.openimis.imispolicies.domain.utils.PhotoUtils;
 import org.openimis.imispolicies.network.request.GetInsureeInquireGraphQLRequest;
 import org.openimis.imispolicies.network.util.Mapper;
+import org.openimis.imispolicies.tools.Log;
 
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +31,7 @@ public class FetchInsureeInquire {
     @NonNull
     @WorkerThread
     public Insuree execute(@NonNull String chfId) throws Exception {
+
         GetInsureeInquireQuery.Node node = request.get(chfId);
         return new Insuree(
                 /* chfId = */ Objects.requireNonNull(node.chfId()),

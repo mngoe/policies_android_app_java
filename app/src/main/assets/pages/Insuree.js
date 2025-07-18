@@ -293,6 +293,12 @@ $(document).ready(function () {
         $('#ddlCurrentVillage').val($.parseJSON(Insuree)[0]["CurVillage"]);
         $('#ddlFSPRegion').val($.parseJSON(Insuree)[0]["FSPRegion"]).trigger("change");
 
+        $('#ddlDisability').val($.parseJSON(Insuree)[0]["Disability"]).trigger("change");
+        $('#ddlDisablingDisease').val($.parseJSON(Insuree)[0]["DisablingDisease"]).trigger("change");
+        $('#ddlCoverageInsurance').val($.parseJSON(Insuree)[0]["CoverageInsurance"]).trigger("change");
+        $('#ddlHouseType').val($.parseJSON(Insuree)[0]["HouseType"]).trigger("change");
+        $('#ddlResidencePlace').val($.parseJSON(Insuree)[0]["ResidencePlace"]).trigger("change");
+
         try {
             $('#ddlFSPDistrict').val($.parseJSON(Insuree)[0]["FSPDistrict"]).trigger("change");
         } catch (e) {
@@ -324,6 +330,11 @@ function fillDropdowns() {
     fillGender();
     fillMaritalStatus();
     fillBeneficiaryCard();
+    fillDisability();
+    fillDisablingDisease();
+    fillCoverageInsurance();
+    fillResidencePlace();
+    fillHouseType();
     fillCurrentRegion();
     //fillCurrentDistricts();
     fillProfessions();
@@ -383,6 +394,31 @@ function fillMaritalStatus() {
 function fillBeneficiaryCard() {
     var $YesNo = Android.getYesNo();
     bindDropdown('ddlBeneficiaryCard', $YesNo, 'value', 'key', null, Android.getString('SelectBeneficiary'));
+}
+
+function fillDisability() {
+    var $YesNo = Android.getBoolYesNo();
+    bindDropdown('ddlDisability', $YesNo, 'value', 'key', null, Android.getString('SelectDisability'));
+}
+
+function fillDisablingDisease() {
+    var $YesNo = Android.getBoolYesNo();
+    bindDropdown('ddlDisablingDisease', $YesNo, 'value', 'key', null, Android.getString('SelectDisablingDisease'));
+}
+
+function fillCoverageInsurance() {
+    var $YesNo = Android.getBoolYesNo();
+    bindDropdown('ddlCoverageInsurance', $YesNo, 'value', 'key', null, Android.getString('SelectCoverageInsurance'));
+}
+
+function fillResidencePlace() {
+    var $ResidencePlace = Android.getRuralUrbain();
+    bindDropdown('ddlResidencePlace', $ResidencePlace, 'value', 'key', null, Android.getString('SelectResidencePlace'));
+}
+
+function fillHouseType() {
+    var $HouseType = Android.getHouseType();
+    bindDropdown('ddlHouseType', $HouseType, 'value', 'key', null, Android.getString('SelectHouseType'));
 }
 
 function fillCurrentRegion() {
