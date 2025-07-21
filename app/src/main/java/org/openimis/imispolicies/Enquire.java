@@ -53,6 +53,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.zxing.integration.android.IntentIntegrator;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -156,8 +157,8 @@ public class Enquire extends ImisActivity {
             }).start();
         });
         btnScan.setOnClickListener(v -> {
-            Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-            intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
+            Intent intent = new Intent(this, com.google.zxing.client.android.CaptureActivity.class);
+            intent.setAction("com.google.zxing.client.android.SCAN");
             startActivityForResult(intent, 1);
             ClearForm();
         });
