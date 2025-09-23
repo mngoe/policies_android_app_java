@@ -902,6 +902,52 @@ public class SQLHandler extends SQLiteOpenHelper {
         return productCode;
     }
 
+    public String getProductMinAge(String productId) {
+        openDatabase();
+        String productAgeMin = null;
+        try (Cursor cursor = mDatabase.query(tblProduct,
+                new String[]{"AgeMin"},
+                "ProdId = ?",
+                new String[]{productId},
+                null,
+                null,
+                null,
+                "1")) {
+            cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
+                productAgeMin = cursor.getString(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeDatabase();
+        }
+        return productAgeMin;
+    }
+
+    public String getProductMaxAge(String productId) {
+        openDatabase();
+        String productAgeMax = null;
+        try (Cursor cursor = mDatabase.query(tblProduct,
+                new String[]{"AgeMax"},
+                "ProdId = ?",
+                new String[]{productId},
+                null,
+                null,
+                null,
+                "1")) {
+            cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
+                productAgeMax = cursor.getString(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeDatabase();
+        }
+        return productAgeMax;
+    }
+
     public String getProductProgramById(String productId) {
         openDatabase();
         String program = null;

@@ -72,7 +72,6 @@ import org.json.JSONObject;
 import org.openimis.imispolicies.domain.entity.Family;
 import org.openimis.imispolicies.domain.entity.FeedbackRequest;
 import org.openimis.imispolicies.domain.entity.PendingFeedback;
-import org.openimis.imispolicies.domain.entity.Policy;
 import org.openimis.imispolicies.network.exception.HttpException;
 import org.openimis.imispolicies.network.exception.UserNotAuthenticatedException;
 import org.openimis.imispolicies.tools.ImageManager;
@@ -81,12 +80,9 @@ import org.openimis.imispolicies.tools.StorageManager;
 import org.openimis.imispolicies.usecase.CreatePolicy;
 import org.openimis.imispolicies.usecase.DeletePolicyRenewal;
 import org.openimis.imispolicies.usecase.FetchFamily;
-import org.openimis.imispolicies.usecase.FetchFamilyPolicies;
 import org.openimis.imispolicies.usecase.FetchMasterData;
-import org.openimis.imispolicies.usecase.FetchPolicy;
 import org.openimis.imispolicies.usecase.Login;
 import org.openimis.imispolicies.usecase.PostFeedback;
-import org.openimis.imispolicies.usecase.UpdateFamily;
 import org.openimis.imispolicies.util.AndroidUtils;
 import org.openimis.imispolicies.util.DateUtils;
 import org.openimis.imispolicies.util.FileUtils;
@@ -105,6 +101,9 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -3272,6 +3271,12 @@ public class ClientAndroidInterface {
                         case -8:
                             ErrMsg = "[" + CHFNumber + "] " + activity.getString(R.string.CanAddFagepPolicy);
                             break;
+                        case -9:
+                            ErrMsg = "[" + CHFNumber + "] " + activity.getString(R.string.ProductMinAgeError);
+                            break;
+                        case -10:
+                            ErrMsg = "[" + CHFNumber + "] " + activity.getString(R.string.ProductMaxAgeError);
+                            break;
                         case -400:
                             ErrMsg = "[" + CHFNumber + "] " + activity.getString(R.string.ServerError);
                             break;
@@ -3350,10 +3355,25 @@ public class ClientAndroidInterface {
                 }
                 policiesArray.getJSONObject(j).put("premium", policyPremiums);
             }
+            Date dob = checkedFamily.getHead().getDateOfBirth();
+            LocalDate localDob = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            int beneficiaryAge = Period.between(localDob, LocalDate.now()).getYears();
 
             List<Family.Policy> policies = familyPolicyFromJSONObject(family.getUuid(), checkedFamily.getId(), policiesArray);
             for(Family.Policy policy : policies){
-                new CreatePolicy().execute(family.getHead().getChfId(), policy, checkedFamily.getUuid());
+                String ageMin = sqlHandler.getProductMinAge(String.valueOf(policy.getProductId()));
+                String ageMax = sqlHandler.getProductMaxAge(String.valueOf(policy.getProductId()));
+                if(ageMin != null && beneficiaryAge < Integer.parseInt(ageMin)){
+                    return -9;
+                } else if(ageMax != null && beneficiaryAge > Integer.parseInt(ageMax)){
+                    return -10;
+                } else if (ageMax != null && beneficiaryAge < Integer.parseInt(ageMax)){
+                    Date newExpiryDate = getNewExpiryDate(beneficiaryAge, Integer.parseInt(ageMax), policy.getStartDate());
+                    policy.setExpiryDate(newExpiryDate);
+                    new CreatePolicy().execute(family.getHead().getChfId(), policy, checkedFamily.getUuid());
+                } else {
+                    new CreatePolicy().execute(family.getHead().getChfId(), policy, checkedFamily.getUuid());
+                }
             }
         } catch (HttpException e){
             if (e.getCode() == HttpURLConnection.HTTP_NOT_FOUND) {
@@ -3378,6 +3398,15 @@ public class ClientAndroidInterface {
 //        }
 
         return 0;
+    }
+
+    @NonNull
+    private Date getNewExpiryDate (int beneficiaryAge, int maxAge, Date startDate){
+        int remainingYear = maxAge - beneficiaryAge;
+        Calendar c = Calendar.getInstance();
+        c.setTime(startDate);
+        c.add(Calendar.YEAR, remainingYear);
+        return c.getTime();
     }
 
     @NonNull
