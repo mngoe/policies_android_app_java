@@ -611,7 +611,7 @@ public class Family implements Parcelable {
         @Nullable
         private final Date effectiveDate;
         @NonNull
-        private final Date expiryDate;
+        private Date expiryDate;
         @Nullable
         private final String status;
         @Nullable
@@ -797,6 +797,10 @@ public class Family implements Parcelable {
         @Nullable
         public String getPolicyStage() {
             return policyStage;
+        }
+
+        public void setExpiryDate(@NonNull Date newExpiryDate){
+            expiryDate = newExpiryDate;
         }
 
         public boolean isOffline() {
