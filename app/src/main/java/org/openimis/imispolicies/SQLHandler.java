@@ -327,7 +327,9 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "AdministrationPeriod NUMERIC," +
                             "EnrolmentDiscountPerc NUMERIC," +
                             "EnrolmentDiscountPeriod NUMERIC," +
-                            "GracePeriod INT" + ")"
+                            "GracePeriod INT," +
+                            "MinAge INT," +
+                            "MaxAge INT" + ")"
             );
             sqLiteDatabase.execSQL(
                     "CREATE TABLE 'tblProfessions' (" +
@@ -992,6 +994,52 @@ public class SQLHandler extends SQLiteOpenHelper {
             closeDatabase();
         }
         return programName;
+    }
+
+    public int getProductMinAge(String productId) {
+        openDatabase();
+        int productAgeMin = 0;
+        try (Cursor cursor = mDatabase.query(tblProduct,
+                new String[]{"AgeMin"},
+                "ProdId = ?",
+                new String[]{productId},
+                null,
+                null,
+                null,
+                "1")) {
+            cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
+                productAgeMin = cursor.getInt(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeDatabase();
+        }
+        return productAgeMin;
+    }
+
+    public int getProductMaxAge(String productId) {
+        openDatabase();
+        int productAgeMax = 0;
+        try (Cursor cursor = mDatabase.query(tblProduct,
+                new String[]{"AgeMax"},
+                "ProdId = ?",
+                new String[]{productId},
+                null,
+                null,
+                null,
+                "1")) {
+            cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
+                productAgeMax = cursor.getInt(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeDatabase();
+        }
+        return productAgeMax;
     }
 
     public JSONArray getAvailableProducts(String officerCode) {

@@ -105,6 +105,9 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -3272,6 +3275,12 @@ public class ClientAndroidInterface {
                         case -8:
                             ErrMsg = "[" + CHFNumber + "] " + activity.getString(R.string.CanAddFagepPolicy);
                             break;
+                        case -9:
+                            ErrMsg = "[" + CHFNumber + "] " + activity.getString(R.string.ProductMinAgeError);
+                            break;
+                        case -10:
+                            ErrMsg = "[" + CHFNumber + "] " + activity.getString(R.string.ProductMaxAgeError);
+                            break;
                         case -400:
                             ErrMsg = "[" + CHFNumber + "] " + activity.getString(R.string.ServerError);
                             break;
@@ -3350,10 +3359,27 @@ public class ClientAndroidInterface {
                 }
                 policiesArray.getJSONObject(j).put("premium", policyPremiums);
             }
+            Date dob = checkedFamily.getHead().getDateOfBirth();
+            LocalDate localDob = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            int beneficiaryAge = Period.between(localDob, LocalDate.now()).getYears();
 
             List<Family.Policy> policies = familyPolicyFromJSONObject(family.getUuid(), checkedFamily.getId(), policiesArray);
             for(Family.Policy policy : policies){
-                new CreatePolicy().execute(family.getHead().getChfId(), policy, checkedFamily.getUuid());
+                int ageMin = sqlHandler.getProductMinAge(String.valueOf(policy.getProductId()));
+                int ageMax = sqlHandler.getProductMaxAge(String.valueOf(policy.getProductId()));
+
+                if(beneficiaryAge < ageMin){
+                    return -9;
+                } else if(beneficiaryAge > ageMax){
+                    return -10;
+                }else if (beneficiaryAge < ageMax){
+                    Date newExpiryDate = getNewExpiryDate(beneficiaryAge, ageMax, policy.getStartDate());
+                    policy.setExpiryDate(newExpiryDate);
+                    new CreatePolicy().execute(family.getHead().getChfId(), policy, checkedFamily.getUuid());
+                }
+                else {
+                    new CreatePolicy().execute(family.getHead().getChfId(), policy, checkedFamily.getUuid());
+                }
             }
         } catch (HttpException e){
             if (e.getCode() == HttpURLConnection.HTTP_NOT_FOUND) {
@@ -3378,6 +3404,15 @@ public class ClientAndroidInterface {
 //        }
 
         return 0;
+    }
+
+    @NonNull
+    private Date getNewExpiryDate (int beneficiaryAge, int maxAge, Date startDate){
+        int remainingYear = maxAge - beneficiaryAge;
+        Calendar c = Calendar.getInstance();
+        c.setTime(startDate);
+        c.add(Calendar.YEAR, remainingYear);
+        return c.getTime();
     }
 
     @NonNull
