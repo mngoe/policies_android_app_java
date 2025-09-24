@@ -3361,14 +3361,16 @@ public class ClientAndroidInterface {
 
             List<Family.Policy> policies = familyPolicyFromJSONObject(family.getUuid(), checkedFamily.getId(), policiesArray);
             for(Family.Policy policy : policies){
-                String ageMin = sqlHandler.getProductMinAge(String.valueOf(policy.getProductId()));
-                String ageMax = sqlHandler.getProductMaxAge(String.valueOf(policy.getProductId()));
-                if(ageMin != null && beneficiaryAge < Integer.parseInt(ageMin)){
+                int ageMin = sqlHandler.getProductMinAge(String.valueOf(policy.getProductId()));
+                int ageMax = sqlHandler.getProductMaxAge(String.valueOf(policy.getProductId()));
+
+
+                if(beneficiaryAge < ageMin){
                     return -9;
-                } else if(ageMax != null && beneficiaryAge > Integer.parseInt(ageMax)){
+                } else if(beneficiaryAge > ageMax){
                     return -10;
-                } else if (ageMax != null && beneficiaryAge < Integer.parseInt(ageMax)){
-                    Date newExpiryDate = getNewExpiryDate(beneficiaryAge, Integer.parseInt(ageMax), policy.getStartDate());
+                } else if (beneficiaryAge < ageMax){
+                    Date newExpiryDate = getNewExpiryDate(beneficiaryAge, ageMax, policy.getStartDate());
                     policy.setExpiryDate(newExpiryDate);
                     new CreatePolicy().execute(family.getHead().getChfId(), policy, checkedFamily.getUuid());
                 } else {

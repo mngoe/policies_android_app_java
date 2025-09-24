@@ -327,7 +327,9 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "AdministrationPeriod NUMERIC," +
                             "EnrolmentDiscountPerc NUMERIC," +
                             "EnrolmentDiscountPeriod NUMERIC," +
-                            "GracePeriod INT" + ")"
+                            "GracePeriod INT," +
+                            "MinAge INT," +
+                            "MaxAge INT" + ")"
             );
             sqLiteDatabase.execSQL(
                     "CREATE TABLE 'tblProfessions' (" +
@@ -902,11 +904,11 @@ public class SQLHandler extends SQLiteOpenHelper {
         return productCode;
     }
 
-    public String getProductMinAge(String productId) {
+    public int getProductMinAge(String productId) {
         openDatabase();
-        String productAgeMin = null;
+        int productAgeMin = 0;
         try (Cursor cursor = mDatabase.query(tblProduct,
-                new String[]{"AgeMin"},
+                new String[]{"MinAge"},
                 "ProdId = ?",
                 new String[]{productId},
                 null,
@@ -915,7 +917,7 @@ public class SQLHandler extends SQLiteOpenHelper {
                 "1")) {
             cursor.moveToFirst();
             if (!cursor.isAfterLast()) {
-                productAgeMin = cursor.getString(0);
+                productAgeMin = cursor.getInt(0);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -925,11 +927,11 @@ public class SQLHandler extends SQLiteOpenHelper {
         return productAgeMin;
     }
 
-    public String getProductMaxAge(String productId) {
+    public int getProductMaxAge(String productId) {
         openDatabase();
-        String productAgeMax = null;
+        int productAgeMax = 0;
         try (Cursor cursor = mDatabase.query(tblProduct,
-                new String[]{"AgeMax"},
+                new String[]{"MaxAge"},
                 "ProdId = ?",
                 new String[]{productId},
                 null,
@@ -938,7 +940,7 @@ public class SQLHandler extends SQLiteOpenHelper {
                 "1")) {
             cursor.moveToFirst();
             if (!cursor.isAfterLast()) {
-                productAgeMax = cursor.getString(0);
+                productAgeMax = cursor.getInt(0);
             }
         } catch (Exception e) {
             e.printStackTrace();
