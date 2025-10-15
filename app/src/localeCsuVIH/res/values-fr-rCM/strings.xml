@@ -187,7 +187,7 @@
   <string name="IncorrectOfficerCode">Code de l\'agent incorrect</string>
   <string name="Login">Se connecter</string>
   <string name="FTPConnectionFailed">Impossible de connecter le serveur. Opération annulée.</string>
-  <string name="SomethingWrongServer">Il y a eu un problème sur le serveur.</string>
+  <string name="SomethingWrongServer">Une erreur est subvenu sur le serveur, merci de bien vouloir reprendre l\'action.</string>
   <string name="UncaughtException">Bénéficiaire ne peut pas être insérée, s\'il vous plaît contacter l\'administrateur du système.</string>
   <string name="FamilyUploaded">Bénéficiaires téléversée avec succès</string>
   <string name="MissingHOF">Bénéficiaires manquant</string>
@@ -288,7 +288,7 @@
   <string name="failedToUpload">Échec du téléversement</string>
   <string name="dataDeleted">Supprimé avec succès</string>
   <string name="InvalidEmail">Email invalide !</string>
-  <string name="ServerError">Échec sur le serveur, la mise à jour des données a échouée !</string>
+  <string name="ServerError">Une erreur est subvenu sur le serveur, merci de bien vouloir reprendre l\'action !</string>
   <string name="PolicyCovered">Le prix du police est couvert. Voulez-vous toujours ajouter une contribution ?</string>
   <string name="ExceedsPolicy">La contribution dépasse le prix du police.</string>
   <string name="PriceBelow">Le prix du police n\'est pas encore couvert, veuillez sélectionner l\'action à effectuer.</string>
@@ -460,24 +460,21 @@
   <string name="WithoutPremium">sans contribution</string>
   <string name="HttpResponse">Réponse HTTP: %1$d — %2$s</string>
   <string name="EnquireNoPolicies">Aucune police n\'a été enregistrée.</string>
-  <string name="UsedChequeNumber">Ce chèque est déjà utilisé.</string>
+  <string name="UsedChequeNumber">Ce chèque est déjà utilisé</string>
   <string name="AbortedChequeNumber">Ce numéro de chèque a été annulé</string>
   <string name="DownladChequeDataFail">Impossible de télécharger les données relatives aux numéros de chèque</string>
   <string name="EnquirePolicyCovered">Statut de la police : Couvert</string>
   <string name="EnquirePolicyLabel">Statut de la police</string>
-  <string name="NotExistChequeNumber">Ce numéro de chèque n\'existe pas</string>
+  <string name="NotExistChequeNumber">Chèque introuvable</string>
   <string name="PhotoRequired">Veuillez ajouter une photo</string>
   <string name="NotFound">L\'entrée n\'existe pas.</string>
   <string name="Unauthorized">Échec de l\'autorisation.</string>
   <string name="UnknownError">Erreur inconnue.</string>
   <string name="Forbidden">Vous n\'êtes pas autorisé à effectuer cette action.</string>
-  <string name="LanguageCode">fr</string>
+  <string name="LanguageCode">fr_CM</string>
   <string name="LanguageSettings">Paramètres de langue</string>
   <string name="CurrentResourceLanguage">Langue de la ressource actuelle:%1$s</string>
   <string name="SystemLanguageNotSupported">La langue du système actuel n\'est pas prise en compte. 
 L\'application utilisera la langue par défaut.</string>
   <string name="DataDownloadedFailed">Échec du téléchargement des données</string>
-  <string name="SupportedLanguages">Supported languages:\n%1$s</string>
-  <string name="PolicyNumber">Numéro de chèque</string>
-  <string name="PolicyNumberRequired">Veuillez entrer le numéro de chèque</string>
 </resources>
