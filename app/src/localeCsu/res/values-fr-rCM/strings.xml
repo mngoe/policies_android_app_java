@@ -187,7 +187,7 @@
   <string name="IncorrectOfficerCode">Code de l\'agent incorrect</string>
   <string name="Login">Se connecter</string>
   <string name="FTPConnectionFailed">Impossible de connecter le serveur. Opération annulée.</string>
-  <string name="SomethingWrongServer">Une erreur est subvenu sur le serveur, merci de bien vouloir reprendre l\'action.</string>
+  <string name="SomethingWrongServer">Une erreur est survenue sur le serveur, merci de bien vouloir reprendre l\'action.</string>
   <string name="UncaughtException">Bénéficiaire ne peut pas être insérée, s\'il vous plaît contacter l\'administrateur du système.</string>
   <string name="FamilyUploaded">Bénéficiaires téléversée avec succès</string>
   <string name="MissingHOF">Bénéficiaires manquant</string>
