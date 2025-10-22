@@ -4264,7 +4264,7 @@ public class ClientAndroidInterface {
             insertPhoneDefaults((JSONArray) masterData.get("phoneDefaults"));
             insertGenders((JSONArray) masterData.get("genders"));
             insertPrograms((JSONArray) masterData.get("programs"));
-            insertCheques((JSONArray) masterData.get("cheques"));
+            //insertCheques((JSONArray) masterData.get("cheques"));
         } catch (JSONException e) {
             e.printStackTrace();
             throw new UserException(activity.getResources().getString(R.string.DownloadMasterDataFailed), e);

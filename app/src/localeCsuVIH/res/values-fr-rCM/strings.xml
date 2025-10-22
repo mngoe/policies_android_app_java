@@ -288,7 +288,7 @@
   <string name="failedToUpload">Échec du téléversement</string>
   <string name="dataDeleted">Supprimé avec succès</string>
   <string name="InvalidEmail">Email invalide !</string>
-  <string name="ServerError">Une erreur est subvenu sur le serveur, merci de bien vouloir reprendre l\'action !</string>
+  <string name="ServerError">Une erreur est survenue sur le serveur, merci de bien vouloir reprendre l\'action</string>
   <string name="PolicyCovered">Le prix du police est couvert. Voulez-vous toujours ajouter une contribution ?</string>
   <string name="ExceedsPolicy">La contribution dépasse le prix du police.</string>
   <string name="PriceBelow">Le prix du police n\'est pas encore couvert, veuillez sélectionner l\'action à effectuer.</string>
