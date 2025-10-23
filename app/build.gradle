@@ -29,7 +29,7 @@ android {
             keyPassword 'ynote2025'
         }
     }
-    compileSdk 34
+    compileSdk = 34
     namespace = "org.openimis.imispolicies"
     if (keystorePropertiesFile.exists()) {
         signingConfigs {

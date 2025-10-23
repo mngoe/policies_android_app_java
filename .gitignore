@@ -61,6 +61,7 @@ fastlane/readme.md
 
 app/release/output.json
 **/.DS_Store
+.DS_Store
 
 # Custom product flavours
 
