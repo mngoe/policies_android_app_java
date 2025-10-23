@@ -1,6 +1,8 @@
 # Built application files
 *.apk
 *.ap_
+*.aab
+*.aar
 
 # Files for the ART/Dalvik VM
 *.dex
@@ -12,10 +14,31 @@
 bin/
 gen/
 out/
+.externalNativeBuild/
+.cxx/
 
 # Gradle files
 .gradle/
 build/
+
+# Local configuration files (user-specific)
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/libraries/
+.idea/assetWizardSettings.xml
+.idea/gradle.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/codeStyles/
+.idea/dictionaries/
+.idea/copyright/
+.idea/runConfigurations/
+.idea/caches/
+.idea/jarRepositories.xml
+.idea/render.experimental.xml
+.idea/deploymentTargetDropDown.xml
+.idea/sqldialects.xml
+.idea/sqlDataSources.xml
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -61,6 +84,7 @@ fastlane/readme.md
 
 app/release/output.json
 **/.DS_Store
+.DS_Store
 
 # Custom product flavours
 
