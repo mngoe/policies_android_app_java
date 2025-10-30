@@ -126,6 +126,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.net.ssl.HttpsURLConnection;
 
 import cz.msebera.android.httpclient.HttpResponse;
+import io.sentry.Sentry;
 
 public class ClientAndroidInterface {
     private static final String LOG_TAG_RENEWAL = "RENEWAL";
@@ -188,6 +189,7 @@ public class ClientAndroidInterface {
                 String Adjustibility = object.getString("Adjustibility");
                 controls.put(FieldName, Adjustibility);
             } catch (JSONException e) {
+                Sentry.captureException(e);
                 e.printStackTrace();
             }
         }
@@ -209,6 +211,7 @@ public class ClientAndroidInterface {
                 controls.put(FieldName, Adjustibility);
 
             } catch (JSONException e) {
+                Sentry.captureException(e);
                 e.printStackTrace();
             }
         }
@@ -232,6 +235,7 @@ public class ClientAndroidInterface {
                 controls.put(FieldName, Adjustibility);
 
             } catch (JSONException e) {
+                Sentry.captureException(e);
                 e.printStackTrace();
             }
         }
@@ -277,6 +281,7 @@ public class ClientAndroidInterface {
                     try {
                         getFamilyPolicies(FamilyId);
                     } catch (ParseException e) {
+                        Sentry.captureException(e);
                         e.printStackTrace();
                     }
                 })
@@ -285,6 +290,7 @@ public class ClientAndroidInterface {
                     try {
                         getFamilyPolicies(FamilyId);
                     } catch (ParseException e) {
+                        Sentry.captureException(e);
                         e.printStackTrace();
                     }
                 }).show();
@@ -299,6 +305,7 @@ public class ClientAndroidInterface {
             return resources.getString(resources.getIdentifier(str, "string", activity.getPackageName()));
         } catch (Resources.NotFoundException e) {
             Log.e("RESOURCES", String.format("Resource \"%s\" not found", str), e);
+            Sentry.captureException(e);
         }
         return "";
     }
@@ -312,6 +319,7 @@ public class ClientAndroidInterface {
             return resources.getString(resources.getIdentifier(str, "string", activity.getPackageName()), arg);
         } catch (Resources.NotFoundException e) {
             Log.e("RESOURCES", String.format("Resource \"%s\" not found", str), e);
+            Sentry.captureException(e);
         }
         return "";
     }
@@ -365,6 +373,7 @@ public class ClientAndroidInterface {
                 statut = object.getString("chequeImportLineStatus");
             }
         } catch (Exception e) {
+            Sentry.captureException(e);
             return statut;
         }
 
@@ -379,6 +388,7 @@ public class ClientAndroidInterface {
             cv.put("chequeImportLineStatus", "used");
             sqlHandler.updateData("tblCheque", cv,"chequeImportLineCode=?", new String[]{Code});
         } catch (Exception e) {
+            Sentry.captureException(e);
             e.printStackTrace();
         }
     }
@@ -419,6 +429,7 @@ public class ClientAndroidInterface {
             return JsonUtils.getIntegerOrDefault(object,"LocationId");
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
             return null;
         }
     }
@@ -490,6 +501,7 @@ public class ClientAndroidInterface {
             object.put("value", 2);
             YesNo.put(object);
         } catch (JSONException e) {
+            Sentry.captureException(e);
             e.printStackTrace();
         }
         return YesNo.toString();
@@ -546,6 +558,7 @@ public class ClientAndroidInterface {
             object.put("value", 0);
             selectJsonArray.put(object);
         } catch (JSONException e) {
+            Sentry.captureException(e);
             e.printStackTrace();
         }
         return selectJsonArray.toString();
@@ -566,6 +579,7 @@ public class ClientAndroidInterface {
             object.put("value", 0);
             selectJsonArray.put(object);
         } catch (JSONException e) {
+            Sentry.captureException(e);
             e.printStackTrace();
         }
         return selectJsonArray.toString();
@@ -644,6 +658,7 @@ public class ClientAndroidInterface {
             object.put("Status", activity.getResources().getString(R.string.NotSpecified));
             maritalStatus.put(object);
         } catch (JSONException e) {
+            Sentry.captureException(e);
             e.printStackTrace();
         }
 
@@ -720,6 +735,7 @@ public class ClientAndroidInterface {
                 jsonHFLevels.put(jsonObject);
             }
         } catch (JSONException e) {
+            Sentry.captureException(e);
             e.printStackTrace();
         }
 
@@ -763,6 +779,7 @@ public class ClientAndroidInterface {
                 data.put(ControlName, ControlValue);
             }
         } catch (JSONException e) {
+            Sentry.captureException(e);
             e.printStackTrace();
         }
 
@@ -860,6 +877,7 @@ public class ClientAndroidInterface {
 
         } catch (UserException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
             if (InsureeId != 0)
                 sqlHandler.deleteData("tblInsuree", "InsureeId = ?", new String[]{String.valueOf(InsureeId)});
             if (FamilyId > 0 && InsureeData.length() > 0)
@@ -897,6 +915,7 @@ public class ClientAndroidInterface {
             return result;
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
             return null;
         }
     }
@@ -1114,6 +1133,7 @@ public class ClientAndroidInterface {
             }
         } catch (NumberFormatException | UserException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
             throw new Exception(e.getMessage());
         }
 
@@ -1151,6 +1171,7 @@ public class ClientAndroidInterface {
             }
             result = outputFileName;
         } catch (IOException e) {
+            Sentry.captureException(e);
             e.printStackTrace();
         }
 
@@ -1291,6 +1312,7 @@ public class ClientAndroidInterface {
                 Family.getJSONObject(0).put("LanguageOfSMS", sms.get("LanguageOfSMS"));
             }
         } catch (JSONException e) {
+            Sentry.captureException(e);
             e.printStackTrace();
         }
         return Family.toString();
@@ -1546,6 +1568,7 @@ public class ClientAndroidInterface {
             try {
                 prvDate = format.parse(PEDObject.getString("ExpiryDate"));
             } catch (ParseException e) {
+                Sentry.captureException(e);
                 e.printStackTrace();
             }
             PreviousExpiryDate = addDay(prvDate, 1);
@@ -1559,6 +1582,7 @@ public class ClientAndroidInterface {
             if (PolicyId > 0) ExpiryDate = format.parse(expiryDate);
             StartDate = format.parse(startDate);
         } catch (ParseException e) {
+            Sentry.captureException(e);
             e.printStackTrace();
         }
         double PolicyValue = 0;
@@ -1609,6 +1633,7 @@ public class ClientAndroidInterface {
         try {
             PolicyPeriod = getPolicyPeriod(ProductId, enrollDate);
         } catch (ParseException e) {
+            Sentry.captureException(e);
             e.printStackTrace();
         }
         JSONArray jsonArray = new JSONArray(PolicyPeriod);
@@ -1616,6 +1641,7 @@ public class ClientAndroidInterface {
         try {
             StartDate = format.parse(jsnobject.getString("StartDate"));
         } catch (ParseException e) {
+            Sentry.captureException(e);
             e.printStackTrace();
         }
         if (PolicyStage.equalsIgnoreCase("N")) {
@@ -1770,6 +1796,7 @@ public class ClientAndroidInterface {
             Products = sqlHandler.getResult(ProductQuery, null);
 
         } catch (JSONException e) {
+            Sentry.captureException(e);
             e.printStackTrace();
         }
         return Products != null ? Products.toString() : null;
@@ -1857,8 +1884,10 @@ public class ClientAndroidInterface {
             inProgress = false;
         } catch (NumberFormatException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         } catch (UserException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
             throw new Exception(e.getMessage());
         }
         while (inProgress) {
@@ -1928,6 +1957,7 @@ public class ClientAndroidInterface {
 
             } catch (JSONException e) {
                 e.printStackTrace();
+                Sentry.captureException(e);
             }
         }
 
@@ -1991,6 +2021,7 @@ public class ClientAndroidInterface {
             policyval = JmaxPolicyOb.getInt("PolicyValue");
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         return policyval;
     }
@@ -2008,6 +2039,7 @@ public class ClientAndroidInterface {
             totalPremium = JmaxPolicyOb.getInt("SUM(Amount)");
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         return totalPremium;
     }
@@ -2049,8 +2081,10 @@ public class ClientAndroidInterface {
             inProgress = false;
         } catch (NumberFormatException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         } catch (UserException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
             throw new Exception(e.getMessage());
         }
         while (inProgress) {
@@ -2186,6 +2220,7 @@ public class ClientAndroidInterface {
             code = JmaxIdOb.getString("Id");
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         return code;
     }
@@ -2207,6 +2242,7 @@ public class ClientAndroidInterface {
             isOffline = JsonCHFIDJSONObject.getInt("isOffline");
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
 
 /*        String Query = "SELECT PremiumId, PayerId, Amount, Receipt , PayDate, PayType,IsOffline,isPhotoFee \n" +
@@ -2285,6 +2321,7 @@ public class ClientAndroidInterface {
             //  CHFID = JsonCHFIDJSONObject.getString("CHFID");
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         return sumpremiums;
     }
@@ -2300,6 +2337,7 @@ public class ClientAndroidInterface {
             polv = JmaxPremiumOb.getInt("PolicyValue");
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         return polv;
     }
@@ -2311,6 +2349,7 @@ public class ClientAndroidInterface {
             sqlHandler.updateData("tblPolicy", values, "PolicyId = ?", new String[]{String.valueOf(PolicyId)});
         } catch (UserException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
     }
 
@@ -2359,6 +2398,7 @@ public class ClientAndroidInterface {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         return res;
     }
@@ -2438,6 +2478,7 @@ public class ClientAndroidInterface {
             sqlHandler.insertData(TableName, Columns, result, "");
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
     }
 
@@ -2451,7 +2492,7 @@ public class ClientAndroidInterface {
             sqlHandler.insertData(TableName, Columns, Result, "");
         } catch (JSONException e) {
             e.printStackTrace();
-            return;
+            Sentry.captureException(e);
         }
     }
 
@@ -2545,6 +2586,7 @@ public class ClientAndroidInterface {
             return sqlHandler.getResult(Query, arg);
         } catch (Exception e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
 
         return null;
@@ -2560,6 +2602,7 @@ public class ClientAndroidInterface {
             sqlHandler.updateData("tblRecordedPolicies", values, "PolicyId = ?", new String[]{String.valueOf(PolicyId)});
         } catch (UserException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
     }
 
@@ -2577,6 +2620,7 @@ public class ClientAndroidInterface {
             sqlHandler.updateData("tblRenewals", values, "RenewalId = ?", new String[]{String.valueOf(RenewalId)});
         } catch (UserException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
     }
 
@@ -2594,6 +2638,7 @@ public class ClientAndroidInterface {
             return InsertFeedbacks(toJSONArray(feedbacks));
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
             return false;
         }
     }
@@ -2608,6 +2653,7 @@ public class ClientAndroidInterface {
             sqlHandler.insertData(TableName, Columns, Result, "");
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
             return false;
         }
         return true;
@@ -2651,6 +2697,7 @@ public class ClientAndroidInterface {
             sqlHandler.updateData("tblFeedbacks", values, "ClaimUUID = ?", new String[]{ClaimUUID});
         } catch (UserException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
     }
 
@@ -2681,6 +2728,7 @@ public class ClientAndroidInterface {
             StartDate = O.getString("StartDate");
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         Date Paydate = format.parse(PayDate);
         Date Startdate = format.parse(StartDate);
@@ -2699,6 +2747,7 @@ public class ClientAndroidInterface {
             sqlHandler.updateData("tblPolicy", values, "PolicyId = ?", new String[]{String.valueOf(PolicyId)});
         } catch (UserException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         return 1;//Update Success
     }
@@ -2717,6 +2766,7 @@ public class ClientAndroidInterface {
                 } catch (UserException | JSONException | IOException | NumberFormatException e) {
                     finalPd.dismiss();
                     e.printStackTrace();
+                    Sentry.captureException(e);
                 }
                 finalPd.dismiss();
                 if (myList.size() == 0) {
@@ -2744,6 +2794,7 @@ public class ClientAndroidInterface {
                 }
             }).start();
         } catch (Exception e) {
+            Sentry.captureException(e);
             if (finalPd.isShowing()) {
                 finalPd.dismiss();
             }
@@ -2764,6 +2815,7 @@ public class ClientAndroidInterface {
                 }
             } catch (Exception e) {
                 Log.e("ENROL XML", "Error while creating enrolment xml", e);
+                Sentry.captureException(e);
             }
             if (myList.size() == 0) {
                 activity.runOnUiThread(() -> {
@@ -2861,6 +2913,7 @@ public class ClientAndroidInterface {
                     object = familiesToUpload.getJSONObject(i);
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Sentry.captureException(e);
                     continue;
                 }
 
@@ -2992,6 +3045,7 @@ public class ClientAndroidInterface {
                 object = familiesToUpload.getJSONObject(i);
             } catch (JSONException e) {
                 e.printStackTrace();
+                Sentry.captureException(e);
             }
             if (object == null) {
                 continue;
@@ -3384,6 +3438,7 @@ public class ClientAndroidInterface {
                 return -400;
             }
         } catch (Exception e){
+            Sentry.captureException(e);
             if(!global.isNetworkAvailable()){
                 return - 6;
             }else {
@@ -3599,6 +3654,7 @@ public class ClientAndroidInterface {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                Sentry.captureException(e);
             }
         }
         return images;
@@ -3669,6 +3725,7 @@ public class ClientAndroidInterface {
         try {
             ZipUtils.unzipPath(targetPath, unzippedFolderPath, password);
         } catch (Exception e) {
+            Sentry.captureException(e);
             return false;
         }
         return true;
@@ -3679,6 +3736,7 @@ public class ClientAndroidInterface {
         try {
             ZipUtils.unzipFile(file, file.getParentFile(), password);
         } catch (Exception e) {
+            Sentry.captureException(e);
             return false;
         }
         return true;
@@ -3700,6 +3758,7 @@ public class ClientAndroidInterface {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
 
         return password;
@@ -3737,6 +3796,7 @@ public class ClientAndroidInterface {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                Sentry.captureException(e);
             }
         }
     }
@@ -3838,6 +3898,7 @@ public class ClientAndroidInterface {
             }.execute().get();
         } catch (Exception e) {
             e.printStackTrace();
+            Sentry.captureException(e);
             return false;
         }
     }
@@ -3936,6 +3997,7 @@ public class ClientAndroidInterface {
                     MoveFile(jsonFiles[i], 1);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Sentry.captureException(e);
                     if (
                             e instanceof HttpException &&
                                     ((HttpException) e).getCode() >= 400 &&
@@ -4055,6 +4117,7 @@ public class ClientAndroidInterface {
                     }
                 } catch (Exception e) {
                     Log.e(LOG_TAG_RENEWAL, "Error while sending renewal", e);
+                    Sentry.captureException(e);
                     messageBuilder.append(String.format(messageFormat, renewalInsureeNo, activity.getResources().getString(R.string.InvalidRenewalFile)));
                     continue;
                 }
@@ -4178,6 +4241,7 @@ public class ClientAndroidInterface {
             //processOldFormat(new JSONArray(data));
             processNewFormat(new JSONObject(data));
         } catch (JSONException e) {
+            Sentry.captureException(e);
             try {
                 processNewFormat(new JSONObject(data));
             } catch (JSONException e2) {
@@ -4192,6 +4256,7 @@ public class ClientAndroidInterface {
         try {
             importMasterData(new FetchMasterData().execute());
         } catch (Exception e) {
+            Sentry.captureException(e);
             if (e instanceof UserNotAuthenticatedException) {
                 throw (UserNotAuthenticatedException) e;
             }
@@ -4312,6 +4377,7 @@ public class ClientAndroidInterface {
             insertGenders(Genders);
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
             throw new UserException(activity.getResources().getString(R.string.DownloadMasterDataFailed), e);
         }
     }
@@ -4338,6 +4404,7 @@ public class ClientAndroidInterface {
             insertCheques((JSONArray) masterData.get("cheques"));
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
             throw new UserException(activity.getResources().getString(R.string.DownloadMasterDataFailed), e);
         }
     }
@@ -4354,6 +4421,7 @@ public class ClientAndroidInterface {
                 Columns = columnsList.toArray(new String[0]);
             } catch (JSONException e) {
                 e.printStackTrace();
+                Sentry.captureException(e);
             }
         }
         return Columns;
@@ -4367,6 +4435,7 @@ public class ClientAndroidInterface {
             sqlHandler.insertData("tblConfirmationTypes", Columns, jsonArray, "DELETE FROM tblConfirmationTypes");
         } catch (Exception e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
 
     }
@@ -4495,11 +4564,13 @@ public class ClientAndroidInterface {
             object = Families.getJSONObject(0);
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         try {
             TotalFamilies = object != null ? Integer.parseInt(object.getString("Families")) : 0;
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         return TotalFamilies;
     }
@@ -4516,11 +4587,13 @@ public class ClientAndroidInterface {
             object = Insuree.getJSONObject(0);
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         try {
             TotalInsuree = object != null ? Integer.parseInt(object.getString("Insuree")) : 0;
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         return TotalInsuree;
     }
@@ -4537,11 +4610,13 @@ public class ClientAndroidInterface {
             object = Policy.getJSONObject(0);
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         try {
             TotalPolicies = object != null ? Integer.parseInt(object.getString("Policies")) : 0;
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         return TotalPolicies;
     }
@@ -4558,11 +4633,13 @@ public class ClientAndroidInterface {
             object = Premium.getJSONObject(0);
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         try {
             TotalPremiums = object != null ? Integer.parseInt(object.getString("Premiums")) : 0;
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         return TotalPremiums;
     }
@@ -4588,6 +4665,7 @@ public class ClientAndroidInterface {
                 DistrictId = Integer.parseInt(object.getString("DistrictId"));
             } catch (JSONException e) {
                 e.printStackTrace();
+                Sentry.captureException(e);
             }
 
             @Language("SQL")
@@ -4668,6 +4746,7 @@ public class ClientAndroidInterface {
             MaxInstallArray = sqlHandler.getResult(Query, null);
         } catch (Exception e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
 
         if (MaxInstallArray == null) {
@@ -4680,6 +4759,7 @@ public class ClientAndroidInterface {
                 MaxInstallments = MaxObject.getInt("MaxInstallments");
             } catch (JSONException e) {
                 e.printStackTrace();
+                Sentry.captureException(e);
             }
         }
         return MaxInstallments;
@@ -4698,6 +4778,7 @@ public class ClientAndroidInterface {
             GracePeriodArray = sqlHandler.getResult(Query, null);
         } catch (Exception e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         if (GracePeriodArray == null) {
             return 0;
@@ -4710,6 +4791,7 @@ public class ClientAndroidInterface {
                 gracePeriod = MaxObject.getInt("GracePeriod");
             } catch (JSONException e) {
                 e.printStackTrace();
+                Sentry.captureException(e);
             }
         }
         return gracePeriod;
@@ -4727,6 +4809,7 @@ public class ClientAndroidInterface {
                 ProdId = MaxObject.getInt("ProdId");
             } catch (JSONException e) {
                 e.printStackTrace();
+                Sentry.captureException(e);
             }
         }
         return ProdId;
@@ -4746,6 +4829,7 @@ public class ClientAndroidInterface {
                 PolicyStatus = MaxObject.getInt("PolicyStatus");
             } catch (JSONException e) {
                 e.printStackTrace();
+                Sentry.captureException(e);
             }
         }
         return PolicyStatus;
@@ -4792,6 +4876,7 @@ public class ClientAndroidInterface {
                 EnrollmentDate = PolicyObject.getString("EnrollDate");
             } catch (JSONException e) {
                 e.printStackTrace();
+                Sentry.captureException(e);
             }
             @Language("SQL")
             String MemberCount = "SELECT MemberCount,StartCycle1 FROM tblProduct WHERE ProdId =" + ProdID;
@@ -4805,6 +4890,7 @@ public class ClientAndroidInterface {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                Sentry.captureException(e);
             }
             if (MaxMember >= TotalIns) {
                 if (!Activate) EffectiveDate = null;
@@ -4832,6 +4918,7 @@ public class ClientAndroidInterface {
                     EnrollDate = PolicyObject2.getString("EnrollDate");
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Sentry.captureException(e);
                 }
                 values.put("InsureePolicyId", MaxInsureePolicyId);
                 values.put("InsureeId", InsureId);
@@ -4861,6 +4948,7 @@ public class ClientAndroidInterface {
             MaxInsureePolicyId = JmaxOb.getInt("InsureePolicyId");
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         @Language("SQL")
         String MemberCount = "SELECT MemberCount FROM tblProduct Prod  \n" +
@@ -4872,6 +4960,7 @@ public class ClientAndroidInterface {
             MaxMember = Integer.parseInt(MCObject.getString("MemberCount"));
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         @Language("SQL")
         String SavePolicyInsuree = "INSERT INTO tblInsureePolicy(InsureePolicyId,InsureeId,PolicyId,EnrollmentDate,StartDate,EffectiveDate,ExpiryDate,isOffline)\n" +
@@ -4896,6 +4985,7 @@ public class ClientAndroidInterface {
             EffectiveDate = O.getString("EffectiveDate");
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
 
         values.put("EffectiveDate", EffectiveDate);
@@ -4904,6 +4994,7 @@ public class ClientAndroidInterface {
             sqlHandler.updateData("tblInsureePolicy", values, "PolicyId = ?", new String[]{String.valueOf(PolicyId)});
         } catch (UserException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
     }
 
@@ -4962,6 +5053,7 @@ public class ClientAndroidInterface {
             editor.apply();
         } catch (Exception e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
     }
 
@@ -4981,6 +5073,7 @@ public class ClientAndroidInterface {
             editor.apply();
         } catch (Exception e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
     }
 
@@ -5001,6 +5094,7 @@ public class ClientAndroidInterface {
                 return 1;
             } catch (Exception e) {
                 Log.e("MODIFYFAMILY", "Error while downloading a family", e);
+                Sentry.captureException(e);
                 if (e instanceof HttpException && ((HttpException) e).getCode() == HttpURLConnection.HTTP_NOT_FOUND) {
                     ShowDialog(activity.getResources().getString(R.string.InsuranceNumberNotFound));
                 } else {
@@ -5028,6 +5122,7 @@ public class ClientAndroidInterface {
                     );
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Sentry.captureException(e);
                     Log.w("ModifyFamily", "No familySMS data in family payload");
                 }
             }
@@ -5115,6 +5210,7 @@ public class ClientAndroidInterface {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         return TotalFamilies;
     }
@@ -5131,6 +5227,7 @@ public class ClientAndroidInterface {
             TotalInsuree = object != null ? Integer.parseInt(object.getString("Insuree")) : 0;
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         return TotalInsuree;
     }
@@ -5147,6 +5244,7 @@ public class ClientAndroidInterface {
             TotalPolicies = object != null ? Integer.parseInt(object.getString("Policies")) : 0;
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         return TotalPolicies;
     }
@@ -5215,6 +5313,7 @@ public class ClientAndroidInterface {
 
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         return TotalPremiums;
     }
@@ -5240,6 +5339,7 @@ public class ClientAndroidInterface {
                 locationId = Integer.parseInt(O.getString("LocationId"));
             } catch (JSONException | NumberFormatException e) {
                 e.printStackTrace();
+                Sentry.captureException(e);
             }
         }
 
@@ -5254,6 +5354,7 @@ public class ClientAndroidInterface {
             status = getFamilyStatus(FamilyId);
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         return status;
     }
@@ -5299,6 +5400,7 @@ public class ClientAndroidInterface {
             Toast.makeText(activity, activity.getResources().getString(R.string.dataDeleted), Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
 
         return DataDeleted;
@@ -5318,6 +5420,7 @@ public class ClientAndroidInterface {
             sqlHandler.deleteData(TableName, WhereClause, null);
         } catch (Exception ex) {
             ex.printStackTrace();
+            Sentry.captureException(ex);
         }
     }
 
@@ -5346,6 +5449,7 @@ public class ClientAndroidInterface {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         return rule;
     }
@@ -5469,6 +5573,7 @@ public class ClientAndroidInterface {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            Sentry.captureException(e);
         }
         return true;
     }
