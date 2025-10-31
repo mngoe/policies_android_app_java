@@ -19,6 +19,7 @@ import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import io.sentry.Sentry;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -73,6 +74,7 @@ public class FetchMasterData {
             // data but it's possible to put some restrictions in the configuration.
             // Therefore, it's possible the backend would return a 403 (though it should return a
             // 401) when trying to download the zip.
+            Sentry.captureException(e);
             if (e.getCode() == 401 || e.getCode() == 403) {
                 throw new UserNotAuthenticatedException("Backend return '" + e.getCode() + "' while trying to download master data.", e);
             } else throw e;
