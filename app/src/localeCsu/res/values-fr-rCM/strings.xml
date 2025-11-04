@@ -477,4 +477,10 @@
   <string name="SystemLanguageNotSupported">La langue du système actuel n\'est pas prise en compte. 
 L\'application utilisera la langue par défaut.</string>
   <string name="DataDownloadedFailed">Échec du téléchargement des données</string>
+  <string name="CheckUpdate">Recherche de mise à jour</string>
+  <string name="Update">Mise à jour</string>
+  <string name="UpdateAvailable">Mise à jour disponible</string>
+  <string name="Download">Télécharger</string>
+  <string name="NoUpdateAvailable">Aucune mise à jour disponible</string>
+  <string name="DownloadStart">Lancer le téléchargement</string>
 </resources>

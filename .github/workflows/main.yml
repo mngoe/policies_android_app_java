@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Setup JDK 17
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -29,28 +29,27 @@ jobs:
         run: |
           chmod +x gradlew
 
-      - name: build
-        run: |
-          ./gradlew assemblecsuDevDebug --stacktrace
+      - name: run gradle tests
+        run: ./gradlew testCsuDevDebugUnitTest --stacktrace
 
-      - name: Environment info
-        run: |
-          gradle --version
+#      - name: build
+#        run: |
+#          ./gradlew assemblecsuDevDebug --stacktrace
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: policies-csu-${{github.run_number}}.apk
-          path: ./app/build/outputs/**/*.apk
-
-      - name: build
-        run: |
-          ./gradlew bundlecsuDevDebug --stacktrace
-
-      - name: Environment info
-        run: |
-          gradle --version
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: policies-csu-${{github.run_number}}.aab
-          path: ./app/build/outputs/**/*.aab
+#      - uses: actions/upload-artifact@v4
+#        with:
+#          name: policies-csu-${{github.run_number}}.apk
+#          path: ./app/build/outputs/**/*.apk
+#
+#      - name: build
+#        run: |
+#          ./gradlew bundlecsuDevDebug --stacktrace
+#
+#      - name: Environment info
+#        run: |
+#          gradle --version
+#
+#      - uses: actions/upload-artifact@v4
+#        with:
+#          name: policies-csu-${{github.run_number}}.aab
+#          path: ./app/build/outputs/**/*.aab
