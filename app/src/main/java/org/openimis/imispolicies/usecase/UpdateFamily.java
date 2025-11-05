@@ -16,6 +16,8 @@ import org.openimis.imispolicies.network.request.UpdateInsureeGraphQLRequest;
 import java.net.HttpURLConnection;
 import java.util.List;
 
+import io.sentry.Sentry;
+
 public class UpdateFamily {
 
     @NonNull
@@ -86,6 +88,7 @@ public class UpdateFamily {
 //            }
             return status;
         } catch (HttpException e) {
+            Sentry.captureException(e);
             if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
                 throw e;
             } else {
@@ -114,9 +117,11 @@ public class UpdateFamily {
             try {
                 checkMutation.execute(createInsureeGraphQLRequest.create(member,existingFamily.getId()),"Error while creating insuree '" + insureeCHFID + "'");
             } catch (Exception e) {
+                Sentry.captureException(e);
                 checkMutation.execute(updateInsureeGraphQLRequest.update(member, existingFamily.getId()), "Error while updating insuree '" + insureeCHFID + "'");
             }
         } catch (HttpException e) {
+            Sentry.captureException(e);
             if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
                 throw e;
             }
