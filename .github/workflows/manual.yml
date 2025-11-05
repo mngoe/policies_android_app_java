@@ -37,13 +37,9 @@ jobs:
 
       - name: build
         run: |
-          ./gradlew assembleCsuDevDebug --stacktrace
+          ./gradlew assemblecsuDevDebug --stacktrace
         env:
           APP_VERSION: "${{ github.event.inputs.app_version }}"
-
-      - name: Environment info
-        run: |
-          gradle --version
 
       - uses: actions/upload-artifact@v4
         with:
