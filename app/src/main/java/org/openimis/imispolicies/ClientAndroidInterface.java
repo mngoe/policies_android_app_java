@@ -3429,10 +3429,6 @@ public class ClientAndroidInterface {
                     return -9;
                 } else if(beneficiaryAge > ageMax){
                     return -10;
-                } else if (beneficiaryAge < ageMax){
-                    Date newExpiryDate = getNewExpiryDate(beneficiaryAge, ageMax, policy.getStartDate());
-                    policy.setExpiryDate(newExpiryDate);
-                    new CreatePolicy().execute(family.getHead().getChfId(), policy, checkedFamily.getUuid());
                 } else {
                     new CreatePolicy().execute(family.getHead().getChfId(), policy, checkedFamily.getUuid());
                 }
