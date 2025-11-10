@@ -3415,23 +3415,24 @@ public class ClientAndroidInterface {
                 }
                 policiesArray.getJSONObject(j).put("premium", policyPremiums);
             }
-            Date dob = checkedFamily.getHead().getDateOfBirth();
-            LocalDate localDob = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            int beneficiaryAge = Period.between(localDob, LocalDate.now()).getYears();
+//            Date dob = checkedFamily.getHead().getDateOfBirth();
+//            LocalDate localDob = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//            int beneficiaryAge = Period.between(localDob, LocalDate.now()).getYears();
 
             List<Family.Policy> policies = familyPolicyFromJSONObject(family.getUuid(), checkedFamily.getId(), policiesArray);
             for(Family.Policy policy : policies){
-                int ageMin = sqlHandler.getProductMinAge(String.valueOf(policy.getProductId()));
-                int ageMax = sqlHandler.getProductMaxAge(String.valueOf(policy.getProductId()));
+//                int ageMin = sqlHandler.getProductMinAge(String.valueOf(policy.getProductId()));
+//                int ageMax = sqlHandler.getProductMaxAge(String.valueOf(policy.getProductId()));
 
 
-                if(beneficiaryAge < ageMin){
-                    return -9;
-                } else if(beneficiaryAge > ageMax){
-                    return -10;
-                } else {
-                    new CreatePolicy().execute(family.getHead().getChfId(), policy, checkedFamily.getUuid());
-                }
+//                if(beneficiaryAge < ageMin){
+//                    return -9;
+//                } else if(beneficiaryAge > ageMax){
+//                    return -10;
+//                } else {
+//                    new CreatePolicy().execute(family.getHead().getChfId(), policy, checkedFamily.getUuid());
+//                }
+                new CreatePolicy().execute(family.getHead().getChfId(), policy, checkedFamily.getUuid());
             }
         } catch (HttpException e){
             if (e.getCode() == HttpURLConnection.HTTP_NOT_FOUND) {
