@@ -350,6 +350,21 @@ public class ClientAndroidInterface {
             ShowDialog(activity.getResources().getString(R.string.InvalidCsuNumber));
             return false;
         }
+        if(!isNewCsuNumber(csuNumber)){
+            ShowDialog(activity.getResources().getString(R.string.InsuranceNumberExists));
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isNewCsuNumber (String csuNumber){
+        @Language("SQL")
+        String Query = "SELECT InsureeId FROM tblInsuree WHERE Trim(CHFID) = ?";
+        String[] args = {csuNumber};
+        JSONArray returnData = sqlHandler.getResult(Query, args);
+        if(returnData.length() > 0){
+            return false;
+        }
         return true;
     }
 
