@@ -110,6 +110,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -126,6 +127,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -3415,24 +3417,26 @@ public class ClientAndroidInterface {
                 }
                 policiesArray.getJSONObject(j).put("premium", policyPremiums);
             }
-//            Date dob = checkedFamily.getHead().getDateOfBirth();
-//            LocalDate localDob = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-//            int beneficiaryAge = Period.between(localDob, LocalDate.now()).getYears();
+            Date dob = checkedFamily.getHead().getDateOfBirth();
+            LocalDate localDob = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            int beneficiaryAge = Period.between(localDob, LocalDate.now()).getYears();
 
             List<Family.Policy> policies = familyPolicyFromJSONObject(family.getUuid(), checkedFamily.getId(), policiesArray);
             for(Family.Policy policy : policies){
-//                int ageMin = sqlHandler.getProductMinAge(String.valueOf(policy.getProductId()));
-//                int ageMax = sqlHandler.getProductMaxAge(String.valueOf(policy.getProductId()));
+                int ageMin = sqlHandler.getProductMinAge(String.valueOf(policy.getProductId()));
+                int ageMax = sqlHandler.getProductMaxAge(String.valueOf(policy.getProductId()));
 
-
-//                if(beneficiaryAge < ageMin){
-//                    return -9;
-//                } else if(beneficiaryAge > ageMax){
-//                    return -10;
-//                } else {
-//                    new CreatePolicy().execute(family.getHead().getChfId(), policy, checkedFamily.getUuid());
-//                }
-                new CreatePolicy().execute(family.getHead().getChfId(), policy, checkedFamily.getUuid());
+                if(ageMin != 0 && beneficiaryAge < ageMin){
+                    return -9;
+                } else if(ageMax != 0 && beneficiaryAge > ageMax){
+                    return -10;
+                } else if(ageMin < beneficiaryAge && beneficiaryAge < ageMax){
+                    Date newExpiryDate = getNewExpiryDate(ageMax, policy.getExpiryDate(), dob);
+                    policy.setExpiryDate(newExpiryDate);
+                    new CreatePolicy().execute(family.getHead().getChfId(), policy, checkedFamily.getUuid());
+                } else {
+                    new CreatePolicy().execute(family.getHead().getChfId(), policy, checkedFamily.getUuid());
+                }
             }
         } catch (HttpException e){
             if (e.getCode() == HttpURLConnection.HTTP_NOT_FOUND) {
@@ -3461,12 +3465,20 @@ public class ClientAndroidInterface {
     }
 
     @NonNull
-    private Date getNewExpiryDate (int beneficiaryAge, int maxAge, Date startDate){
-        int remainingYear = maxAge - beneficiaryAge;
-        Calendar c = Calendar.getInstance();
-        c.setTime(startDate);
-        c.add(Calendar.YEAR, remainingYear);
-        return c.getTime();
+    private Date getNewExpiryDate (int maxAge, Date expiryDate, Date dob){
+        Date newExpiryDate = expiryDate;
+
+        LocalDate localDob = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localExpiryDate = expiryDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        long expiryAge = Period.between(localDob, localExpiryDate).get(ChronoUnit.YEARS);
+
+        if(expiryAge >= maxAge){
+            Calendar c = Calendar.getInstance();
+            c.setTime(dob);
+            c.add(Calendar.YEAR, maxAge);
+            newExpiryDate = c.getTime();
+        }
+        return newExpiryDate;
     }
 
     @NonNull
