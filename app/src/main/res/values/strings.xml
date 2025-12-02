@@ -483,4 +483,6 @@
     <string name="PolicyNumberRequired">Please enter cheque number</string>
     <string name="CanAddFagepPolicy">The beneficiary already have an active CS policy. you cannot attribute FAGEP Policy</string>
     <string name="InvalidCsuNumber">The Csu number must only have numeric characters</string>
+    <string name="ProductMinAgeError">The Beneficiary don\'t have a minimal required age for this policy</string>
+    <string name="ProductMaxAgeError">The Beneficiary exceeded the maximal required age for this policy</string>
 </resources>

@@ -327,7 +327,9 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "AdministrationPeriod NUMERIC," +
                             "EnrolmentDiscountPerc NUMERIC," +
                             "EnrolmentDiscountPeriod NUMERIC," +
-                            "GracePeriod INT" + ")"
+                            "GracePeriod INT," +
+                            "MinAge INT," +
+                            "MaxAge INT" + ")"
             );
             sqLiteDatabase.execSQL(
                     "CREATE TABLE 'tblProfessions' (" +
@@ -1179,5 +1181,51 @@ public class SQLHandler extends SQLiteOpenHelper {
     @NonNull
     public JSONArray getSupportedLanguages() {
         return getResult(tblLanguages, new String[]{"LanguageCode"}, null, null);
+    }
+
+    public int getProductMinAge(String productId) {
+        openDatabase();
+        int productAgeMin = 0;
+        try (Cursor cursor = mDatabase.query(tblProduct,
+                new String[]{"MinAge"},
+                "ProdId = ?",
+                new String[]{productId},
+                null,
+                null,
+                null,
+                "1")) {
+            cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
+                productAgeMin = cursor.getInt(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeDatabase();
+        }
+        return productAgeMin;
+    }
+
+    public int getProductMaxAge(String productId) {
+        openDatabase();
+        int productAgeMax = 0;
+        try (Cursor cursor = mDatabase.query(tblProduct,
+                new String[]{"MaxAge"},
+                "ProdId = ?",
+                new String[]{productId},
+                null,
+                null,
+                null,
+                "1")) {
+            cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
+                productAgeMax = cursor.getInt(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeDatabase();
+        }
+        return productAgeMax;
     }
 }
