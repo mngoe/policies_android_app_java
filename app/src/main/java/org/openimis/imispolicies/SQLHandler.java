@@ -281,6 +281,7 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "OfficerId NUMERIC," +
                             "isOffline NUMERIC," +
                             "PolicyNumber TEXT," +
+                            "PregnancyAge TEXT," +
                             "PolicyStage TEXT" + ")"
             );
             sqLiteDatabase.execSQL(
