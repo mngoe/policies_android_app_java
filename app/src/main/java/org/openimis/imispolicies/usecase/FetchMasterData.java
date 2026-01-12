@@ -43,7 +43,7 @@ public class FetchMasterData {
     @NonNull
     @WorkerThread
     public String execute() throws Exception {
-        String BASE_URL = "https://test-csuapps.minsante.cm/api/tools/extracts/download_master_data";
+        String BASE_URL = "http://192.168.70.213:3000/api/tools/extracts/download_master_data";
         OkHttpClient okHttpClient = OkHttpUtils.getDefaultOkHttpClient();
         Request.Builder builder = new Request.Builder();
         HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(BASE_URL)).newBuilder();

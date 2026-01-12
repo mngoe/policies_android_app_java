@@ -483,4 +483,5 @@ L\'application utilisera la langue par défaut.</string>
   <string name="Download">Télécharger</string>
   <string name="NoUpdateAvailable">Aucune mise à jour disponible</string>
   <string name="DownloadStart">Lancer le téléchargement</string>
+  <string name="PregnancyAge">Semaine de grossesse</string>
 </resources>
