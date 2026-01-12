@@ -12,6 +12,8 @@ import org.openimis.imispolicies.network.request.CreatePremiumGraphQLRequest;
 import java.net.HttpURLConnection;
 import java.util.List;
 
+import io.sentry.Sentry;
+
 public class CreatePolicy {
 
     @NonNull
@@ -51,6 +53,7 @@ public class CreatePolicy {
                     throw e;
                 }
             }catch(Exception e){
+                Sentry.captureException(e);
                 e.printStackTrace();
             }
         }
