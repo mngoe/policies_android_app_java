@@ -1863,6 +1863,7 @@ public class ClientAndroidInterface {
             values.put("ProdId", data.get("ddlProduct"));
             values.put("OfficerId", data.get("ddlOfficer"));
             values.put("PolicyNumber", data.get("txtPolicyNumber"));
+            values.put("PregnancyAge", data.get("ddlPregnancyAge"));
 
             String controlNumber = data.get("AssignedControlNumber");
             values.put("isOffline", isOffline);
@@ -1995,7 +1996,7 @@ public class ClientAndroidInterface {
     @SuppressWarnings("unused")
     public String getPolicy(int PolicyId) {
         @Language("SQL")
-        String Query = "SELECT  P.PolicyId, P.ProdId, OfficerId , Prod.ProductCode, ProductName, PolicyStage, EffectiveDate, IFNULL(PolicyValue,0) PolicyValue, StartDate, PolicyNumber, EnrollDate, bcn.ControlNumber, \n" +
+        String Query = "SELECT  P.PolicyId, P.ProdId, OfficerId , Prod.ProductCode, ProductName, PolicyStage, EffectiveDate, IFNULL(PolicyValue,0) PolicyValue, StartDate, PolicyNumber, PregnancyAge, EnrollDate, bcn.ControlNumber, \n" +
                 "   CASE    WHEN PolicyStatus = 1 THEN '" + activity.getResources().getString(R.string.Idle) + "'   " +
                 "   WHEN PolicyStatus = 2 THEN '" + activity.getResources().getString(R.string.Active) + "'  " +
                 "   WHEN PolicyStatus = 4 THEN '" + activity.getResources().getString(R.string.Suspended) + "'  " +
@@ -2947,7 +2948,7 @@ public class ClientAndroidInterface {
                     }
                 }
                 //get Policies
-                Query = "SELECT PolicyId, FamilyId, EnrollDate, StartDate, NULLIF(EffectiveDate,'null') EffectiveDate, ExpiryDate, Policystatus, PolicyValue, ProdId, OfficerId, PolicyStage, isOffline\n" +
+                Query = "SELECT PolicyId, FamilyId, EnrollDate, StartDate, NULLIF(EffectiveDate,'null') EffectiveDate, ExpiryDate, Policystatus, PolicyValue, ProdId, OfficerId, PregnancyAge, PolicyStage, isOffline\n" +
                         "FROM tblPolicy ";
                 Query += " WHERE FamilyId = " + FamilyId;
                 JSONArray policiesArray = sqlHandler.getResult(Query, null);
@@ -3543,6 +3544,7 @@ public class ClientAndroidInterface {
                     /* productId = */ JsonUtils.getIntegerOrDefault(object, "ProdId"),
                     /* officerId = */ Integer.parseInt(object.getString("OfficerId")),
                     /* policyNumber = */ JsonUtils.getStringOrDefault(object,"PolicyNumber"),
+                    /* pregnancyAge = */ JsonUtils.getStringOrDefault(object,"PregnancyAge"),
                     /* stage = */ JsonUtils.getStringOrDefault(object, "PolicyStage"),
                     /* isOffline = */ JsonUtils.getBooleanOrDefault(object, "isOffline", false),
                     /* controlNumber = */ JsonUtils.getStringOrDefault(object, "ControlNumber"),
@@ -5730,5 +5732,27 @@ public class ClientAndroidInterface {
         } catch (Exception e) {
             Toast.makeText(activity, "Échec du téléchargement: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @JavascriptInterface
+    @SuppressWarnings("unused")
+    public String getPregnancyAge() {
+        JSONArray PregnancyAge = new JSONArray();
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put("Value", "");
+            obj.put("Label", "");
+            PregnancyAge.put(obj);
+
+            for (int i = 1; i < 43; i++){
+                JSONObject object = new JSONObject();
+                object.put("Value", String.valueOf(i));
+                object.put("Label", String.valueOf(i));
+                PregnancyAge.put(object);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return PregnancyAge.toString();
     }
 }
