@@ -104,14 +104,14 @@ public class SQLHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         try {
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE " + tblConfirmationTypes + "("
+                    "CREATE TABLE IF NOT EXISTS " + tblConfirmationTypes + "("
                             + "ConfirmationTypeCode TEXT,"
                             + "ConfirmationType TEXT NOT NULL,"
                             + "SortOrder NUMERIC NOT NULL,"
                             + "AltLanguage TEXT " + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE " + tblControlNumber + "("
+                    "CREATE TABLE IF NOT EXISTS " + tblControlNumber + "("
                             + "Id INTEGER PRIMARY KEY AUTOINCREMENT,"
                             + "AmountCalculated INTEGER,"
                             + "AmountConfirmed INTEGER,"
@@ -121,19 +121,19 @@ public class SQLHandler extends SQLiteOpenHelper {
                             + "SmsRequired TEXT" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE " + tblControls + "("
+                    "CREATE TABLE IF NOT EXISTS " + tblControls + "("
                             + "FieldName TEXT,"
                             + "Adjustibility TEXT" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE " + tblEducations + "("
+                    "CREATE TABLE IF NOT EXISTS " + tblEducations + "("
                             + "EducationId NUMERIC,"
                             + "Education TEXT,"
                             + "SortOrder NUMERIC,"
                             + "AltLanguage TEXT" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE " + tblFamilies + "(" +
+                    "CREATE TABLE IF NOT EXISTS " + tblFamilies + "(" +
                             "FamilyId INTEGER," +
                             "InsureeId NUMERIC," +
                             "LocationId NUMERIC," +
@@ -146,14 +146,14 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "ConfirmationType TEXT" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE " + tblFamilyTypes + "(" +
+                    "CREATE TABLE IF NOT EXISTS " + tblFamilyTypes + "(" +
                             "FamilyTypeCode TEXT," +
                             "FamilyType TEXT," +
                             "SortOrder NUMERIC," +
                             "AltLanguage TEXT" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE " + tblFeedbacks + "(" +
+                    "CREATE TABLE IF NOT EXISTS " + tblFeedbacks + "(" +
                             "ClaimId INTEGER," +
                             "ClaimUUID TEXT," +
                             "OfficerId INTEGER," +
@@ -172,14 +172,14 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "isDone TEXT DEFAULT 'N'" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE 'tblGender' (" +
+                    "CREATE TABLE IF NOT EXISTS 'tblGender' (" +
                             "Code TEXT," +
                             "Gender TEXT," +
                             "AltLanguage TEXT," +
                             "SortOrder NUMERIC" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE 'tblHF' (" +
+                    "CREATE TABLE IF NOT EXISTS 'tblHF' (" +
                             "HFID NUMERIC," +
                             "HFCode TEXT," +
                             "HFName TEXT," +
@@ -187,19 +187,19 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "HFLevel TEXT" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE 'tblIMISDefaultsPhone' (" +
+                    "CREATE TABLE IF NOT EXISTS 'tblIMISDefaultsPhone' (" +
                             "RuleName TEXT," +
                             "RuleValue BIT" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE 'tblIdentificationTypes' (" +
+                    "CREATE TABLE IF NOT EXISTS 'tblIdentificationTypes' (" +
                             "IdentificationCode TEXT," +
                             "IdentificationTypes TEXT," +
                             "AltLanguage TEXT," +
                             "SortOrder NUMERIC" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE 'tblInsuree' (" +
+                    "CREATE TABLE IF NOT EXISTS 'tblInsuree' (" +
                             "InsureeId INTEGER," +
                             "FamilyId NUMERIC," +
                             "CHFID TEXT," +
@@ -226,7 +226,7 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "Vulnerability BOOLEAN" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE 'tblInsureePolicy' (" +
+                    "CREATE TABLE IF NOT EXISTS 'tblInsureePolicy' (" +
                             "InsureePolicyId INTEGER," +
                             "InsureeId INTEGER," +
                             "PolicyId NUMERIC," +
@@ -237,13 +237,13 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "isOffline NUMERIC" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE 'tblLanguages' (" +
+                    "CREATE TABLE IF NOT EXISTS 'tblLanguages' (" +
                             "LanguageCode TEXT," +
                             "LanguageName TEXT," +
                             "SortOrder NUMERIC" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE " + tblLocations + " (" +
+                    "CREATE TABLE IF NOT EXISTS " + tblLocations + " (" +
                             "LocationId NUMERIC," +
                             "LocationCode TEXT," +
                             "LocationName TEXT," +
@@ -251,7 +251,7 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "LocationType TEXT" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE 'tblOfficer' (" +
+                    "CREATE TABLE IF NOT EXISTS 'tblOfficer' (" +
                             "OfficerId NUMERIC," +
                             "Code TEXT," +
                             "LastName TEXT," +
@@ -262,13 +262,13 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "WorksTo DATE" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE 'tblPayer' (" +
+                    "CREATE TABLE IF NOT EXISTS 'tblPayer' (" +
                             "PayerId NUMERIC," +
                             "PayerName TEXT," +
                             "LocationId NUMERIC" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE 'tblPolicy' (" +
+                    "CREATE TABLE IF NOT EXISTS 'tblPolicy' (" +
                             "PolicyId INTEGER," +
                             "FamilyId NUMERIC," +
                             "EnrollDate DATE," +
@@ -284,7 +284,7 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "PolicyStage TEXT" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE 'tblPremium' (" +
+                    "CREATE TABLE IF NOT EXISTS 'tblPremium' (" +
                             "PremiumId INTEGER," +
                             "PolicyId NUMERIC," +
                             "PayerId NUMERIC," +
@@ -296,7 +296,7 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "isPhotoFee BOOLEAN" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE 'tblProduct' (" +
+                    "CREATE TABLE IF NOT EXISTS 'tblProduct' (" +
                             "ProdId NUMERIC," +
                             "ProductCode TEXT," +
                             "ProductName TEXT," +
@@ -327,19 +327,17 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "AdministrationPeriod NUMERIC," +
                             "EnrolmentDiscountPerc NUMERIC," +
                             "EnrolmentDiscountPeriod NUMERIC," +
-                            "GracePeriod INT," +
-                            "maxAge INT," +
-                            "minAge INT" + ")"
+                            "GracePeriod INT" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE 'tblProfessions' (" +
+                    "CREATE TABLE IF NOT EXISTS 'tblProfessions' (" +
                             "ProfessionId NUMERIC," +
                             "Profession TEXT," +
                             "SortOrder NUMERIC," +
                             "AltLanguage TEXT" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE 'tblRecordedPolicies' (" +
+                    "CREATE TABLE IF NOT EXISTS 'tblRecordedPolicies' (" +
                             "Id INTEGER PRIMARY KEY AUTOINCREMENT," +
                             "PolicyId INTEGER," +
                             "InsuranceNumber TEXT," +
@@ -354,14 +352,14 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "Code INTEGER DEFAULT 'N'" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE 'tblRelations' (" +
+                    "CREATE TABLE IF NOT EXISTS 'tblRelations' (" +
                             "RelationId NUMERIC," +
                             "Relation TEXT," +
                             "SortOrder NUMERIC," +
                             "AltLanguage TEXT" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE 'tblRenewals' (" +
+                    "CREATE TABLE IF NOT EXISTS 'tblRenewals' (" +
                             "RenewalId NUMERIC," +
                             "PolicyId INTEGER," +
                             "OfficerId INTEGER," +
@@ -382,7 +380,7 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "EnrollDate TEXT" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE VIEW uvwLocations As SELECT 'null' LocationId," +
+                    "CREATE VIEW IF NOT EXISTS uvwLocations As SELECT 'null' LocationId," +
                             " 'null' RegionId ," +
                             " 'null' RegionCode," +
                             " 'National' RegionName," +
@@ -409,7 +407,7 @@ public class SQLHandler extends SQLiteOpenHelper {
                             " FROM tbllocations " +
                             "where LocationTyPe ='D'");
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE " + tblBulkControlNumbers + "(" +
+                    "CREATE TABLE IF NOT EXISTS " + tblBulkControlNumbers + "(" +
                             "Id INTEGER," +
                             "BillId INTEGER," +
                             "ProductCode TEXT," +
@@ -419,7 +417,7 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "PolicyId INTEGER" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE " + tblProgram + "(" +
+                    "CREATE TABLE IF NOT EXISTS " + tblProgram + "(" +
                             "idProgram INTEGER," +
                             "Name TEXT," +
                             "validityDateFrom TEXT," +
@@ -427,12 +425,14 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "validityDateTo TEXT" + ")"
             );
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE " + tblCheque + "(" +
+                    "CREATE TABLE IF NOT EXISTS " + tblCheque + "(" +
                             "idChequeImportLine INTEGER," +
                             "chequeImportLineCode TEXT," +
                             "chequeImportLineDate TEXT," +
                             "chequeImportLineStatus TEXT" + ")"
             );
+            sqLiteDatabase.execSQL("ALTER TABLE tblProduct ADD COLUMN minAge INTEGER;");
+            sqLiteDatabase.execSQL("ALTER TABLE tblProduct ADD COLUMN maxAge INTEGER;");
         } catch (Exception e) {
             e.printStackTrace();
         }
