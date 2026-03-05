@@ -59,7 +59,7 @@ public class SQLHandler extends SQLiteOpenHelper {
     private final Context context;
     private final Global global;
     private SQLiteDatabase mDatabase;
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 4;
 
     //table names
     private static final String android_metadata = "android_metadata";
@@ -327,7 +327,9 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "AdministrationPeriod NUMERIC," +
                             "EnrolmentDiscountPerc NUMERIC," +
                             "EnrolmentDiscountPeriod NUMERIC," +
-                            "GracePeriod INT" + ")"
+                            "GracePeriod INT," +
+                            "maxAge INT," +
+                            "minAge INT" + ")"
             );
             sqLiteDatabase.execSQL(
                     "CREATE TABLE 'tblProfessions' (" +
@@ -444,34 +446,36 @@ public class SQLHandler extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + android_metadata);
-        db.execSQL("DROP TABLE IF EXISTS " + sqlite_sequence);
-        db.execSQL("DROP TABLE IF EXISTS " + tblConfirmationTypes);
-        db.execSQL("DROP TABLE IF EXISTS " + tblControlNumber);
-        db.execSQL("DROP TABLE IF EXISTS " + tblControls);
-        db.execSQL("DROP TABLE IF EXISTS " + tblEducations);
-        db.execSQL("DROP TABLE IF EXISTS " + tblFamilies);
-        db.execSQL("DROP TABLE IF EXISTS " + tblFamilyTypes);
-        db.execSQL("DROP TABLE IF EXISTS " + tblFeedbacks);
-        db.execSQL("DROP TABLE IF EXISTS " + tblGender);
-        db.execSQL("DROP TABLE IF EXISTS " + tblHF);
-        db.execSQL("DROP TABLE IF EXISTS " + tblIMISDefaultsPhone);
-        db.execSQL("DROP TABLE IF EXISTS " + tblIdentificationTypes);
-        db.execSQL("DROP TABLE IF EXISTS " + tblInsuree);
-        db.execSQL("DROP TABLE IF EXISTS " + tblInsureePolicy);
-        db.execSQL("DROP TABLE IF EXISTS " + tblLanguages);
-        db.execSQL("DROP TABLE IF EXISTS " + tblLocations);
-        db.execSQL("DROP TABLE IF EXISTS " + tblOfficer);
-        db.execSQL("DROP TABLE IF EXISTS " + tblPayer);
-        db.execSQL("DROP TABLE IF EXISTS " + tblPolicy);
-        db.execSQL("DROP TABLE IF EXISTS " + tblPremium);
-        db.execSQL("DROP TABLE IF EXISTS " + tblProduct);
-        db.execSQL("DROP TABLE IF EXISTS " + tblProfessions);
-        db.execSQL("DROP TABLE IF EXISTS " + tblRecordedPolicies);
-        db.execSQL("DROP TABLE IF EXISTS " + tblRelations);
-        db.execSQL("DROP TABLE IF EXISTS " + tblRenewals);
-        db.execSQL("DROP TABLE IF EXISTS " + tblProgram);
-        db.execSQL("DROP TABLE IF EXISTS " + tblCheque);
+//        db.execSQL("DROP TABLE IF EXISTS " + android_metadata);
+//        db.execSQL("DROP TABLE IF EXISTS " + sqlite_sequence);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblConfirmationTypes);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblControlNumber);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblControls);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblEducations);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblFamilies);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblFamilyTypes);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblFeedbacks);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblGender);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblHF);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblIMISDefaultsPhone);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblIdentificationTypes);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblInsuree);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblInsureePolicy);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblLanguages);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblLocations);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblOfficer);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblPayer);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblPolicy);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblPremium);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblProduct);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblProfessions);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblRecordedPolicies);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblRelations);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblRenewals);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblProgram);
+//        db.execSQL("DROP TABLE IF EXISTS " + tblCheque);
+        db.execSQL("ALTER TABLE tblProduct ADD COLUMN minAge INTEGER;");
+        db.execSQL("ALTER TABLE tblProduct ADD COLUMN maxAge INTEGER;");
         if (oldVersion < 2) {
             String sql = "ALTER TABLE tblRenewals ADD COLUMN LocationId INTEGER;";
             db.execSQL(sql);
