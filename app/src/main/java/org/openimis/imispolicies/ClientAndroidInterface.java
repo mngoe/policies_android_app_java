@@ -1864,6 +1864,7 @@ public class ClientAndroidInterface {
             HashMap<String, String> data = jsonToTable(PolicyData);
             ContentValues values = new ContentValues();
             // isOffline = getFamilyStatus(FamilyId);
+            String policyNumber = data.get("txtPolicyNumber");
 
             values.put("FamilyId", FamilyId);
             values.put("EnrollDate", data.get("txtEnrolmentDate"));
@@ -1874,7 +1875,7 @@ public class ClientAndroidInterface {
             values.put("PolicyValue", data.get("hfPolicyValue"));
             values.put("ProdId", data.get("ddlProduct"));
             values.put("OfficerId", data.get("ddlOfficer"));
-            values.put("PolicyNumber", data.get("txtPolicyNumber"));
+            values.put("PolicyNumber", policyNumber);
 
             String controlNumber = data.get("AssignedControlNumber");
             values.put("isOffline", isOffline);
@@ -1883,7 +1884,10 @@ public class ClientAndroidInterface {
             if (rtPolicyId == 0) {
                 values.put("PolicyId", MaxPolicyId);
                 sqlHandler.insertData("tblPolicy", values);
-                updateChequeStatut(data.get("txtInsuranceNumber"));
+                data.get("txtInsuranceNumber");
+                if(policyNumber != null && !policyNumber.isEmpty()){
+                    updateChequeStatut(policyNumber);
+                }
                 rtPolicyId = MaxPolicyId;
                 InsertPolicyInsuree(rtPolicyId, 1);
                 if (IsBulkCNUsed()) {
@@ -1893,7 +1897,9 @@ public class ClientAndroidInterface {
             } else {
                 int Online = 2;
                 sqlHandler.updateData("tblPolicy", values, "PolicyId = ? AND (isOffline = ? OR isOffline = ?) ", new String[]{String.valueOf(PolicyId), String.valueOf(isOffline), String.valueOf(Online)});
-                updateChequeStatut(data.get("txtInsuranceNumber"));
+                if(policyNumber != null && !policyNumber.isEmpty()){
+                    updateChequeStatut(policyNumber);
+                }
                 if (IsBulkCNUsed()) {
                     sqlHandler.clearCnAssignedToPolicy(PolicyId);
                     sqlHandler.assignCnToPolicy(PolicyId, controlNumber);
