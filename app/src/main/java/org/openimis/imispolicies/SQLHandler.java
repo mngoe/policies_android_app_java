@@ -281,6 +281,7 @@ public class SQLHandler extends SQLiteOpenHelper {
                             "OfficerId NUMERIC," +
                             "isOffline NUMERIC," +
                             "PolicyNumber TEXT," +
+                            "PregnancyAge TEXT," +
                             "PolicyStage TEXT" + ")"
             );
             sqLiteDatabase.execSQL(
@@ -1227,5 +1228,51 @@ public class SQLHandler extends SQLiteOpenHelper {
     @NonNull
     public JSONArray getSupportedLanguages() {
         return getResult(tblLanguages, new String[]{"LanguageCode"}, null, null);
+    }
+
+    public int getProductMinAge(String productId) {
+        openDatabase();
+        int productAgeMin = 0;
+        try (Cursor cursor = mDatabase.query(tblProduct,
+                new String[]{"MinAge"},
+                "ProdId = ?",
+                new String[]{productId},
+                null,
+                null,
+                null,
+                "1")) {
+            cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
+                productAgeMin = cursor.getInt(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeDatabase();
+        }
+        return productAgeMin;
+    }
+
+    public int getProductMaxAge(String productId) {
+        openDatabase();
+        int productAgeMax = 0;
+        try (Cursor cursor = mDatabase.query(tblProduct,
+                new String[]{"MaxAge"},
+                "ProdId = ?",
+                new String[]{productId},
+                null,
+                null,
+                null,
+                "1")) {
+            cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
+                productAgeMax = cursor.getInt(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeDatabase();
+        }
+        return productAgeMax;
     }
 }

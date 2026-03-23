@@ -110,6 +110,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -1863,6 +1864,7 @@ public class ClientAndroidInterface {
             values.put("ProdId", data.get("ddlProduct"));
             values.put("OfficerId", data.get("ddlOfficer"));
             values.put("PolicyNumber", data.get("txtPolicyNumber"));
+            values.put("PregnancyAge", data.get("ddlPregnancyAge"));
 
             String controlNumber = data.get("AssignedControlNumber");
             values.put("isOffline", isOffline);
@@ -1995,7 +1997,7 @@ public class ClientAndroidInterface {
     @SuppressWarnings("unused")
     public String getPolicy(int PolicyId) {
         @Language("SQL")
-        String Query = "SELECT  P.PolicyId, P.ProdId, OfficerId , Prod.ProductCode, ProductName, PolicyStage, EffectiveDate, IFNULL(PolicyValue,0) PolicyValue, StartDate, PolicyNumber, EnrollDate, bcn.ControlNumber, \n" +
+        String Query = "SELECT  P.PolicyId, P.ProdId, OfficerId , Prod.ProductCode, ProductName, PolicyStage, EffectiveDate, IFNULL(PolicyValue,0) PolicyValue, StartDate, PolicyNumber, PregnancyAge, EnrollDate, bcn.ControlNumber, \n" +
                 "   CASE    WHEN PolicyStatus = 1 THEN '" + activity.getResources().getString(R.string.Idle) + "'   " +
                 "   WHEN PolicyStatus = 2 THEN '" + activity.getResources().getString(R.string.Active) + "'  " +
                 "   WHEN PolicyStatus = 4 THEN '" + activity.getResources().getString(R.string.Suspended) + "'  " +
@@ -2947,7 +2949,7 @@ public class ClientAndroidInterface {
                     }
                 }
                 //get Policies
-                Query = "SELECT PolicyId, FamilyId, EnrollDate, StartDate, NULLIF(EffectiveDate,'null') EffectiveDate, ExpiryDate, Policystatus, PolicyValue, ProdId, OfficerId, PolicyStage, isOffline\n" +
+                Query = "SELECT PolicyId, FamilyId, EnrollDate, StartDate, NULLIF(EffectiveDate,'null') EffectiveDate, ExpiryDate, Policystatus, PolicyValue, ProdId, OfficerId, PregnancyAge, PolicyStage, isOffline\n" +
                         "FROM tblPolicy ";
                 Query += " WHERE FamilyId = " + FamilyId;
                 JSONArray policiesArray = sqlHandler.getResult(Query, null);
@@ -3416,9 +3418,26 @@ public class ClientAndroidInterface {
                 policiesArray.getJSONObject(j).put("premium", policyPremiums);
             }
 
+            Date dob = checkedFamily.getHead().getDateOfBirth();
+            LocalDate localDob = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            int beneficiaryAge = Period.between(localDob, LocalDate.now()).getYears();
+
             List<Family.Policy> policies = familyPolicyFromJSONObject(family.getUuid(), checkedFamily.getId(), policiesArray);
             for(Family.Policy policy : policies){
-                new CreatePolicy().execute(family.getHead().getChfId(), policy, checkedFamily.getUuid());
+                int ageMin = sqlHandler.getProductMinAge(String.valueOf(policy.getProductId()));
+                int ageMax = sqlHandler.getProductMaxAge(String.valueOf(policy.getProductId()));
+
+                if(ageMin != 0 && beneficiaryAge < ageMin){
+                    return -9;
+                } else if(ageMax != 0 && beneficiaryAge > ageMax){
+                    return -10;
+                } else if(ageMin < beneficiaryAge && beneficiaryAge < ageMax){
+                    Date newExpiryDate = getNewExpiryDate(ageMax, policy.getExpiryDate(), dob);
+                    policy.setExpiryDate(newExpiryDate);
+                    new CreatePolicy().execute(family.getHead().getChfId(), policy, checkedFamily.getUuid());
+                } else {
+                    new CreatePolicy().execute(family.getHead().getChfId(), policy, checkedFamily.getUuid());
+                }
             }
         } catch (HttpException e){
             if (e.getCode() == HttpURLConnection.HTTP_NOT_FOUND) {
@@ -3447,12 +3466,20 @@ public class ClientAndroidInterface {
     }
 
     @NonNull
-    private Date getNewExpiryDate (int beneficiaryAge, int maxAge, Date startDate){
-        int remainingYear = maxAge - beneficiaryAge;
-        Calendar c = Calendar.getInstance();
-        c.setTime(startDate);
-        c.add(Calendar.YEAR, remainingYear);
-        return c.getTime();
+    private Date getNewExpiryDate (int maxAge, Date expiryDate, Date dob){
+        Date newExpiryDate = expiryDate;
+
+        LocalDate localDob = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localExpiryDate = expiryDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        long expiryAge = Period.between(localDob, localExpiryDate).get(ChronoUnit.YEARS);
+
+        if(expiryAge >= maxAge){
+            Calendar c = Calendar.getInstance();
+            c.setTime(dob);
+            c.add(Calendar.YEAR, maxAge);
+            newExpiryDate = c.getTime();
+        }
+        return newExpiryDate;
     }
 
     @NonNull
@@ -3543,6 +3570,7 @@ public class ClientAndroidInterface {
                     /* productId = */ JsonUtils.getIntegerOrDefault(object, "ProdId"),
                     /* officerId = */ Integer.parseInt(object.getString("OfficerId")),
                     /* policyNumber = */ JsonUtils.getStringOrDefault(object,"PolicyNumber"),
+                    /* pregnancyAge = */ JsonUtils.getStringOrDefault(object,"PregnancyAge"),
                     /* stage = */ JsonUtils.getStringOrDefault(object, "PolicyStage"),
                     /* isOffline = */ JsonUtils.getBooleanOrDefault(object, "isOffline", false),
                     /* controlNumber = */ JsonUtils.getStringOrDefault(object, "ControlNumber"),
@@ -5730,5 +5758,27 @@ public class ClientAndroidInterface {
         } catch (Exception e) {
             Toast.makeText(activity, "Échec du téléchargement: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @JavascriptInterface
+    @SuppressWarnings("unused")
+    public String getPregnancyAge() {
+        JSONArray PregnancyAge = new JSONArray();
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put("Value", "");
+            obj.put("Label", "");
+            PregnancyAge.put(obj);
+
+            for (int i = 1; i < 43; i++){
+                JSONObject object = new JSONObject();
+                object.put("Value", String.valueOf(i));
+                object.put("Label", String.valueOf(i));
+                PregnancyAge.put(object);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return PregnancyAge.toString();
     }
 }
