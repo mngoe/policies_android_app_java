@@ -4296,9 +4296,7 @@ public class ClientAndroidInterface {
         } catch (OutOfMemoryError e){
             Sentry.captureException(e);
             activity.runOnUiThread(() ->
-                    AndroidUtils.showDialog(activity,
-                            activity.getResources().getString(R.string.DataDownloadedFailed),
-                            e.getMessage()));
+                            AndroidUtils.showToast(activity,e.getMessage()));
         }
     }
 
