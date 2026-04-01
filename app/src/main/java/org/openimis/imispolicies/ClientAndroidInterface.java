@@ -4293,6 +4293,12 @@ public class ClientAndroidInterface {
                 throw (UserNotAuthenticatedException) e;
             }
             throw new UserException("Error while downloading the master data", e);
+        } catch (OutOfMemoryError e){
+            Sentry.captureException(e);
+            activity.runOnUiThread(() ->
+                    AndroidUtils.showDialog(activity,
+                            activity.getResources().getString(R.string.DataDownloadedFailed),
+                            e.getMessage()));
         }
     }
 
