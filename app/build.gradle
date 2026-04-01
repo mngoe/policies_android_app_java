@@ -113,7 +113,7 @@ android {
             buildConfigField "String", "API_BASE_URL", '"https://test-csuapps.minsante.cm/"'
             buildConfigField "String", "RAR_PASSWORD", '"xc3-ed@/dfr;nJ3R"'
             resValue "string", "app_name_policies", "CSU VIH Test"
-            resValue "string", "sentry_dsn", "https://fd258d375e334a95b99fb9820501c2c7@glitchtip-csuapps.minsante.cm/8"
+            resValue "string", "sentry_dsn", "https://2f49055b003543ef9a15b59babba674e@glitchtip-csuapps.minsante.cm/4"
             dimension = 'std'
             signingConfig signingConfigs.csuVIHDev
         }
