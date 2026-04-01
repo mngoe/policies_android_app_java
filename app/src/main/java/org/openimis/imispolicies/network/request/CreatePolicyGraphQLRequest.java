@@ -30,6 +30,7 @@ public class CreatePolicyGraphQLRequest extends BaseGraphQLRequest {
                         .productId(policy.getProductId())
                         .officerId(policy.getOfficerId())
                         .policyNumber(policy.getPolicyNumber())
+                        .pregnancyAge(policy.getPregnancyAge().isEmpty() ? null : Integer.parseInt(policy.getPregnancyAge()))
                         .build()
         ));
         return Objects.requireNonNull(

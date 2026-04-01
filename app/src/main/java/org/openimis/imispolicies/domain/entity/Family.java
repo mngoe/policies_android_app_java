@@ -611,7 +611,7 @@ public class Family implements Parcelable {
         @Nullable
         private final Date effectiveDate;
         @NonNull
-        private final Date expiryDate;
+        private Date expiryDate;
         @Nullable
         private final String status;
         @Nullable
@@ -621,6 +621,8 @@ public class Family implements Parcelable {
         private final int officerId;
         @Nullable
         private final String policyNumber;
+        @Nullable
+        private final String pregnancyAge;
         @Nullable
         private final String policyStage;
         private final boolean isOffline;
@@ -643,6 +645,7 @@ public class Family implements Parcelable {
                 @Nullable Integer productId,
                 int officerId,
                 @Nullable String policyNumber,
+                @Nullable String pregnancyAge,
                 @Nullable String policyStage,
                 boolean isOffline,
                 @Nullable String controlNumber,
@@ -665,6 +668,7 @@ public class Family implements Parcelable {
             this.isOffline = isOffline;
             this.controlNumber = controlNumber;
             this.premiums = premiums;
+            this.pregnancyAge = pregnancyAge;
         }
 
         protected Policy(Parcel in) {
@@ -690,6 +694,7 @@ public class Family implements Parcelable {
             }
             officerId = in.readInt();
             policyNumber = in.readString();
+            pregnancyAge = in.readString();
             policyStage = in.readString();
             isOffline = in.readByte() != 0;
             controlNumber = in.readString();
@@ -721,6 +726,7 @@ public class Family implements Parcelable {
             }
             dest.writeInt(officerId);
             dest.writeString(policyNumber);
+            dest.writeString(pregnancyAge);
             dest.writeString(policyStage);
             dest.writeByte((byte) (isOffline ? 1 : 0));
             dest.writeString(controlNumber);
@@ -795,8 +801,15 @@ public class Family implements Parcelable {
         }
 
         @Nullable
+        public String getPregnancyAge(){ return pregnancyAge; }
+
+        @Nullable
         public String getPolicyStage() {
             return policyStage;
+        }
+
+        public void setExpiryDate(@NonNull Date newExpiryDate){
+            expiryDate = newExpiryDate;
         }
 
         public boolean isOffline() {
