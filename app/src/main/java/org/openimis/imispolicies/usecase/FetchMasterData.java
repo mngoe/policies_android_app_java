@@ -78,6 +78,9 @@ public class FetchMasterData {
             if (e.getCode() == 401 || e.getCode() == 403) {
                 throw new UserNotAuthenticatedException("Backend return '" + e.getCode() + "' while trying to download master data.", e);
             } else throw e;
+        } catch (Exception e) {
+            Sentry.captureException(e);
+            throw e;
         }
     }
 }
