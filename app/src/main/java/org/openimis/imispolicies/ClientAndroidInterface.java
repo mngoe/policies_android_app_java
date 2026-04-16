@@ -4290,7 +4290,7 @@ public class ClientAndroidInterface {
     @WorkerThread
     public void startDownloadingMasterData() throws JSONException, UserException, UserNotAuthenticatedException {
         try {
-            importMasterData(new FetchMasterData().getMasterData());
+            importMasterData(new FetchMasterData().streamOnline());
             downloadChequeData();
         } catch (Exception e) {
             Sentry.captureException(e);

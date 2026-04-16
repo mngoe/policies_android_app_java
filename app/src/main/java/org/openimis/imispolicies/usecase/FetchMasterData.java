@@ -90,7 +90,7 @@ public class FetchMasterData {
         }
     }
 
-    public JSONObject getMasterData() throws Exception {
+    public JSONObject streamOnline() throws Exception {
         try{
             URL url = new URL(BASE_URL);
             ZipInputStream zipInputStream = new ZipInputStream(url.openStream());
