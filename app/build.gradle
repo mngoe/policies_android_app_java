@@ -38,7 +38,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 34
         versionCode gitVersionCode
-        versionName System.getenv("APP_VERSION") ?: "2.4.2"
+        versionName System.getenv("APP_VERSION") ?: "2.4.3"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         vectorDrawables {
             useSupportLibrary = true
@@ -103,6 +103,7 @@ android {
         csuDev {
             applicationId "org.openimis.imispolicies.csuDev"
             buildConfigField "String", "API_BASE_URL", '"https://test-csuapps.minsante.cm/"'
+            buildConfigField "String", "MASTER_DATA_URL", '"https://test-csuapps.minsante.cm/"'
             resValue "string", "app_name_policies", "Enrolement CSU Test"
             buildConfigField "String", "RAR_PASSWORD", '"xc3-ed@/dfr;nJ3R"'
             resValue "string", "release_tag", "csu-test"
@@ -252,6 +253,7 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'cz.msebera.android:httpclient:4.5.8'
     implementation 'io.sentry:sentry-android:8.25.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
 
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'

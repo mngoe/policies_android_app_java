@@ -479,4 +479,5 @@
     <string name="SupportedLanguages">Supported languages:\n%1$s</string>
     <string name="PolicyNumber">Numéro de chèque</string>
     <string name="PolicyNumberRequired">Veuillez entrer le numéro de chèque</string>
+    <string name="chequeImportFailed">Échec de l'importation des chèques</string>
 </resources>
