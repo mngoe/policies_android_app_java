@@ -4327,7 +4327,7 @@ public class ClientAndroidInterface {
                         if(name.equals("cheques")){
                             JSONArray array = new JSONArray();
                             int lot = 0;
-                            int lotSize = 1500;
+                            int lotSize = 1000;
                             reader.beginArray();
                             while (reader.hasNext()) {
                                 JsonObject gson = JsonParser.parseReader(reader).getAsJsonObject();
