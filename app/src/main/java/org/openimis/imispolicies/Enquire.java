@@ -454,6 +454,7 @@ public class Enquire extends ImisActivity {
             c.close();
             db.close();
             return new Insuree(
+                    /* uuid = */ null,
                     /* chfId = */ chfid,
                     /* name = */ Objects.requireNonNull(name),
                     /* dateOfBirth = */ Objects.requireNonNull(dateOfBirth),
