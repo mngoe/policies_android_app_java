@@ -340,6 +340,24 @@ public class ClientAndroidInterface {
         return "";
     }
 
+    @JavascriptInterface
+    public boolean isValidPolicyNumber(String PolicyNumber) {
+        String status = getChequeStatut(PolicyNumber).toLowerCase();
+        if(status.equals("used")){
+            ShowDialog(activity.getResources().getString(R.string.UsedChequeNumber));
+            return false;
+        }
+        if(status.equals("cancel")){
+            ShowDialog(activity.getResources().getString(R.string.AbortedChequeNumber));
+            return false;
+        }
+        if(status.equals("")){
+            ShowDialog(activity.getResources().getString(R.string.NotExistChequeNumber));
+            return false;
+        }
+        return true;
+    }
+
 
     @JavascriptInterface
     @SuppressWarnings("unused")
@@ -348,18 +366,6 @@ public class ClientAndroidInterface {
         int validInsuranceNumber = escape.CheckInsuranceNumber(InsuranceNumber);
         if (validInsuranceNumber != 0) {
             ShowDialog(activity.getResources().getString(validInsuranceNumber));
-            return false;
-        }
-        if(getChequeStatut(InsuranceNumber).equals("used")){
-            ShowDialog(activity.getResources().getString(R.string.UsedChequeNumber));
-            return false;
-        }
-        if(getChequeStatut(InsuranceNumber).equals("cancel")){
-            ShowDialog(activity.getResources().getString(R.string.AbortedChequeNumber));
-            return false;
-        }
-        if(getChequeStatut(InsuranceNumber).equals("")){
-            ShowDialog(activity.getResources().getString(R.string.NotExistChequeNumber));
             return false;
         }
         return true;
@@ -632,7 +638,7 @@ public class ClientAndroidInterface {
     @JavascriptInterface
     @SuppressWarnings("unused")
     public String getProgram() {
-        String tableName = "tblProgram";
+        String tableName = SQLHandler.tblProgram;
         String[] columns = {"idProgram", "Name"};
         String where = null;
 
@@ -4311,6 +4317,7 @@ public class ClientAndroidInterface {
         URL url = new URL(BASE_URL);
         ZipInputStream zipInputStream = new ZipInputStream(url.openStream());
         ZipEntry zipEntry;
+        sqlHandler.deleteData(SQLHandler.tblCheque, null, null);
 
         try {
             while ((zipEntry = zipInputStream.getNextEntry()) != null) {
@@ -4627,7 +4634,7 @@ public class ClientAndroidInterface {
     @WorkerThread
     private void insertCheques(JSONArray jsonArray) throws JSONException {
         String[] Columns = getColumnNames(jsonArray);
-        sqlHandler.insertData("tblCheque", Columns, jsonArray, "DELETE FROM tblCheque;");
+        sqlHandler.insertData("tblCheque", Columns, jsonArray, null);
     }
     // endregion Insert Master Data
 
