@@ -98,7 +98,7 @@ $(document).ready(function () {
 
     $('#txtPolicyNumber').change(function () {
             var Pol = $('#txtPolicyNumber').val();
-            var ans = Android.isValidInsuranceNumber(Pol);
+            var ans = Android.isValidPolicyNumber(Pol);
             if (ans != true) {
                 $('#txtPolicyNumber').val("");
                 $('#txtPolicyNumber').focus();
@@ -160,7 +160,7 @@ $(document).ready(function () {
 
             if( Android.checkCsProduct(parseInt(ProdId))){
                 var Pol = $('#txtPolicyNumber').val();
-                var ans = Android.isValidInsuranceNumber(Pol);
+                var ans = Android.isValidPolicyNumber(Pol);
                 if (ans != true) {
                    return;
                 }

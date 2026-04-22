@@ -3,7 +3,14 @@ package org.openimis.imispolicies.usecase;
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+
 import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.openimis.imispolicies.BuildConfig;
 import org.openimis.imispolicies.ClientAndroidInterface;
 import org.openimis.imispolicies.Global;
 import org.openimis.imispolicies.network.exception.HttpException;
@@ -13,6 +20,8 @@ import org.openimis.imispolicies.network.util.OkHttpUtils;
 import org.openimis.imispolicies.tools.Log;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Objects;
@@ -29,6 +38,7 @@ import okhttp3.ResponseBody;
 public class FetchMasterData {
 
     private static final String MASTER_DATA_FILE_NAME = "masterdata.";
+    private static final String BASE_URL = BuildConfig.MASTER_DATA_URL + "api/tools/extracts/download_master_data";
     @NonNull
     private final GetMasterDataExportRequest getMasterDataExportRequest;
 
@@ -43,7 +53,6 @@ public class FetchMasterData {
     @NonNull
     @WorkerThread
     public String execute() throws Exception {
-        String BASE_URL = "https://csureport.minsante.cm/api/tools/extracts/download_master_data";
         OkHttpClient okHttpClient = OkHttpUtils.getDefaultOkHttpClient();
         Request.Builder builder = new Request.Builder();
         HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(BASE_URL)).newBuilder();
@@ -81,6 +90,43 @@ public class FetchMasterData {
         } catch (Exception e) {
             Sentry.captureException(e);
             throw e;
+        }
+    }
+
+    public JSONObject streamOnline() throws Exception {
+        try{
+            URL url = new URL(BASE_URL);
+            ZipInputStream zipInputStream = new ZipInputStream(url.openStream());
+            ZipEntry zipEntry;
+            JSONObject masterDataObj = new JSONObject();
+
+            while ((zipEntry = zipInputStream.getNextEntry()) != null){
+                if(zipEntry.getName().toLowerCase(Locale.ENGLISH).startsWith(MASTER_DATA_FILE_NAME)){
+                    JsonReader reader = new JsonReader(
+                            new InputStreamReader(zipInputStream, StandardCharsets.UTF_8)
+                    );
+                    reader.beginObject();
+
+                    while (reader.hasNext()){
+                        String name = reader.nextName();
+                        if(!name.equals("cheques")){
+                            JSONArray array = new JSONArray();
+                            reader.beginArray();
+                            while (reader.hasNext()) {
+                                JsonObject gson = JsonParser.parseReader(reader).getAsJsonObject();
+                                array.put(new JSONObject(gson.toString()));
+                            }
+                            reader.endArray();
+                            masterDataObj.put(name,array);
+                        } else {
+                            reader.skipValue();
+                        }
+                    }
+                }
+            }
+            return masterDataObj;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }
