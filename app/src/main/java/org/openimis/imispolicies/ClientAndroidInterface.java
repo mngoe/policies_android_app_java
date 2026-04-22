@@ -4198,32 +4198,26 @@ public class ClientAndroidInterface {
     }
 
     @WorkerThread
-    public void importMasterData(String data) throws JSONException, UserException {
-        try {
-            //processOldFormat(new JSONArray(data));
-            processNewFormat(new JSONObject(data));
-        } catch (JSONException e) {
-            Sentry.captureException(e);
-            try {
-                processNewFormat(new JSONObject(data));
-            } catch (JSONException e2) {
-                Sentry.captureException(e2);
-                throw new UserException(activity.getResources().getString(R.string.DownloadMasterDataFailed), e2);
-            }
-        }
+    public void importMasterData(JSONObject data) throws JSONException, UserException {
+        //processOldFormat(new JSONArray(data));
+        processNewFormat(data);
     }
 
 
     @WorkerThread
     public void startDownloadingMasterData() throws JSONException, UserException, UserNotAuthenticatedException {
         try {
-            importMasterData(new FetchMasterData().execute());
+            importMasterData(new FetchMasterData().streamOnline());
         } catch (Exception e) {
             Sentry.captureException(e);
             if (e instanceof UserNotAuthenticatedException) {
                 throw (UserNotAuthenticatedException) e;
             }
             throw new UserException("Error while downloading the master data", e);
+        } catch (OutOfMemoryError e){
+            Sentry.captureException(e);
+            activity.runOnUiThread(() ->
+                    AndroidUtils.showToast(activity,e.getMessage()));
         }
     }
 
