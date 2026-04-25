@@ -64,7 +64,8 @@ public class Global extends Application {
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.VIBRATE,
             Manifest.permission.INTERNET,
-            Manifest.permission.CAMERA,
+            // CSU: camera access is intentionally disabled.
+            // Manifest.permission.CAMERA,
             Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.ACCESS_WIFI_STATE,
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -74,11 +75,13 @@ public class Global extends Application {
     private static final String[] PERMISSIONS_POST_13 = new String[]{
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.VIBRATE,
-            Manifest.permission.READ_MEDIA_AUDIO,
-            Manifest.permission.READ_MEDIA_IMAGES,
-            Manifest.permission.READ_MEDIA_VIDEO,
+            // CSU: media/photos access is intentionally disabled.
+            // Manifest.permission.READ_MEDIA_AUDIO,
+            // Manifest.permission.READ_MEDIA_IMAGES,
+            // Manifest.permission.READ_MEDIA_VIDEO,
             Manifest.permission.INTERNET,
-            Manifest.permission.CAMERA,
+            // CSU: camera access is intentionally disabled.
+            // Manifest.permission.CAMERA,
             Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.ACCESS_WIFI_STATE,
             Manifest.permission.ACCESS_FINE_LOCATION,
