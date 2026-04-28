@@ -67,6 +67,7 @@
                 android:layout_width="43dp"
                 android:layout_height="43dp"
                 android:contentDescription="@string/Scan"
+                android:visibility="gone"
                 android:src="@drawable/scan" />
 
         </LinearLayout>
