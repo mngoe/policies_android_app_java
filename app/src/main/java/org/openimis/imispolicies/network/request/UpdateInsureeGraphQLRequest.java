@@ -23,12 +23,13 @@ public class UpdateInsureeGraphQLRequest extends BaseGraphQLRequest {
     public String update(
             @NonNull Family.Member member
     ) throws Exception {
-        return update(member, member.getFamilyId());
+        return update(member.getUuid(), member, member.getFamilyId());
     }
 
     @WorkerThread
     @NonNull
     public String update(
+            @Nullable String uuid,
             @NonNull Family.Member member,
             @Nullable Integer familyId
         ) throws Exception {
@@ -37,6 +38,7 @@ public class UpdateInsureeGraphQLRequest extends BaseGraphQLRequest {
                         .clientMutationId(UUID.randomUUID().toString())
                         .clientMutationLabel("Update Insuree")
                         .chfId(member.getChfId())
+                        .uuid(uuid)
                         .familyId(familyId)
                         .head(member.isHead())
                         .passport(member.getIdentificationNumber())
