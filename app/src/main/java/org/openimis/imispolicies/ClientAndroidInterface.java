@@ -65,6 +65,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -103,6 +106,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.text.ParseException;
@@ -127,6 +131,8 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -142,6 +148,7 @@ public class ClientAndroidInterface {
     public static int RESULT_LOAD_IMG = 1;
     public static int RESULT_SCAN = 100;
     public static boolean inProgress = true;
+    private static final String MASTER_DATA_FILE_NAME = "masterdata.";
 
     @NonNull
     private final Activity activity;
@@ -331,7 +338,6 @@ public class ClientAndroidInterface {
         return "";
     }
 
-
     @JavascriptInterface
     @SuppressWarnings("unused")
     public boolean isValidInsuranceNumber(String InsuranceNumber) {
@@ -341,15 +347,23 @@ public class ClientAndroidInterface {
             ShowDialog(activity.getResources().getString(validInsuranceNumber));
             return false;
         }
-        if(getChequeStatut(InsuranceNumber).equals("used")){
+        return true;
+    }
+
+
+    @JavascriptInterface
+    @SuppressWarnings("unused")
+    public boolean isValidPolicyNumber(String PolicyNumber) {
+        String status = getChequeStatut(PolicyNumber).toLowerCase();
+        if(status.equals("used")){
             ShowDialog(activity.getResources().getString(R.string.UsedChequeNumber));
             return false;
         }
-        if(getChequeStatut(InsuranceNumber).equals("cancel")){
+        if(status.equals("cancel")){
             ShowDialog(activity.getResources().getString(R.string.AbortedChequeNumber));
             return false;
         }
-        if(getChequeStatut(InsuranceNumber).equals("")){
+        if(status.isEmpty()){
             ShowDialog(activity.getResources().getString(R.string.NotExistChequeNumber));
             return false;
         }
@@ -4268,25 +4282,22 @@ public class ClientAndroidInterface {
     }
 
     @WorkerThread
-    public void importMasterData(String data) throws JSONException, UserException {
-        try {
-            //processOldFormat(new JSONArray(data));
-            processNewFormat(new JSONObject(data));
-        } catch (JSONException e) {
-            Sentry.captureException(e);
-            try {
-                processNewFormat(new JSONObject(data));
-            } catch (JSONException e2) {
-                throw new UserException(activity.getResources().getString(R.string.DownloadMasterDataFailed), e2);
-            }
-        }
+    public void importMasterData(JSONObject data) throws JSONException, UserException {
+        //processOldFormat(new JSONArray(data));
+        processNewFormat(data);
+    }
+
+    @WorkerThread
+    public void importCheques(JSONObject cheques) throws JSONException {
+        insertCheques((JSONArray) cheques.get("cheques"));
     }
 
 
     @WorkerThread
     public void startDownloadingMasterData() throws JSONException, UserException, UserNotAuthenticatedException {
         try {
-            importMasterData(new FetchMasterData().execute());
+            importMasterData(new FetchMasterData().streamOnline());
+            downloadChequeData();
         } catch (Exception e) {
             Sentry.captureException(e);
             if (e instanceof UserNotAuthenticatedException) {
@@ -4297,6 +4308,60 @@ public class ClientAndroidInterface {
             Sentry.captureException(e);
             activity.runOnUiThread(() ->
                             AndroidUtils.showToast(activity,e.getMessage()));
+        }
+    }
+
+    @WorkerThread
+    public void downloadChequeData() throws Exception {
+        String BASE_URL = BuildConfig.MASTER_DATA_URL + "api/tools/extracts/download_master_data";
+        URL url = new URL(BASE_URL);
+        ZipInputStream zipInputStream = new ZipInputStream(url.openStream());
+        ZipEntry zipEntry;
+        sqlHandler.deleteData(SQLHandler.tblCheque, null, null);
+
+        try {
+            while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+
+                if (zipEntry.getName().toLowerCase(Locale.ENGLISH).startsWith(MASTER_DATA_FILE_NAME)) {
+                    JsonReader reader = new JsonReader(
+                            new InputStreamReader(zipInputStream, StandardCharsets.UTF_8)
+                    );
+                    reader.beginObject();
+
+                    while (reader.hasNext()) {
+                        String name = reader.nextName();
+                        JSONObject masterDataObj = new JSONObject();
+                        if (name.equals("cheques")) {
+                            JSONArray array = new JSONArray();
+                            int lot = 0;
+                            int lotSize = 1000;
+                            reader.beginArray();
+                            while (reader.hasNext()) {
+                                JsonObject gson = JsonParser.parseReader(reader).getAsJsonObject();
+                                array.put(new JSONObject(gson.toString()));
+
+                                if (array.length() == lotSize) {
+                                    masterDataObj.put(name, array);
+                                    importCheques(masterDataObj);
+                                    lot++;
+                                    array = new JSONArray();
+                                }
+                            }
+                            reader.endArray();
+                            if (array.length() > 0) {
+                                masterDataObj.put(name, array);
+                                importCheques(masterDataObj);
+                            }
+                        } else {
+                            reader.skipValue();
+                        }
+                    }
+                    reader.endObject();
+                }
+            }
+        } catch (Exception e) {
+            Sentry.captureException(e);
+            ShowToast(activity.getResources().getString(R.string.chequeImportFailed));
         }
     }
 
@@ -4437,7 +4502,6 @@ public class ClientAndroidInterface {
             insertPhoneDefaults((JSONArray) masterData.get("phoneDefaults"));
             insertGenders((JSONArray) masterData.get("genders"));
             insertPrograms((JSONArray) masterData.get("programs"));
-            insertCheques((JSONArray) masterData.get("cheques"));
         } catch (JSONException e) {
             e.printStackTrace();
             Sentry.captureException(e);
@@ -4570,7 +4634,7 @@ public class ClientAndroidInterface {
     @WorkerThread
     private void insertCheques(JSONArray jsonArray) throws JSONException {
         String[] Columns = getColumnNames(jsonArray);
-        sqlHandler.insertData("tblCheque", Columns, jsonArray, "DELETE FROM tblCheque;");
+        sqlHandler.insertData("tblCheque", Columns, jsonArray, null);
     }
     // endregion Insert Master Data
 

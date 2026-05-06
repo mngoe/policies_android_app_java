@@ -857,7 +857,7 @@ public class MainActivity extends AppCompatActivity
             }
             ClientAndroidInterface ca = new ClientAndroidInterface(context);
             try {
-                ca.importMasterData(buffers[0]);
+                ca.importMasterData(new JSONObject(buffers[0]));
             } catch (JSONException | UserException e) {
                 e.printStackTrace();
             }
