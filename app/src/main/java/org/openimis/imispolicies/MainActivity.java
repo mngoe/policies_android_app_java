@@ -230,6 +230,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         global = (Global) getApplicationContext();
         super.onCreate(savedInstanceState);
+        new LanguageManager(this).restoreLanguage(false);
         instance = this;
         setContentView(R.layout.activity_main);
         SQLHandler sqlHandler = new SQLHandler(this);
