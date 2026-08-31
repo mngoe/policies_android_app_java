@@ -491,4 +491,6 @@
     <string name="Download">Download</string>
     <string name="NoUpdateAvailable">No update available</string>
     <string name="DownloadStart">Download Start</string>
+    <string name="PregnancyAge">week of pregnancy</string>
+    <string name="chequeImportFailed">Failed to Import cheque numbers</string>
 </resources>

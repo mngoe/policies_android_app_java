@@ -1,11 +1,13 @@
 $(document).ready(function () {
     document.title = Android.getString('AddEditPolicy');
+    fillDropdowns();
 
     if(!Android.IsBulkCNUsed()) {
         $('#ControlNumber').hide();
     }
 
     $('#PolicyNumber').hide()
+    $('#PregnancyAge').hide()
 
     $("#dialog-confirm").attr("title", Android.getString('Confirm'));
 
@@ -45,7 +47,10 @@ $(document).ready(function () {
         var prodId = $Policy[0]["ProdId"];
         if(Android.checkCsProduct(parseInt(prodId))){
              $('#PolicyNumber').show();
+             $('#PregnancyAge').show();
              $("#textPolicyNumber").val($Policy[0]["PolicyNumber"]);
+             $("#ddlPregnancyAge").val($Policy[0]["PregnancyAge"]);
+             $('#ddlPregnancyAge').attr('required', true)
         }
 
         bindDataFromDatafield(strPolicy);
@@ -93,7 +98,7 @@ $(document).ready(function () {
 
     $('#txtPolicyNumber').change(function () {
             var Pol = $('#txtPolicyNumber').val();
-            var ans = Android.isValidInsuranceNumber(Pol);
+            var ans = Android.isValidPolicyNumber(Pol);
             if (ans != true) {
                 $('#txtPolicyNumber').val("");
                 $('#txtPolicyNumber').focus();
@@ -126,8 +131,12 @@ $(document).ready(function () {
 
         if( Android.checkCsProduct(parseInt(ProdId))){
             $('#PolicyNumber').show();
+            $('#PregnancyAge').show();
+            $('#ddlPregnancyAge').attr('required', true);
         }else{
             $('#PolicyNumber').hide();
+            $('#PregnancyAge').hide();
+            $('#ddlPregnancyAge').attr('required', false);
         }
     });
 
@@ -151,7 +160,7 @@ $(document).ready(function () {
 
             if( Android.checkCsProduct(parseInt(ProdId))){
                 var Pol = $('#txtPolicyNumber').val();
-                var ans = Android.isValidInsuranceNumber(Pol);
+                var ans = Android.isValidPolicyNumber(Pol);
                 if (ans != true) {
                    return;
                 }
@@ -239,6 +248,15 @@ function LoadOfficers(LocationId, EnrolmentDate) {
 function LoadProduct(RegionId, DistrictId, EnrolmentDate) {
     var $Products = Android.getCSUProducts(parseInt(RegionId), parseInt(DistrictId), EnrolmentDate);
     bindDropdown('ddlProduct', $Products, 'ProdId', 'ProductNameCombined', 0, Android.getString('SelectProduct'));
+}
+
+function fillDropdowns() {
+    getPregnancyAgeOptions();
+}
+
+function getPregnancyAgeOptions() {
+    var PregnancyAge = Android.getPregnancyAge();
+    bindDropdown('ddlPregnancyAge', PregnancyAge, 'Value', 'Label', null);
 }
 
 function createJSONString() {
