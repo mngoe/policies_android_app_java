@@ -187,7 +187,7 @@
   <string name="IncorrectOfficerCode">Code de l\'agent incorrect</string>
   <string name="Login">Se connecter</string>
   <string name="FTPConnectionFailed">Impossible de connecter le serveur. Opération annulée.</string>
-  <string name="SomethingWrongServer">Une erreur est survenue sur le serveur, merci de bien vouloir reprendre l\'action.</string>
+  <string name="SomethingWrongServer">Une erreur est subvenu sur le serveur, merci de bien vouloir reprendre l\'action.</string>
   <string name="UncaughtException">Bénéficiaire ne peut pas être insérée, s\'il vous plaît contacter l\'administrateur du système.</string>
   <string name="FamilyUploaded">Bénéficiaires téléversée avec succès</string>
   <string name="MissingHOF">Bénéficiaires manquant</string>
@@ -288,7 +288,7 @@
   <string name="failedToUpload">Échec du téléversement</string>
   <string name="dataDeleted">Supprimé avec succès</string>
   <string name="InvalidEmail">Email invalide !</string>
-  <string name="ServerError">Une erreur est survenue sur le serveur, merci de bien vouloir reprendre l\'action !</string>
+  <string name="ServerError">Une erreur est subvenu sur le serveur, merci de bien vouloir reprendre l\'action !</string>
   <string name="PolicyCovered">Le prix du police est couvert. Voulez-vous toujours ajouter une contribution ?</string>
   <string name="ExceedsPolicy">La contribution dépasse le prix du police.</string>
   <string name="PriceBelow">Le prix du police n\'est pas encore couvert, veuillez sélectionner l\'action à effectuer.</string>
@@ -474,8 +474,9 @@
   <string name="LanguageCode">fr_CM</string>
   <string name="LanguageSettings">Paramètres de langue</string>
   <string name="CurrentResourceLanguage">Langue de la ressource actuelle:%1$s</string>
-  <string name="SystemLanguageNotSupported">La langue du système actuel n\'est pas prise en compte. 
+  <string name="SystemLanguageNotSupported">La langue du système actuel n\'est pas prise en compte.
 L\'application utilisera la langue par défaut.</string>
+  <string name="DataDownloadedFailed">Échec du téléchargement des données</string>
   <string name="DataDownloadedFailed">Échec du téléchargement des données</string>
   <string name="CheckUpdate">Recherche de mise à jour</string>
   <string name="Update">Mise à jour</string>
