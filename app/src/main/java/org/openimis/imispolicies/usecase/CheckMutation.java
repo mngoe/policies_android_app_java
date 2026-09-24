@@ -10,6 +10,8 @@ import org.openimis.imispolicies.network.request.CheckMutationGraphQLRequest;
 
 import java.util.concurrent.TimeoutException;
 
+import io.sentry.Sentry;
+
 public class CheckMutation {
 
     private static final long DEFAULT_TIMEOUT = 300_000L;
@@ -72,8 +74,9 @@ public class CheckMutation {
             if (builder.length() != 0) {
                 return builder.toString();
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
             //
+            Sentry.captureException(e);
         }
         return error;
     }

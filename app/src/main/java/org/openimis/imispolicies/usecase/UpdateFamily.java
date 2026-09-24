@@ -12,6 +12,8 @@ import org.openimis.imispolicies.network.request.UpdateInsureeGraphQLRequest;
 
 import java.net.HttpURLConnection;
 
+import io.sentry.Sentry;
+
 public class UpdateFamily {
 
     @NonNull
@@ -58,6 +60,7 @@ public class UpdateFamily {
             if (e.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
                 throw e;
             }
+            Sentry.captureException(e);
         }
         if (existingFamily == null) {
             createFamilyGraphQLRequest.create(family);
@@ -83,6 +86,7 @@ public class UpdateFamily {
         try {
             updateInsureeGraphQLRequest.update(member);
         } catch (Exception e) {
+            Sentry.captureException(e);
             createInsureeGraphQLRequest.create(member);
         }
     }
