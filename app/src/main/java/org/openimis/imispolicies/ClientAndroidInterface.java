@@ -3417,9 +3417,6 @@ public class ClientAndroidInterface {
                 }
                 policiesArray.getJSONObject(j).put("premium", policyPremiums);
             }
-            Date dob = checkedFamily.getHead().getDateOfBirth();
-            LocalDate localDob = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            int beneficiaryAge = Period.between(localDob, LocalDate.now()).getYears();
 
             Date dob = checkedFamily.getHead().getDateOfBirth();
             LocalDate localDob = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
