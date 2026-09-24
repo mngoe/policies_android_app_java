@@ -2,4 +2,16 @@
 <resources>
   <string name="EnquirePolicyNotCovered">Policy Status: Not Covered</string>
   <string name="csuNumber">MPI Number</string>
+  <string name="PregnancyAge">Pregnancy Age</string>
+  <string name="CheckUpdate">Check for Updates</string>
+  <string name="Update">Update</string>
+  <string name="UpdateAvailable">Update Available</string>
+  <string name="Download">Download</string>
+  <string name="NoUpdateAvailable">No updates available</string>
+  <string name="DownloadStart">Start the download</string>
+  <string name="SupportedLanguages">Supported languages:%1$s</string>
+  <string name="PolicyNumber">Cheque number</string>
+  <string name="PolicyNumberRequired">Please enter cheque number</string>
+  <string name="CanAddFagepPolicy">The beneficiary already have an active CS policy. you cannot attribute FAGEP Policy</string>
+  <string name="InvalidCsuNumber">The MPI number must only have numeric characters</string>
 </resources>
