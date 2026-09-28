@@ -32,6 +32,7 @@ public class FetchInsureeInquire {
     public Insuree execute(@NonNull String chfId) throws Exception {
         GetInsureeInquireQuery.Node node = request.get(chfId);
         return new Insuree(
+                /* uuid = */ Objects.requireNonNull(node.uuid()),
                 /* chfId = */ Objects.requireNonNull(node.chfId()),
                 /* name = */ node.lastName() + " " + node.otherNames(),
                 /* dateOfBirth = */ node.dob(),
