@@ -76,6 +76,7 @@ import org.openimis.imispolicies.util.TextViewUtils;
 import java.net.HttpURLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -667,11 +668,10 @@ public class Enquire extends ImisActivity {
                 } catch (Exception e) {
                     Log.e(LOG_TAG, "Fetching image failed", e);
                 }
-
-                if (insuree.getPolicies().size() == 1 && insuree.getPolicies().get(0).getExpiryDate() == null || insuree.getPolicies().isEmpty()) {
-                    tvPolicyStatus.setText(getResources().getString(R.string.EnquirePolicyNotCovered));
-                } else {
+                if(!insuree.getPolicies().isEmpty() && insuree.getPolicies().get(insuree.getPolicies().size() - 1).getStatus() == Policy.Status.ACTIVE){
                     tvPolicyStatus.setText(getResources().getString(R.string.EnquirePolicyCovered));
+                } else {
+                    tvPolicyStatus.setText(getResources().getString(R.string.EnquirePolicyNotCovered));
                 }
 
                 for (Policy policy : insuree.getPolicies()) {
@@ -766,6 +766,9 @@ public class Enquire extends ImisActivity {
                     etCHFID.setText("");
                     //break;
                 }
+
+                Collections.reverse(PolicyList);
+
             }
             ListAdapter adapter = new SimpleAdapter(Enquire.this,
                     PolicyList, R.layout.policylist,
