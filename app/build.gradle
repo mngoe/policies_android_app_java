@@ -94,10 +94,10 @@ android {
         }
         comoresDev {
             applicationId "org.openimis.imispolicies.comoresDev"
-            buildConfigField "String", "API_BASE_URL", '"https://dev.amg.km/"'
-            resValue "string", "app_name_policies", "Policies Comores Dev"
+            buildConfigField "String", "API_BASE_URL", '"https://amg.km/"'
+            resValue "string", "app_name_policies", "Policies Comores"
             dimension = 'std'
-            resValue "string", "release_tag", "comores-dev"
+            resValue "string", "release_tag", "comores-main"
         }
         chfDev {
             applicationId "org.openimis.imispolicies.chfdev"
