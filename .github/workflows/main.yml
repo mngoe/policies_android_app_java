@@ -24,6 +24,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
       - name: Setup JDK 17
         uses: actions/setup-java@v2
         with:
@@ -37,7 +40,7 @@ jobs:
 
       - name: build
         run: |
-          ./gradlew assemblecomoresDevDebug --stacktrace
+          ./gradlew assembleComoresDevDebug --stacktrace
 
       - name: Prepare updater APK asset
         run: |
@@ -71,7 +74,7 @@ jobs:
 
       - name: build
         run: |
-          ./gradlew bundlecomoresDevDebug --stacktrace
+          ./gradlew bundleComoresDevDebug --stacktrace
 
       - name: Environment info
         run: |
