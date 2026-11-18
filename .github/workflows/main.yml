@@ -49,6 +49,25 @@ jobs:
           cp "$APK_PATH" "./app/build/outputs/apk/update/${UPDATE_APK_NAME}"
           ls -la ./app/build/outputs/apk/update
 
+      - name: Extract app version name
+        id: app_version
+        run: |
+          BUILD_CONFIG_PATH=$(find ./app/build/generated/source/buildConfig -type f -name "BuildConfig.java" | grep -i "comores/dev" | head -n 1)
+          if [ -z "$BUILD_CONFIG_PATH" ]; then
+            echo "BuildConfig.java not found for comoresDev"
+            exit 1
+          fi
+
+          VERSION_NAME=$(grep 'VERSION_NAME' "$BUILD_CONFIG_PATH" | head -n 1 | sed -E 's/.*"(.*)".*/\1/')
+          if [ -z "$VERSION_NAME" ]; then
+            echo "VERSION_NAME not found in $BUILD_CONFIG_PATH"
+            exit 1
+          fi
+
+          echo "version_name=$VERSION_NAME" >> "$GITHUB_OUTPUT"
+          echo "release_title=$VERSION_NAME" >> "$GITHUB_OUTPUT"
+          echo "Detected version: $VERSION_NAME"
+
       - name: Environment info
         run: |
           gradle --version
@@ -63,20 +82,8 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ env.RELEASE_TAG }}
+          name: ${{ steps.app_version.outputs.release_title }}
           allowUpdates: true
           replacesArtifacts: true
           artifactErrorsFailBuild: true
           artifacts: ./app/build/outputs/apk/update/${{ env.UPDATE_APK_NAME }}
-
-      - name: build
-        run: |
-          ./gradlew bundleComoresDevDebug --stacktrace
-
-      - name: Environment info
-        run: |
-          gradle --version
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: policies-comores-aab-${{github.run_number}}.aab
-          path: ./app/build/outputs/**/*.aab
