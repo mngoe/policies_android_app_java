@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - 'develop-comores'
+      - 'feature-38559'
   workflow_dispatch:
 #    tags:
 #      - '!v*'
@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       RELEASE_TAG: ${{ vars.RELEASE_TAG || 'comores-dev' }}
-      UPDATE_APK_NAME: app-comoresDev-debug.apk
+      UPDATE_APK_NAME: app-comoresDev-release.apk
 
     steps:
       - uses: actions/checkout@v4
@@ -30,13 +30,26 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Decode keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > policies_comores.jks
+
+      - name: Create keystore.properties
+        run: |
+          cat > app/keystore.properties <<EOF
+          storeFile=../policies_comores.jks
+          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+          keyAlias=${{ secrets.KEY_ALIAS }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          EOF
+
       - name: Environment info
         run: |
           gradle --version
 
       - name: build
         run: |
-          ./gradlew assembleComoresDevDebug --stacktrace
+          ./gradlew assembleComoresDevRelease --stacktrace
 
       - name: Prepare updater APK asset
         run: |
@@ -52,7 +65,7 @@ jobs:
       - name: Extract app version name
         id: app_version
         run: |
-          METADATA_PATH=$(find ./app/build/outputs/apk -type f -name "output-metadata.json" | grep -Ei "comoresDev/.*/debug|comoresDev/debug" | head -n 1)
+          METADATA_PATH=$(find ./app/build/outputs/apk -type f -name "output-metadata.json" | grep -Ei "comoresDev/.*/release|comoresDev/release" | head -n 1)
           if [ -z "$METADATA_PATH" ]; then
             METADATA_PATH=$(find ./app/build/outputs/apk -type f -name "output-metadata.json" | head -n 1)
           fi
