@@ -76,6 +76,7 @@ import org.openimis.imispolicies.util.TextViewUtils;
 import java.net.HttpURLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -99,7 +100,7 @@ public class Enquire extends ImisActivity {
     private ImageView iv;
     private LinearLayout ll;
     private ProgressDialog pd;
-    private final ArrayList<HashMap<String, String>> PolicyList = new ArrayList<>();
+    private ArrayList<HashMap<String, String>> PolicyList = new ArrayList<>();
     private boolean ZoomOut = false;
     private int orgHeight, orgWidth;
 
@@ -667,14 +668,25 @@ public class Enquire extends ImisActivity {
                 } catch (Exception e) {
                     Log.e(LOG_TAG, "Fetching image failed", e);
                 }
+                tvPolicyStatus.setText(getResources().getString(R.string.EnquirePolicyNotCovered));
 
-                if (insuree.getPolicies().size() == 1 && insuree.getPolicies().get(0).getExpiryDate() == null || insuree.getPolicies().isEmpty()) {
-                    tvPolicyStatus.setText(getResources().getString(R.string.EnquirePolicyNotCovered));
-                } else {
-                    tvPolicyStatus.setText(getResources().getString(R.string.EnquirePolicyCovered));
+                List<Policy> sortedPolicies = new ArrayList<>();
+                for (Policy p : insuree.getPolicies()) {
+                    if (p != null) {
+                        sortedPolicies.add(p);
+                    }
                 }
 
-                for (Policy policy : insuree.getPolicies()) {
+                Collections.sort(sortedPolicies, (p1, p2) -> {
+                    Date d1 = p1.getExpiryDate();
+                    Date d2 = p2.getExpiryDate();
+                    if (d1 == null && d2 == null) return 0;
+                    if (d1 == null) return 1;
+                    if (d2 == null) return -1;
+                    return d2.compareTo(d1);
+                });
+
+                for (Policy policy : sortedPolicies) {
                     HashMap<String, String> policyMap = new HashMap<>();
 
                     double iDedType = policy.getDeductibleType() == null ? 0 : policy.getDeductibleType();
@@ -762,7 +774,15 @@ public class Enquire extends ImisActivity {
                         policyMap.put("SubItem14", buildEnquireValue(policy.getDeliveryAmountLeft(), R.string.deliveryAmountLeft));
                     }
 
-                    PolicyList.add(policyMap);
+                    if(policy.getStatus() == Policy.Status.ACTIVE){
+                        PolicyList = new ArrayList<>();
+                        PolicyList.add(policyMap);
+                        tvPolicyStatus.setText(getResources().getString(R.string.EnquirePolicyCovered));
+                        break;
+                    } else {
+                        // sinon ajouter dans la liste
+                        PolicyList.add(policyMap);
+                    }
                     etCHFID.setText("");
                     //break;
                 }
