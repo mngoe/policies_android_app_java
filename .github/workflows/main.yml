@@ -1,15 +1,25 @@
 name: CI
 
 on:
-  push:
+  pull_request:
     branches:
       - 'develop-comores'
+    types:
+      - closed
+  workflow_dispatch:
 #    tags:
 #      - '!v*'
 
+permissions:
+  contents: write
+
 jobs:
   build:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ vars.RELEASE_TAG || 'comores-dev' }}
+      UPDATE_APK_NAME: app-comoresDev-debug.apk
 
     steps:
       - uses: actions/checkout@v2
@@ -29,6 +39,17 @@ jobs:
         run: |
           ./gradlew assemblecomoresDevDebug --stacktrace
 
+      - name: Prepare updater APK asset
+        run: |
+          mkdir -p ./app/build/outputs/apk/update
+          APK_PATH=$(find ./app/build/outputs/apk -type f -name "*.apk" ! -path "*/update/*" | head -n 1)
+          if [ -z "$APK_PATH" ]; then
+            echo "No APK found after build"
+            exit 1
+          fi
+          cp "$APK_PATH" "./app/build/outputs/apk/update/${UPDATE_APK_NAME}"
+          ls -la ./app/build/outputs/apk/update
+
       - name: Environment info
         run: |
           gradle --version
@@ -37,6 +58,16 @@ jobs:
         with:
           name: policies-comores-apk-${{github.run_number}}.apk
           path: ./app/build/outputs/**/*.apk
+
+      - name: Publish APK to release tag
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ env.RELEASE_TAG }}
+          allowUpdates: true
+          replacesArtifacts: true
+          artifactErrorsFailBuild: true
+          artifacts: ./app/build/outputs/apk/update/${{ env.UPDATE_APK_NAME }}
 
       - name: build
         run: |
