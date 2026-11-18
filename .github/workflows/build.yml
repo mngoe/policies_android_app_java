@@ -1,10 +1,7 @@
 name: develop-comores
 
 on:
-  push:
-    branches: [ "develop-comores" ]
-  pull_request:
-    branches: [ "develop-comores" ]
+  workflow_dispatch:
 
 jobs:
   build:
