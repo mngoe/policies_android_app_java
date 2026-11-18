@@ -52,15 +52,19 @@ jobs:
       - name: Extract app version name
         id: app_version
         run: |
-          BUILD_CONFIG_PATH=$(find ./app/build/generated/source/buildConfig -type f -name "BuildConfig.java" | grep -i "comores/dev" | head -n 1)
-          if [ -z "$BUILD_CONFIG_PATH" ]; then
-            echo "BuildConfig.java not found for comoresDev"
+          METADATA_PATH=$(find ./app/build/outputs/apk -type f -name "output-metadata.json" | grep -Ei "comoresDev/.*/debug|comoresDev/debug" | head -n 1)
+          if [ -z "$METADATA_PATH" ]; then
+            METADATA_PATH=$(find ./app/build/outputs/apk -type f -name "output-metadata.json" | head -n 1)
+          fi
+
+          if [ -z "$METADATA_PATH" ]; then
+            echo "output-metadata.json not found"
             exit 1
           fi
 
-          VERSION_NAME=$(grep 'VERSION_NAME' "$BUILD_CONFIG_PATH" | head -n 1 | sed -E 's/.*"(.*)".*/\1/')
+          VERSION_NAME=$(grep -oE '"versionName"[[:space:]]*:[[:space:]]*"[^"]+"' "$METADATA_PATH" | head -n 1 | sed -E 's/.*"([^"]+)"$/\1/')
           if [ -z "$VERSION_NAME" ]; then
-            echo "VERSION_NAME not found in $BUILD_CONFIG_PATH"
+            echo "versionName not found in $METADATA_PATH"
             exit 1
           fi
 
