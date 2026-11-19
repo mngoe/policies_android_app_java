@@ -6407,7 +6407,7 @@ public class ClientAndroidInterface {
     @JavascriptInterface
     public void downloadUpdate(String lastVersion, String tagName) {
         try {
-            String fileName = "app-" + BuildConfig.FLAVOR + "-debug.apk";
+            String fileName = "app-" + BuildConfig.FLAVOR + "-release.apk";
             String apkUrl = "https://github.com/mngoe/policies_android_app_java/releases/download/" + tagName + "/" + fileName;
 
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(apkUrl))
