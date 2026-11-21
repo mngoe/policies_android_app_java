@@ -3,23 +3,45 @@ name: CI
 on:
   push:
     branches:
-      - 'develop-comores'
+      - 'main-comores'
+  workflow_dispatch:
 #    tags:
 #      - '!v*'
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ vars.RELEASE_TAG || 'comores-dev' }}
+      UPDATE_APK_NAME: app-comoresDev-release.apk
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
 
       - name: Setup JDK 17
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-          cache: 'gradle'
+
+      - name: Decode keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > policies_comores.jks
+
+      - name: Create keystore.properties
+        run: |
+          cat > app/keystore.properties <<EOF
+          storeFile=../policies_comores.jks
+          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+          keyAlias=${{ secrets.KEY_ALIAS }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          EOF
 
       - name: Environment info
         run: |
@@ -27,7 +49,41 @@ jobs:
 
       - name: build
         run: |
-          ./gradlew assemblecomoresDevDebug --stacktrace
+          ./gradlew assembleComoresDevRelease --stacktrace
+
+      - name: Prepare updater APK asset
+        run: |
+          mkdir -p ./app/build/outputs/apk/update
+          APK_PATH=$(find ./app/build/outputs/apk -type f -name "*.apk" ! -path "*/update/*" | head -n 1)
+          if [ -z "$APK_PATH" ]; then
+            echo "No APK found after build"
+            exit 1
+          fi
+          cp "$APK_PATH" "./app/build/outputs/apk/update/${UPDATE_APK_NAME}"
+          ls -la ./app/build/outputs/apk/update
+
+      - name: Extract app version name
+        id: app_version
+        run: |
+          METADATA_PATH=$(find ./app/build/outputs/apk -type f -name "output-metadata.json" | grep -Ei "comoresDev/.*/release|comoresDev/release" | head -n 1)
+          if [ -z "$METADATA_PATH" ]; then
+            METADATA_PATH=$(find ./app/build/outputs/apk -type f -name "output-metadata.json" | head -n 1)
+          fi
+
+          if [ -z "$METADATA_PATH" ]; then
+            echo "output-metadata.json not found"
+            exit 1
+          fi
+
+          VERSION_NAME=$(grep -oE '"versionName"[[:space:]]*:[[:space:]]*"[^"]+"' "$METADATA_PATH" | head -n 1 | sed -E 's/.*"([^"]+)"$/\1/')
+          if [ -z "$VERSION_NAME" ]; then
+            echo "versionName not found in $METADATA_PATH"
+            exit 1
+          fi
+
+          echo "version_name=$VERSION_NAME" >> "$GITHUB_OUTPUT"
+          echo "release_title=$VERSION_NAME" >> "$GITHUB_OUTPUT"
+          echo "Detected version: $VERSION_NAME"
 
       - name: Environment info
         run: |
@@ -38,15 +94,13 @@ jobs:
           name: policies-comores-apk-${{github.run_number}}.apk
           path: ./app/build/outputs/**/*.apk
 
-      - name: build
-        run: |
-          ./gradlew bundlecomoresDevDebug --stacktrace
-
-      - name: Environment info
-        run: |
-          gradle --version
-
-      - uses: actions/upload-artifact@v4
+      - name: Publish APK to release tag
+        uses: ncipollo/release-action@v1
         with:
-          name: policies-comores-aab-${{github.run_number}}.aab
-          path: ./app/build/outputs/**/*.aab
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ env.RELEASE_TAG }}
+          name: ${{ steps.app_version.outputs.release_title }}
+          allowUpdates: true
+          replacesArtifacts: true
+          artifactErrorsFailBuild: true
+          artifacts: ./app/build/outputs/apk/update/${{ env.UPDATE_APK_NAME }}
