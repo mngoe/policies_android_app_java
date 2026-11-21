@@ -15,7 +15,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      RELEASE_TAG: ${{ vars.RELEASE_TAG || 'comores-dev' }}
+      RELEASE_TAG: ${{ vars.RELEASE_TAG || 'comores-test' }}
       UPDATE_APK_NAME: app-comoresDev-release.apk
 
     steps:
